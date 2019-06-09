@@ -1,0 +1,6 @@
+rm somefile.txt
+gpsd /dev/serial0
+(check with)
+gpsmon
+(start with)
+nohup python CaptureGryoAndGps.py &

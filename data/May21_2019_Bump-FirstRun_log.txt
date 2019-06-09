@@ -1,0 +1,9 @@
+01500 - 00:00 - 12:17 2 shakes, then quiet (pre trip)
+00000 - 00:10 - 12:27 initial mounting and test
+00000 - 00:12 - 12:29 end smooth
+00000 - 00:14 - 12:31 end medium (dirt road)
+00000 - 00:15 - 12:32 searching for rough
+00000 - 00:16 - 12:33 start rough
+00000 - 00:19 - 12:36 end rough (homeward bound)
+00000 - 00:22 - 12:39 back home (removing from mounting)
+00000 - 00:41 - 12:58 disconnected
