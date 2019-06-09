@@ -1,0 +1,2482 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Quick Start - Leaflet</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="shortcut icon" type="image/x-icon"
+			href="docs/images/favicon.ico" />
+    <link rel="stylesheet" 
+    		href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css" 
+    		integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" 
+    		crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js" 
+    		integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
+    		crossorigin="">
+    </script>
+</head>
+<body>
+
+<div id="mapid" style="width: 600px; height: 400px;"></div>
+<script>
+	var mymap = L.map('mapid').setView([42.493, -83.158], 14);
+
+	L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+		maxZoom: 18,
+		attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+			'<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+			'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+		id: 'mapbox.streets'
+	}).addTo(mymap);
+
+	var polygon = L.polygon([
+		[42.494433, -83.159279], 		[42.494433, -83.158586], 		[42.493725, -83.158586], 		[42.493725, -83.159279] 	]).addTo(mymap);
+	var latLongs0 = [
+		[42.494132833, -83.159295667],
+		[42.4941515, -83.159312667],
+	];
+	ployline0 = L.polyline(latLongs0, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs1 = [
+		[42.4941515, -83.159312667],
+		[42.4941775, -83.159317667],
+		[42.4942065, -83.159327333],
+		[42.494230333, -83.159335],
+		[42.4942635, -83.159341833],
+		[42.4942985, -83.159342167],
+		[42.494332333, -83.159354333],
+		[42.494366167, -83.15937],
+		[42.494406833, -83.159361333],
+		[42.4944415, -83.159362333],
+		[42.494487333, -83.1593685],
+		[42.494537167, -83.159373833],
+		[42.494580833, -83.159387667],
+		[42.494632333, -83.159396167],
+	];
+	ployline1 = L.polyline(latLongs1, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs2 = [
+		[42.494632333, -83.159396167],
+		[42.494676167, -83.159406833],
+		[42.494724333, -83.159414],
+	];
+	ployline2 = L.polyline(latLongs2, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs3 = [
+		[42.494724333, -83.159414],
+		[42.494779667, -83.159425333],
+		[42.494840333, -83.159434833],
+		[42.4948945, -83.159440333],
+		[42.4949455, -83.1594525],
+		[42.494994, -83.159463167],
+		[42.495049, -83.1594795],
+		[42.495107167, -83.159482],
+		[42.495156333, -83.159487667],
+		[42.4952, -83.159489167],
+		[42.495254833, -83.159492167],
+		[42.495317667, -83.159512667],
+	];
+	ployline3 = L.polyline(latLongs3, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs4 = [
+		[42.495317667, -83.159512667],
+		[42.495376333, -83.159519333],
+	];
+	ployline4 = L.polyline(latLongs4, {color: 'rgb(178,76,76)'} ).addTo(mymap);
+	var latLongs5 = [
+		[42.495376333, -83.159519333],
+		[42.495436167, -83.159523167],
+		[42.495494167, -83.159532167],
+		[42.495546833, -83.159534],
+		[42.495603667, -83.1595315],
+		[42.495668167, -83.159527333],
+		[42.495737, -83.159520167],
+		[42.495781667, -83.159519],
+		[42.4958295, -83.159520667],
+		[42.495896833, -83.159526167],
+		[42.495952667, -83.159523833],
+		[42.496011833, -83.159524],
+		[42.496061333, -83.159527],
+		[42.4960895, -83.159534833],
+		[42.4961285, -83.159543],
+		[42.496176667, -83.159542167],
+	];
+	ployline5 = L.polyline(latLongs5, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs6 = [
+		[42.496176667, -83.159542167],
+		[42.496218333, -83.159547],
+	];
+	ployline6 = L.polyline(latLongs6, {color: 'rgb(178,76,76)'} ).addTo(mymap);
+	var latLongs7 = [
+		[42.496218333, -83.159547],
+		[42.4962595, -83.159546167],
+		[42.4963125, -83.159539667],
+	];
+	ployline7 = L.polyline(latLongs7, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs8 = [
+		[42.4963125, -83.159539667],
+		[42.496383333, -83.159508333],
+	];
+	ployline8 = L.polyline(latLongs8, {color: 'rgb(51,204,240)'} ).addTo(mymap);
+	var latLongs9 = [
+		[42.496383333, -83.159508333],
+		[42.4964435, -83.159495833],
+	];
+	ployline9 = L.polyline(latLongs9, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs10 = [
+		[42.4964435, -83.159495833],
+		[42.4965035, -83.159491833],
+		[42.496588, -83.159488833],
+		[42.496627, -83.159483167],
+		[42.4966565, -83.159478333],
+		[42.496676333, -83.159483333],
+	];
+	ployline10 = L.polyline(latLongs10, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs11 = [
+		[42.496676333, -83.159483333],
+		[42.496697167, -83.159488667],
+		[42.496717, -83.159493333],
+	];
+	ployline11 = L.polyline(latLongs11, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs12 = [
+		[42.496717, -83.159493333],
+		[42.496739333, -83.159501333],
+		[42.496766, -83.159511333],
+		[42.4968, -83.159531167],
+	];
+	ployline12 = L.polyline(latLongs12, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs13 = [
+		[42.4968, -83.159531167],
+		[42.496834667, -83.159565333],
+		[42.496873333, -83.159598667],
+		[42.496918833, -83.15962],
+		[42.496967333, -83.159631833],
+		[42.497011, -83.159630167],
+	];
+	ployline13 = L.polyline(latLongs13, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs14 = [
+		[42.497011, -83.159630167],
+		[42.497056, -83.159630833],
+		[42.4971065, -83.159627667],
+	];
+	ployline14 = L.polyline(latLongs14, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs15 = [
+		[42.4971065, -83.159627667],
+		[42.497160333, -83.159626],
+	];
+	ployline15 = L.polyline(latLongs15, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs16 = [
+		[42.497160333, -83.159626],
+		[42.4972165, -83.159626333],
+		[42.4972735, -83.159629167],
+		[42.4973345, -83.159635167],
+		[42.497390167, -83.159644],
+	];
+	ployline16 = L.polyline(latLongs16, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs17 = [
+		[42.497390167, -83.159644],
+		[42.497448667, -83.159649667],
+	];
+	ployline17 = L.polyline(latLongs17, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs18 = [
+		[42.497448667, -83.159649667],
+		[42.497506667, -83.159650167],
+		[42.497560667, -83.159648333],
+		[42.497612667, -83.159650167],
+	];
+	ployline18 = L.polyline(latLongs18, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs19 = [
+		[42.497612667, -83.159650167],
+		[42.497671, -83.159654],
+	];
+	ployline19 = L.polyline(latLongs19, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs20 = [
+		[42.497671, -83.159654],
+		[42.4977175, -83.1596555],
+	];
+	ployline20 = L.polyline(latLongs20, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs21 = [
+		[42.4977175, -83.1596555],
+		[42.497759333, -83.159652167],
+	];
+	ployline21 = L.polyline(latLongs21, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs22 = [
+		[42.497759333, -83.159652167],
+		[42.497809667, -83.159653],
+		[42.497863667, -83.159655],
+	];
+	ployline22 = L.polyline(latLongs22, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs23 = [
+		[42.497863667, -83.159655],
+		[42.497922167, -83.1596545],
+	];
+	ployline23 = L.polyline(latLongs23, {color: 'rgb(204,51,51)'} ).addTo(mymap);
+	var latLongs24 = [
+		[42.497922167, -83.1596545],
+		[42.49798, -83.159659833],
+		[42.498042667, -83.159663833],
+		[42.498089333, -83.159668333],
+	];
+	ployline24 = L.polyline(latLongs24, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs25 = [
+		[42.498089333, -83.159668333],
+		[42.498149333, -83.159673833],
+	];
+	ployline25 = L.polyline(latLongs25, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs26 = [
+		[42.498149333, -83.159673833],
+		[42.498207167, -83.159673667],
+	];
+	ployline26 = L.polyline(latLongs26, {color: 'rgb(51,204,240)'} ).addTo(mymap);
+	var latLongs27 = [
+		[42.498207167, -83.159673667],
+		[42.498266667, -83.159673667],
+	];
+	ployline27 = L.polyline(latLongs27, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs28 = [
+		[42.498266667, -83.159673667],
+		[42.498326667, -83.159673333],
+		[42.498376, -83.1596755],
+	];
+	ployline28 = L.polyline(latLongs28, {color: 'rgb(51,204,240)'} ).addTo(mymap);
+	var latLongs29 = [
+		[42.498376, -83.1596755],
+		[42.4984225, -83.159682833],
+		[42.498479167, -83.159684333],
+		[42.498530833, -83.159686333],
+		[42.498575667, -83.159685833],
+	];
+	ployline29 = L.polyline(latLongs29, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs30 = [
+		[42.498575667, -83.159685833],
+		[42.498625167, -83.159689],
+	];
+	ployline30 = L.polyline(latLongs30, {color: 'rgb(76,178,178)'} ).addTo(mymap);
+	var latLongs31 = [
+		[42.498625167, -83.159689],
+		[42.498668, -83.159674833],
+	];
+	ployline31 = L.polyline(latLongs31, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs32 = [
+		[42.498668, -83.159674833],
+		[42.498700667, -83.159638333],
+	];
+	ployline32 = L.polyline(latLongs32, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs33 = [
+		[42.498700667, -83.159638333],
+		[42.498717667, -83.159583],
+	];
+	ployline33 = L.polyline(latLongs33, {color: 'rgb(255,0,0)'} ).addTo(mymap);
+	var latLongs34 = [
+		[42.498717667, -83.159583],
+		[42.498727333, -83.159523667],
+	];
+	ployline34 = L.polyline(latLongs34, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs35 = [
+		[42.498727333, -83.159523667],
+		[42.4987395, -83.159462333],
+		[42.498747167, -83.159398833],
+	];
+	ployline35 = L.polyline(latLongs35, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs36 = [
+		[42.498747167, -83.159398833],
+		[42.4987605, -83.159330667],
+	];
+	ployline36 = L.polyline(latLongs36, {color: 'rgb(178,76,76)'} ).addTo(mymap);
+	var latLongs37 = [
+		[42.4987605, -83.159330667],
+		[42.498773167, -83.159263333],
+	];
+	ployline37 = L.polyline(latLongs37, {color: 'rgb(153,102,102)'} ).addTo(mymap);
+	var latLongs38 = [
+		[42.498773167, -83.159263333],
+		[42.498791, -83.159199],
+	];
+	ployline38 = L.polyline(latLongs38, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs39 = [
+		[42.498791, -83.159199],
+		[42.498820167, -83.159137167],
+	];
+	ployline39 = L.polyline(latLongs39, {color: 'rgb(229,25,25)'} ).addTo(mymap);
+	var latLongs40 = [
+		[42.498820167, -83.159137167],
+		[42.498865667, -83.159095833],
+	];
+	ployline40 = L.polyline(latLongs40, {color: 'rgb(127,127,127)'} ).addTo(mymap);
+	var latLongs41 = [
+		[42.498865667, -83.159095833],
+		[42.498917667, -83.1590865],
+	];
+	ployline41 = L.polyline(latLongs41, {color: 'rgb(229,25,25)'} ).addTo(mymap);
+	var latLongs42 = [
+		[42.498917667, -83.1590865],
+		[42.4989765, -83.159086667],
+	];
+	ployline42 = L.polyline(latLongs42, {color: 'rgb(76,178,178)'} ).addTo(mymap);
+	var latLongs43 = [
+		[42.4989765, -83.159086667],
+		[42.499031167, -83.159089833],
+	];
+	ployline43 = L.polyline(latLongs43, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs44 = [
+		[42.499031167, -83.159089833],
+		[42.499089, -83.159091833],
+	];
+	ployline44 = L.polyline(latLongs44, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs45 = [
+		[42.499089, -83.159091833],
+		[42.499144333, -83.159096167],
+	];
+	ployline45 = L.polyline(latLongs45, {color: 'rgb(102,153,153)'} ).addTo(mymap);
+	var latLongs46 = [
+		[42.499144333, -83.159096167],
+		[42.499199, -83.1591005],
+	];
+	ployline46 = L.polyline(latLongs46, {color: 'rgb(127,127,127)'} ).addTo(mymap);
+	var latLongs47 = [
+		[42.499199, -83.1591005],
+		[42.499254, -83.159103333],
+	];
+	ployline47 = L.polyline(latLongs47, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs48 = [
+		[42.499254, -83.159103333],
+		[42.499313833, -83.159092667],
+	];
+	ployline48 = L.polyline(latLongs48, {color: 'rgb(127,127,127)'} ).addTo(mymap);
+	var latLongs49 = [
+		[42.499313833, -83.159092667],
+		[42.499358833, -83.159090667],
+	];
+	ployline49 = L.polyline(latLongs49, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs50 = [
+		[42.499358833, -83.159090667],
+		[42.499411333, -83.159092833],
+	];
+	ployline50 = L.polyline(latLongs50, {color: 'rgb(102,153,153)'} ).addTo(mymap);
+	var latLongs51 = [
+		[42.499411333, -83.159092833],
+		[42.499467, -83.159096333],
+	];
+	ployline51 = L.polyline(latLongs51, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs52 = [
+		[42.499467, -83.159096333],
+		[42.499517833, -83.159089833],
+	];
+	ployline52 = L.polyline(latLongs52, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs53 = [
+		[42.499517833, -83.159089833],
+		[42.499574, -83.1590865],
+	];
+	ployline53 = L.polyline(latLongs53, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs54 = [
+		[42.499574, -83.1590865],
+		[42.499627167, -83.159087333],
+		[42.499688167, -83.159089333],
+	];
+	ployline54 = L.polyline(latLongs54, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs55 = [
+		[42.499688167, -83.159089333],
+		[42.499748167, -83.159092833],
+	];
+	ployline55 = L.polyline(latLongs55, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs56 = [
+		[42.499748167, -83.159092833],
+		[42.499809833, -83.159096167],
+	];
+	ployline56 = L.polyline(latLongs56, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs57 = [
+		[42.499809833, -83.159096167],
+		[42.499870333, -83.159094667],
+	];
+	ployline57 = L.polyline(latLongs57, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs58 = [
+		[42.499870333, -83.159094667],
+		[42.4999285, -83.159091],
+	];
+	ployline58 = L.polyline(latLongs58, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs59 = [
+		[42.4999285, -83.159091],
+		[42.499984333, -83.159087],
+	];
+	ployline59 = L.polyline(latLongs59, {color: 'rgb(127,127,127)'} ).addTo(mymap);
+	var latLongs60 = [
+		[42.499984333, -83.159087],
+		[42.500041167, -83.159086833],
+	];
+	ployline60 = L.polyline(latLongs60, {color: 'rgb(153,102,102)'} ).addTo(mymap);
+	var latLongs61 = [
+		[42.500041167, -83.159086833],
+		[42.50008, -83.15909],
+	];
+	ployline61 = L.polyline(latLongs61, {color: 'rgb(51,204,240)'} ).addTo(mymap);
+	var latLongs62 = [
+		[42.50008, -83.15909],
+		[42.5001195, -83.159092833],
+	];
+	ployline62 = L.polyline(latLongs62, {color: 'rgb(102,153,153)'} ).addTo(mymap);
+	var latLongs63 = [
+		[42.5001195, -83.159092833],
+		[42.500179, -83.159101],
+	];
+	ployline63 = L.polyline(latLongs63, {color: 'rgb(178,76,76)'} ).addTo(mymap);
+	var latLongs64 = [
+		[42.500179, -83.159101],
+		[42.500237167, -83.1591065],
+	];
+	ployline64 = L.polyline(latLongs64, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs65 = [
+		[42.500237167, -83.1591065],
+		[42.500285833, -83.159117333],
+	];
+	ployline65 = L.polyline(latLongs65, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs66 = [
+		[42.500285833, -83.159117333],
+		[42.500341833, -83.159128333],
+	];
+	ployline66 = L.polyline(latLongs66, {color: 'rgb(102,153,153)'} ).addTo(mymap);
+	var latLongs67 = [
+		[42.500341833, -83.159128333],
+		[42.500395333, -83.1591345],
+	];
+	ployline67 = L.polyline(latLongs67, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs68 = [
+		[42.500395333, -83.1591345],
+		[42.500448833, -83.159138333],
+	];
+	ployline68 = L.polyline(latLongs68, {color: 'rgb(102,153,153)'} ).addTo(mymap);
+	var latLongs69 = [
+		[42.500448833, -83.159138333],
+		[42.500503167, -83.159143833],
+	];
+	ployline69 = L.polyline(latLongs69, {color: 'rgb(229,25,25)'} ).addTo(mymap);
+	var latLongs70 = [
+		[42.500503167, -83.159143833],
+		[42.500555833, -83.159136833],
+	];
+	ployline70 = L.polyline(latLongs70, {color: 'rgb(76,178,178)'} ).addTo(mymap);
+	var latLongs71 = [
+		[42.500555833, -83.159136833],
+		[42.500616, -83.159135667],
+		[42.500675167, -83.159137833],
+	];
+	ployline71 = L.polyline(latLongs71, {color: 'rgb(51,204,240)'} ).addTo(mymap);
+	var latLongs72 = [
+		[42.500675167, -83.159137833],
+		[42.500733, -83.159141667],
+	];
+	ployline72 = L.polyline(latLongs72, {color: 'rgb(76,178,178)'} ).addTo(mymap);
+	var latLongs73 = [
+		[42.500733, -83.159141667],
+		[42.500794667, -83.159143167],
+	];
+	ployline73 = L.polyline(latLongs73, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs74 = [
+		[42.500794667, -83.159143167],
+		[42.500853333, -83.1591435],
+	];
+	ployline74 = L.polyline(latLongs74, {color: 'rgb(76,178,178)'} ).addTo(mymap);
+	var latLongs75 = [
+		[42.500853333, -83.1591435],
+		[42.500905333, -83.159144333],
+		[42.500950833, -83.1591445],
+	];
+	ployline75 = L.polyline(latLongs75, {color: 'rgb(127,127,127)'} ).addTo(mymap);
+	var latLongs76 = [
+		[42.500950833, -83.1591445],
+		[42.500998667, -83.1591475],
+		[42.5010515, -83.1591485],
+	];
+	ployline76 = L.polyline(latLongs76, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs77 = [
+		[42.5010515, -83.1591485],
+		[42.5011065, -83.159154],
+	];
+	ployline77 = L.polyline(latLongs77, {color: 'rgb(102,153,153)'} ).addTo(mymap);
+	var latLongs78 = [
+		[42.5011065, -83.159154],
+		[42.5011645, -83.159158667],
+	];
+	ployline78 = L.polyline(latLongs78, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs79 = [
+		[42.5011645, -83.159158667],
+		[42.501222667, -83.1591595],
+	];
+	ployline79 = L.polyline(latLongs79, {color: 'rgb(102,153,153)'} ).addTo(mymap);
+	var latLongs80 = [
+		[42.501222667, -83.1591595],
+		[42.501286167, -83.159157833],
+	];
+	ployline80 = L.polyline(latLongs80, {color: 'rgb(51,204,240)'} ).addTo(mymap);
+	var latLongs81 = [
+		[42.501286167, -83.159157833],
+		[42.5013505, -83.159156833],
+	];
+	ployline81 = L.polyline(latLongs81, {color: 'rgb(76,178,178)'} ).addTo(mymap);
+	var latLongs82 = [
+		[42.5013505, -83.159156833],
+		[42.501414, -83.1591575],
+	];
+	ployline82 = L.polyline(latLongs82, {color: 'rgb(102,153,153)'} ).addTo(mymap);
+	var latLongs83 = [
+		[42.501414, -83.1591575],
+		[42.501479, -83.159157333],
+	];
+	ployline83 = L.polyline(latLongs83, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs84 = [
+		[42.501479, -83.159157333],
+		[42.501542167, -83.1591575],
+	];
+	ployline84 = L.polyline(latLongs84, {color: 'rgb(178,76,76)'} ).addTo(mymap);
+	var latLongs85 = [
+		[42.501542167, -83.1591575],
+		[42.501604167, -83.159157667],
+	];
+	ployline85 = L.polyline(latLongs85, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs86 = [
+		[42.501604167, -83.159157667],
+		[42.501662167, -83.159162833],
+	];
+	ployline86 = L.polyline(latLongs86, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs87 = [
+		[42.501662167, -83.159162833],
+		[42.501716333, -83.1591715],
+	];
+	ployline87 = L.polyline(latLongs87, {color: 'rgb(153,102,102)'} ).addTo(mymap);
+	var latLongs88 = [
+		[42.501716333, -83.1591715],
+		[42.501773333, -83.159174833],
+		[42.5018285, -83.159178833],
+	];
+	ployline88 = L.polyline(latLongs88, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs89 = [
+		[42.5018285, -83.159178833],
+		[42.5018785, -83.159182333],
+	];
+	ployline89 = L.polyline(latLongs89, {color: 'rgb(76,178,178)'} ).addTo(mymap);
+	var latLongs90 = [
+		[42.5018785, -83.159182333],
+		[42.501926667, -83.1591845],
+	];
+	ployline90 = L.polyline(latLongs90, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs91 = [
+		[42.501926667, -83.1591845],
+		[42.501972667, -83.159189333],
+	];
+	ployline91 = L.polyline(latLongs91, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs92 = [
+		[42.501972667, -83.159189333],
+		[42.502009667, -83.159210833],
+	];
+	ployline92 = L.polyline(latLongs92, {color: 'rgb(204,51,51)'} ).addTo(mymap);
+	var latLongs93 = [
+		[42.502009667, -83.159210833],
+		[42.502040667, -83.159252833],
+		[42.502054667, -83.159304167],
+	];
+	ployline93 = L.polyline(latLongs93, {color: 'rgb(76,178,178)'} ).addTo(mymap);
+	var latLongs94 = [
+		[42.502054667, -83.159304167],
+		[42.502051833, -83.159352167],
+	];
+	ployline94 = L.polyline(latLongs94, {color: 'rgb(51,204,240)'} ).addTo(mymap);
+	var latLongs95 = [
+		[42.502051833, -83.159352167],
+		[42.502040167, -83.159400833],
+	];
+	ployline95 = L.polyline(latLongs95, {color: 'rgb(76,178,178)'} ).addTo(mymap);
+	var latLongs96 = [
+		[42.502040167, -83.159400833],
+		[42.5020275, -83.159446667],
+	];
+	ployline96 = L.polyline(latLongs96, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs97 = [
+		[42.5020275, -83.159446667],
+		[42.502014833, -83.159499833],
+	];
+	ployline97 = L.polyline(latLongs97, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs98 = [
+		[42.502014833, -83.159499833],
+		[42.5019985, -83.159547833],
+		[42.501983667, -83.159601167],
+	];
+	ployline98 = L.polyline(latLongs98, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs99 = [
+		[42.501983667, -83.159601167],
+		[42.501970667, -83.159662167],
+	];
+	ployline99 = L.polyline(latLongs99, {color: 'rgb(153,102,102)'} ).addTo(mymap);
+	var latLongs100 = [
+		[42.501970667, -83.159662167],
+		[42.5019615, -83.159722],
+		[42.501955167, -83.159784667],
+	];
+	ployline100 = L.polyline(latLongs100, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs101 = [
+		[42.501955167, -83.159784667],
+		[42.501954167, -83.159854833],
+	];
+	ployline101 = L.polyline(latLongs101, {color: 'rgb(178,76,76)'} ).addTo(mymap);
+	var latLongs102 = [
+		[42.501954167, -83.159854833],
+		[42.501954833, -83.159927167],
+	];
+	ployline102 = L.polyline(latLongs102, {color: 'rgb(229,25,25)'} ).addTo(mymap);
+	var latLongs103 = [
+		[42.501954833, -83.159927167],
+		[42.5019545, -83.159991],
+		[42.501955, -83.160055],
+	];
+	ployline103 = L.polyline(latLongs103, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs104 = [
+		[42.501955, -83.160055],
+		[42.501960667, -83.160121333],
+	];
+	ployline104 = L.polyline(latLongs104, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs105 = [
+		[42.501960667, -83.160121333],
+		[42.5019645, -83.160188667],
+	];
+	ployline105 = L.polyline(latLongs105, {color: 'rgb(204,51,51)'} ).addTo(mymap);
+	var latLongs106 = [
+		[42.5019645, -83.160188667],
+		[42.501969833, -83.1602565],
+		[42.501978667, -83.160319667],
+		[42.501994667, -83.160378167],
+	];
+	ployline106 = L.polyline(latLongs106, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs107 = [
+		[42.501994667, -83.160378167],
+		[42.502012667, -83.160435167],
+	];
+	ployline107 = L.polyline(latLongs107, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs108 = [
+		[42.502012667, -83.160435167],
+		[42.502041333, -83.160483],
+		[42.502061833, -83.1605335],
+		[42.502075333, -83.160590333],
+	];
+	ployline108 = L.polyline(latLongs108, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs109 = [
+		[42.502075333, -83.160590333],
+		[42.502096, -83.1606485],
+	];
+	ployline109 = L.polyline(latLongs109, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs110 = [
+		[42.502096, -83.1606485],
+		[42.502123667, -83.160706667],
+		[42.502149167, -83.160763333],
+	];
+	ployline110 = L.polyline(latLongs110, {color: 'rgb(153,102,102)'} ).addTo(mymap);
+	var latLongs111 = [
+		[42.502149167, -83.160763333],
+		[42.502175, -83.160827167],
+		[42.502197, -83.160880333],
+	];
+	ployline111 = L.polyline(latLongs111, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs112 = [
+		[42.502197, -83.160880333],
+		[42.5022125, -83.1609325],
+	];
+	ployline112 = L.polyline(latLongs112, {color: 'rgb(102,153,153)'} ).addTo(mymap);
+	var latLongs113 = [
+		[42.5022125, -83.1609325],
+		[42.502231333, -83.160985167],
+	];
+	ployline113 = L.polyline(latLongs113, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs114 = [
+		[42.502231333, -83.160985167],
+		[42.502251, -83.161036667],
+	];
+	ployline114 = L.polyline(latLongs114, {color: 'rgb(153,102,102)'} ).addTo(mymap);
+	var latLongs115 = [
+		[42.502251, -83.161036667],
+		[42.502272, -83.161092],
+	];
+	ployline115 = L.polyline(latLongs115, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs116 = [
+		[42.502272, -83.161092],
+		[42.502287333, -83.16114],
+	];
+	ployline116 = L.polyline(latLongs116, {color: 'rgb(102,153,153)'} ).addTo(mymap);
+	var latLongs117 = [
+		[42.502287333, -83.16114],
+		[42.5022905, -83.161180167],
+	];
+	ployline117 = L.polyline(latLongs117, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs118 = [
+		[42.5022905, -83.161180167],
+		[42.502312, -83.161237833],
+		[42.502338167, -83.161289167],
+		[42.502366167, -83.161331333],
+	];
+	ployline118 = L.polyline(latLongs118, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs119 = [
+		[42.502366167, -83.161331333],
+		[42.502411, -83.161363],
+	];
+	ployline119 = L.polyline(latLongs119, {color: 'rgb(51,204,240)'} ).addTo(mymap);
+	var latLongs120 = [
+		[42.502411, -83.161363],
+		[42.502454, -83.161371667],
+	];
+	ployline120 = L.polyline(latLongs120, {color: 'rgb(102,153,153)'} ).addTo(mymap);
+	var latLongs121 = [
+		[42.502454, -83.161371667],
+		[42.502491, -83.161354],
+	];
+	ployline121 = L.polyline(latLongs121, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs122 = [
+		[42.502491, -83.161354],
+		[42.502530333, -83.161327167],
+	];
+	ployline122 = L.polyline(latLongs122, {color: 'rgb(51,204,240)'} ).addTo(mymap);
+	var latLongs123 = [
+		[42.502530333, -83.161327167],
+		[42.502571833, -83.161300333],
+		[42.502615833, -83.161274833],
+	];
+	ployline123 = L.polyline(latLongs123, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs124 = [
+		[42.502615833, -83.161274833],
+		[42.502660667, -83.161248667],
+	];
+	ployline124 = L.polyline(latLongs124, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs125 = [
+		[42.502660667, -83.161248667],
+		[42.502708167, -83.161225167],
+	];
+	ployline125 = L.polyline(latLongs125, {color: 'rgb(102,153,153)'} ).addTo(mymap);
+	var latLongs126 = [
+		[42.502708167, -83.161225167],
+		[42.502754167, -83.161196833],
+	];
+	ployline126 = L.polyline(latLongs126, {color: 'rgb(127,127,127)'} ).addTo(mymap);
+	var latLongs127 = [
+		[42.502754167, -83.161196833],
+		[42.502798333, -83.161167667],
+		[42.502843, -83.161137333],
+	];
+	ployline127 = L.polyline(latLongs127, {color: 'rgb(76,178,178)'} ).addTo(mymap);
+	var latLongs128 = [
+		[42.502843, -83.161137333],
+		[42.502887167, -83.161105667],
+	];
+	ployline128 = L.polyline(latLongs128, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs129 = [
+		[42.502887167, -83.161105667],
+		[42.502932667, -83.161076],
+	];
+	ployline129 = L.polyline(latLongs129, {color: 'rgb(102,153,153)'} ).addTo(mymap);
+	var latLongs130 = [
+		[42.502932667, -83.161076],
+		[42.502977167, -83.161047167],
+	];
+	ployline130 = L.polyline(latLongs130, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs131 = [
+		[42.502977167, -83.161047167],
+		[42.503023667, -83.161018],
+	];
+	ployline131 = L.polyline(latLongs131, {color: 'rgb(51,204,240)'} ).addTo(mymap);
+	var latLongs132 = [
+		[42.503023667, -83.161018],
+		[42.503066, -83.1609875],
+	];
+	ployline132 = L.polyline(latLongs132, {color: 'rgb(76,178,178)'} ).addTo(mymap);
+	var latLongs133 = [
+		[42.503066, -83.1609875],
+		[42.503105333, -83.1609585],
+	];
+	ployline133 = L.polyline(latLongs133, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs134 = [
+		[42.503105333, -83.1609585],
+		[42.5031445, -83.160929333],
+	];
+	ployline134 = L.polyline(latLongs134, {color: 'rgb(178,76,76)'} ).addTo(mymap);
+	var latLongs135 = [
+		[42.5031445, -83.160929333],
+		[42.503180333, -83.160903167],
+	];
+	ployline135 = L.polyline(latLongs135, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs136 = [
+		[42.503180333, -83.160903167],
+		[42.5032115, -83.160883333],
+	];
+	ployline136 = L.polyline(latLongs136, {color: 'rgb(51,204,240)'} ).addTo(mymap);
+	var latLongs137 = [
+		[42.5032115, -83.160883333],
+		[42.503240167, -83.160866667],
+		[42.503266167, -83.160850333],
+	];
+	ployline137 = L.polyline(latLongs137, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs138 = [
+		[42.503266167, -83.160850333],
+		[42.503290833, -83.1608355],
+	];
+	ployline138 = L.polyline(latLongs138, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs139 = [
+		[42.503290833, -83.1608355],
+		[42.503316833, -83.1608225],
+	];
+	ployline139 = L.polyline(latLongs139, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs140 = [
+		[42.503316833, -83.1608225],
+		[42.503341167, -83.1608165],
+		[42.503368, -83.1608155],
+		[42.503390333, -83.1608195],
+		[42.503404167, -83.160817],
+		[42.503419, -83.160811333],
+	];
+	ployline140 = L.polyline(latLongs140, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs141 = [
+		[42.503419, -83.160811333],
+		[42.503445, -83.160808667],
+	];
+	ployline141 = L.polyline(latLongs141, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs142 = [
+		[42.503445, -83.160808667],
+		[42.503470333, -83.160813667],
+		[42.503495667, -83.160825167],
+		[42.5035205, -83.160840833],
+	];
+	ployline142 = L.polyline(latLongs142, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs143 = [
+		[42.5035205, -83.160840833],
+		[42.503544833, -83.160862333],
+	];
+	ployline143 = L.polyline(latLongs143, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs144 = [
+		[42.503544833, -83.160862333],
+		[42.503566667, -83.160889833],
+		[42.5035745, -83.160927667],
+	];
+	ployline144 = L.polyline(latLongs144, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs145 = [
+		[42.5035745, -83.160927667],
+		[42.503574333, -83.160967167],
+	];
+	ployline145 = L.polyline(latLongs145, {color: 'rgb(51,204,240)'} ).addTo(mymap);
+	var latLongs146 = [
+		[42.503574333, -83.160967167],
+		[42.50357, -83.161006833],
+		[42.503561, -83.161047],
+	];
+	ployline146 = L.polyline(latLongs146, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs147 = [
+		[42.503561, -83.161047],
+		[42.503548, -83.161080833],
+	];
+	ployline147 = L.polyline(latLongs147, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs148 = [
+		[42.503548, -83.161080833],
+		[42.503530333, -83.161115333],
+		[42.503505833, -83.161149833],
+		[42.503478167, -83.161178167],
+	];
+	ployline148 = L.polyline(latLongs148, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs149 = [
+		[42.503478167, -83.161178167],
+		[42.5034455, -83.161206833],
+		[42.503409667, -83.161237333],
+		[42.503371333, -83.16127],
+	];
+	ployline149 = L.polyline(latLongs149, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs150 = [
+		[42.503371333, -83.16127],
+		[42.503332, -83.161301833],
+	];
+	ployline150 = L.polyline(latLongs150, {color: 'rgb(76,178,178)'} ).addTo(mymap);
+	var latLongs151 = [
+		[42.503332, -83.161301833],
+		[42.503290333, -83.1613315],
+	];
+	ployline151 = L.polyline(latLongs151, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs152 = [
+		[42.503290333, -83.1613315],
+		[42.5032465, -83.161364167],
+	];
+	ployline152 = L.polyline(latLongs152, {color: 'rgb(51,204,240)'} ).addTo(mymap);
+	var latLongs153 = [
+		[42.5032465, -83.161364167],
+		[42.503203, -83.161397833],
+		[42.503159833, -83.161429667],
+		[42.5031165, -83.161456167],
+		[42.503071833, -83.161491833],
+	];
+	ployline153 = L.polyline(latLongs153, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs154 = [
+		[42.503071833, -83.161491833],
+		[42.5030275, -83.161527],
+	];
+	ployline154 = L.polyline(latLongs154, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs155 = [
+		[42.5030275, -83.161527],
+		[42.502984333, -83.1615645],
+	];
+	ployline155 = L.polyline(latLongs155, {color: 'rgb(127,127,127)'} ).addTo(mymap);
+	var latLongs156 = [
+		[42.502984333, -83.1615645],
+		[42.502940667, -83.161599333],
+	];
+	ployline156 = L.polyline(latLongs156, {color: 'rgb(51,204,240)'} ).addTo(mymap);
+	var latLongs157 = [
+		[42.502940667, -83.161599333],
+		[42.502898, -83.161635333],
+		[42.502855333, -83.161671],
+	];
+	ployline157 = L.polyline(latLongs157, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs158 = [
+		[42.502855333, -83.161671],
+		[42.502813167, -83.1617055],
+	];
+	ployline158 = L.polyline(latLongs158, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs159 = [
+		[42.502813167, -83.1617055],
+		[42.5027745, -83.1617425],
+	];
+	ployline159 = L.polyline(latLongs159, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs160 = [
+		[42.5027745, -83.1617425],
+		[42.502733833, -83.161779667],
+	];
+	ployline160 = L.polyline(latLongs160, {color: 'rgb(229,25,25)'} ).addTo(mymap);
+	var latLongs161 = [
+		[42.502733833, -83.161779667],
+		[42.502691833, -83.1618155],
+	];
+	ployline161 = L.polyline(latLongs161, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs162 = [
+		[42.502691833, -83.1618155],
+		[42.5026495, -83.161848167],
+	];
+	ployline162 = L.polyline(latLongs162, {color: 'rgb(127,127,127)'} ).addTo(mymap);
+	var latLongs163 = [
+		[42.5026495, -83.161848167],
+		[42.502608333, -83.161882667],
+	];
+	ployline163 = L.polyline(latLongs163, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs164 = [
+		[42.502608333, -83.161882667],
+		[42.502565833, -83.161914833],
+	];
+	ployline164 = L.polyline(latLongs164, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs165 = [
+		[42.502565833, -83.161914833],
+		[42.502520333, -83.1619415],
+	];
+	ployline165 = L.polyline(latLongs165, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs166 = [
+		[42.502520333, -83.1619415],
+		[42.5024745, -83.161974167],
+		[42.502429167, -83.1620085],
+	];
+	ployline166 = L.polyline(latLongs166, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs167 = [
+		[42.502429167, -83.1620085],
+		[42.502379667, -83.162040333],
+	];
+	ployline167 = L.polyline(latLongs167, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs168 = [
+		[42.502379667, -83.162040333],
+		[42.502337667, -83.162075667],
+	];
+	ployline168 = L.polyline(latLongs168, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs169 = [
+		[42.502337667, -83.162075667],
+		[42.502292167, -83.162101],
+		[42.502246167, -83.162125833],
+	];
+	ployline169 = L.polyline(latLongs169, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs170 = [
+		[42.502246167, -83.162125833],
+		[42.502199833, -83.162153333],
+	];
+	ployline170 = L.polyline(latLongs170, {color: 'rgb(178,76,76)'} ).addTo(mymap);
+	var latLongs171 = [
+		[42.502199833, -83.162153333],
+		[42.502152333, -83.162179],
+	];
+	ployline171 = L.polyline(latLongs171, {color: 'rgb(127,127,127)'} ).addTo(mymap);
+	var latLongs172 = [
+		[42.502152333, -83.162179],
+		[42.502105333, -83.162199833],
+	];
+	ployline172 = L.polyline(latLongs172, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs173 = [
+		[42.502105333, -83.162199833],
+		[42.502057667, -83.162219833],
+	];
+	ployline173 = L.polyline(latLongs173, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs174 = [
+		[42.502057667, -83.162219833],
+		[42.502009833, -83.162236333],
+	];
+	ployline174 = L.polyline(latLongs174, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs175 = [
+		[42.502009833, -83.162236333],
+		[42.501964, -83.162253167],
+	];
+	ployline175 = L.polyline(latLongs175, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs176 = [
+		[42.501964, -83.162253167],
+		[42.501915333, -83.162264833],
+		[42.501867167, -83.162275167],
+	];
+	ployline176 = L.polyline(latLongs176, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs177 = [
+		[42.501867167, -83.162275167],
+		[42.501820333, -83.162280167],
+		[42.501772167, -83.1622805],
+	];
+	ployline177 = L.polyline(latLongs177, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs178 = [
+		[42.501772167, -83.1622805],
+		[42.501725333, -83.162279167],
+	];
+	ployline178 = L.polyline(latLongs178, {color: 'rgb(51,204,240)'} ).addTo(mymap);
+	var latLongs179 = [
+		[42.501725333, -83.162279167],
+		[42.5016775, -83.162275],
+	];
+	ployline179 = L.polyline(latLongs179, {color: 'rgb(153,102,102)'} ).addTo(mymap);
+	var latLongs180 = [
+		[42.5016775, -83.162275],
+		[42.501629, -83.162268],
+		[42.5015815, -83.162257333],
+	];
+	ployline180 = L.polyline(latLongs180, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs181 = [
+		[42.5015815, -83.162257333],
+		[42.501533167, -83.162248],
+		[42.5014845, -83.1622385],
+	];
+	ployline181 = L.polyline(latLongs181, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs182 = [
+		[42.5014845, -83.1622385],
+		[42.501441333, -83.162242],
+	];
+	ployline182 = L.polyline(latLongs182, {color: 'rgb(127,127,127)'} ).addTo(mymap);
+	var latLongs183 = [
+		[42.501441333, -83.162242],
+		[42.501397833, -83.162245],
+	];
+	ployline183 = L.polyline(latLongs183, {color: 'rgb(102,153,153)'} ).addTo(mymap);
+	var latLongs184 = [
+		[42.501397833, -83.162245],
+		[42.501352, -83.162252333],
+	];
+	ployline184 = L.polyline(latLongs184, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs185 = [
+		[42.501352, -83.162252333],
+		[42.501306, -83.16225],
+	];
+	ployline185 = L.polyline(latLongs185, {color: 'rgb(51,204,240)'} ).addTo(mymap);
+	var latLongs186 = [
+		[42.501306, -83.16225],
+		[42.501258833, -83.1622525],
+	];
+	ployline186 = L.polyline(latLongs186, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs187 = [
+		[42.501258833, -83.1622525],
+		[42.501214667, -83.162257167],
+	];
+	ployline187 = L.polyline(latLongs187, {color: 'rgb(102,153,153)'} ).addTo(mymap);
+	var latLongs188 = [
+		[42.501214667, -83.162257167],
+		[42.501178167, -83.162260167],
+	];
+	ployline188 = L.polyline(latLongs188, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs189 = [
+		[42.501178167, -83.162260167],
+		[42.501133833, -83.162273333],
+		[42.501090833, -83.162291833],
+	];
+	ployline189 = L.polyline(latLongs189, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs190 = [
+		[42.501090833, -83.162291833],
+		[42.501049667, -83.162305],
+	];
+	ployline190 = L.polyline(latLongs190, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs191 = [
+		[42.501049667, -83.162305],
+		[42.501005, -83.162318],
+		[42.500961667, -83.162333833],
+		[42.500919, -83.162347333],
+	];
+	ployline191 = L.polyline(latLongs191, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs192 = [
+		[42.500919, -83.162347333],
+		[42.5008795, -83.162361],
+	];
+	ployline192 = L.polyline(latLongs192, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs193 = [
+		[42.5008795, -83.162361],
+		[42.5008415, -83.162374833],
+	];
+	ployline193 = L.polyline(latLongs193, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs194 = [
+		[42.5008415, -83.162374833],
+		[42.5008065, -83.16239],
+	];
+	ployline194 = L.polyline(latLongs194, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs195 = [
+		[42.5008065, -83.16239],
+		[42.500781167, -83.162417833],
+	];
+	ployline195 = L.polyline(latLongs195, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs196 = [
+		[42.500781167, -83.162417833],
+		[42.500767833, -83.162453],
+	];
+	ployline196 = L.polyline(latLongs196, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs197 = [
+		[42.500767833, -83.162453],
+		[42.500738167, -83.162479],
+		[42.5007115, -83.162498833],
+		[42.500688, -83.1624925],
+		[42.5006705, -83.162482],
+		[42.500663, -83.162453167],
+		[42.500658167, -83.162417333],
+	];
+	ployline197 = L.polyline(latLongs197, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs198 = [
+		[42.500658167, -83.162417333],
+		[42.5006555, -83.1623785],
+	];
+	ployline198 = L.polyline(latLongs198, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs199 = [
+		[42.5006555, -83.1623785],
+		[42.500648667, -83.162341],
+		[42.500637833, -83.162303],
+		[42.500628, -83.162264167],
+		[42.500617167, -83.162220333],
+	];
+	ployline199 = L.polyline(latLongs199, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs200 = [
+		[42.500617167, -83.162220333],
+		[42.5006005, -83.162178167],
+		[42.500579667, -83.162136667],
+	];
+	ployline200 = L.polyline(latLongs200, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs201 = [
+		[42.500579667, -83.162136667],
+		[42.500555833, -83.162091667],
+	];
+	ployline201 = L.polyline(latLongs201, {color: 'rgb(178,76,76)'} ).addTo(mymap);
+	var latLongs202 = [
+		[42.500555833, -83.162091667],
+		[42.5005285, -83.162042167],
+		[42.5005035, -83.16199],
+		[42.500482167, -83.1619355],
+	];
+	ployline202 = L.polyline(latLongs202, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs203 = [
+		[42.500482167, -83.1619355],
+		[42.5004635, -83.161878333],
+		[42.500445333, -83.161820333],
+		[42.500423667, -83.161765667],
+	];
+	ployline203 = L.polyline(latLongs203, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs204 = [
+		[42.500423667, -83.161765667],
+		[42.500404, -83.16171],
+	];
+	ployline204 = L.polyline(latLongs204, {color: 'rgb(76,178,178)'} ).addTo(mymap);
+	var latLongs205 = [
+		[42.500404, -83.16171],
+		[42.500386333, -83.161654333],
+	];
+	ployline205 = L.polyline(latLongs205, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs206 = [
+		[42.500386333, -83.161654333],
+		[42.500371667, -83.161596],
+		[42.500357667, -83.161534],
+	];
+	ployline206 = L.polyline(latLongs206, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs207 = [
+		[42.500357667, -83.161534],
+		[42.500347, -83.161470833],
+	];
+	ployline207 = L.polyline(latLongs207, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs208 = [
+		[42.500347, -83.161470833],
+		[42.500333333, -83.16141],
+	];
+	ployline208 = L.polyline(latLongs208, {color: 'rgb(153,102,102)'} ).addTo(mymap);
+	var latLongs209 = [
+		[42.500333333, -83.16141],
+		[42.500314333, -83.1613465],
+	];
+	ployline209 = L.polyline(latLongs209, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs210 = [
+		[42.500314333, -83.1613465],
+		[42.500302667, -83.161291],
+	];
+	ployline210 = L.polyline(latLongs210, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs211 = [
+		[42.500302667, -83.161291],
+		[42.500292833, -83.1612335],
+	];
+	ployline211 = L.polyline(latLongs211, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs212 = [
+		[42.500292833, -83.1612335],
+		[42.500283833, -83.1611775],
+	];
+	ployline212 = L.polyline(latLongs212, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs213 = [
+		[42.500283833, -83.1611775],
+		[42.500276, -83.161117],
+		[42.500267667, -83.161053],
+		[42.500256833, -83.160985167],
+		[42.500246167, -83.160922333],
+		[42.500233167, -83.160855667],
+		[42.500218, -83.160795333],
+		[42.500205333, -83.160726167],
+	];
+	ployline213 = L.polyline(latLongs213, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs214 = [
+		[42.500205333, -83.160726167],
+		[42.5001945, -83.160656667],
+	];
+	ployline214 = L.polyline(latLongs214, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs215 = [
+		[42.5001945, -83.160656667],
+		[42.500185833, -83.160589667],
+	];
+	ployline215 = L.polyline(latLongs215, {color: 'rgb(178,76,76)'} ).addTo(mymap);
+	var latLongs216 = [
+		[42.500185833, -83.160589667],
+		[42.500179167, -83.160522167],
+	];
+	ployline216 = L.polyline(latLongs216, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs217 = [
+		[42.500179167, -83.160522167],
+		[42.5001755, -83.160455167],
+		[42.500170833, -83.160384667],
+		[42.5001675, -83.160313],
+		[42.500168167, -83.160239667],
+		[42.500174333, -83.160164],
+		[42.500175667, -83.16008],
+	];
+	ployline217 = L.polyline(latLongs217, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs218 = [
+		[42.500175667, -83.16008],
+		[42.500175167, -83.160004667],
+	];
+	ployline218 = L.polyline(latLongs218, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs219 = [
+		[42.500175167, -83.160004667],
+		[42.500169333, -83.159925333],
+	];
+	ployline219 = L.polyline(latLongs219, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs220 = [
+		[42.500169333, -83.159925333],
+		[42.500166833, -83.159841667],
+	];
+	ployline220 = L.polyline(latLongs220, {color: 'rgb(102,153,153)'} ).addTo(mymap);
+	var latLongs221 = [
+		[42.500166833, -83.159841667],
+		[42.500168333, -83.1597635],
+	];
+	ployline221 = L.polyline(latLongs221, {color: 'rgb(76,178,178)'} ).addTo(mymap);
+	var latLongs222 = [
+		[42.500168333, -83.1597635],
+		[42.5001745, -83.159687833],
+		[42.500181333, -83.1596115],
+	];
+	ployline222 = L.polyline(latLongs222, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs223 = [
+		[42.500181333, -83.1596115],
+		[42.500187667, -83.1595385],
+	];
+	ployline223 = L.polyline(latLongs223, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs224 = [
+		[42.500187667, -83.1595385],
+		[42.500195167, -83.1594575],
+	];
+	ployline224 = L.polyline(latLongs224, {color: 'rgb(153,102,102)'} ).addTo(mymap);
+	var latLongs225 = [
+		[42.500195167, -83.1594575],
+		[42.500203, -83.159382],
+	];
+	ployline225 = L.polyline(latLongs225, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs226 = [
+		[42.500203, -83.159382],
+		[42.500211333, -83.159307667],
+		[42.500220667, -83.159236],
+		[42.500231, -83.159169667],
+	];
+	ployline226 = L.polyline(latLongs226, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs227 = [
+		[42.500231, -83.159169667],
+		[42.5002375, -83.159107833],
+	];
+	ployline227 = L.polyline(latLongs227, {color: 'rgb(51,204,240)'} ).addTo(mymap);
+	var latLongs228 = [
+		[42.5002375, -83.159107833],
+		[42.5002435, -83.159046167],
+	];
+	ployline228 = L.polyline(latLongs228, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs229 = [
+		[42.5002435, -83.159046167],
+		[42.500255667, -83.158985833],
+	];
+	ployline229 = L.polyline(latLongs229, {color: 'rgb(204,51,51)'} ).addTo(mymap);
+	var latLongs230 = [
+		[42.500255667, -83.158985833],
+		[42.500274, -83.158930167],
+		[42.5002955, -83.158878167],
+		[42.500319, -83.158837],
+		[42.500342333, -83.1587975],
+	];
+	ployline230 = L.polyline(latLongs230, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs231 = [
+		[42.500342333, -83.1587975],
+		[42.500365833, -83.158760167],
+	];
+	ployline231 = L.polyline(latLongs231, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs232 = [
+		[42.500365833, -83.158760167],
+		[42.500390167, -83.158724167],
+	];
+	ployline232 = L.polyline(latLongs232, {color: 'rgb(76,178,178)'} ).addTo(mymap);
+	var latLongs233 = [
+		[42.500390167, -83.158724167],
+		[42.5004205, -83.158672833],
+	];
+	ployline233 = L.polyline(latLongs233, {color: 'rgb(153,102,102)'} ).addTo(mymap);
+	var latLongs234 = [
+		[42.5004205, -83.158672833],
+		[42.500452, -83.158627667],
+	];
+	ployline234 = L.polyline(latLongs234, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs235 = [
+		[42.500452, -83.158627667],
+		[42.500482333, -83.158573833],
+		[42.500505833, -83.158512667],
+	];
+	ployline235 = L.polyline(latLongs235, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs236 = [
+		[42.500505833, -83.158512667],
+		[42.500528167, -83.158445833],
+	];
+	ployline236 = L.polyline(latLongs236, {color: 'rgb(51,204,240)'} ).addTo(mymap);
+	var latLongs237 = [
+		[42.500528167, -83.158445833],
+		[42.500548667, -83.158377667],
+	];
+	ployline237 = L.polyline(latLongs237, {color: 'rgb(127,127,127)'} ).addTo(mymap);
+	var latLongs238 = [
+		[42.500548667, -83.158377667],
+		[42.500567167, -83.158306],
+	];
+	ployline238 = L.polyline(latLongs238, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs239 = [
+		[42.500567167, -83.158306],
+		[42.500583667, -83.158236833],
+	];
+	ployline239 = L.polyline(latLongs239, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs240 = [
+		[42.500583667, -83.158236833],
+		[42.500593667, -83.1581615],
+	];
+	ployline240 = L.polyline(latLongs240, {color: 'rgb(76,178,178)'} ).addTo(mymap);
+	var latLongs241 = [
+		[42.500593667, -83.1581615],
+		[42.500599833, -83.158085],
+	];
+	ployline241 = L.polyline(latLongs241, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs242 = [
+		[42.500599833, -83.158085],
+		[42.500604167, -83.158008],
+	];
+	ployline242 = L.polyline(latLongs242, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs243 = [
+		[42.500604167, -83.158008],
+		[42.500609167, -83.1579315],
+	];
+	ployline243 = L.polyline(latLongs243, {color: 'rgb(178,76,76)'} ).addTo(mymap);
+	var latLongs244 = [
+		[42.500609167, -83.1579315],
+		[42.5006155, -83.157857167],
+	];
+	ployline244 = L.polyline(latLongs244, {color: 'rgb(76,178,178)'} ).addTo(mymap);
+	var latLongs245 = [
+		[42.5006155, -83.157857167],
+		[42.500622667, -83.1577835],
+	];
+	ployline245 = L.polyline(latLongs245, {color: 'rgb(178,76,76)'} ).addTo(mymap);
+	var latLongs246 = [
+		[42.500622667, -83.1577835],
+		[42.500626333, -83.157709667],
+	];
+	ployline246 = L.polyline(latLongs246, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs247 = [
+		[42.500626333, -83.157709667],
+		[42.500628167, -83.157633833],
+		[42.500630167, -83.157555333],
+		[42.5006305, -83.1574755],
+	];
+	ployline247 = L.polyline(latLongs247, {color: 'rgb(51,204,240)'} ).addTo(mymap);
+	var latLongs248 = [
+		[42.5006305, -83.1574755],
+		[42.500628167, -83.1573965],
+		[42.500615833, -83.157316667],
+		[42.500584333, -83.157251667],
+		[42.500538833, -83.157206833],
+		[42.500490667, -83.157171333],
+	];
+	ployline248 = L.polyline(latLongs248, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs249 = [
+		[42.500490667, -83.157171333],
+		[42.500443167, -83.157133667],
+		[42.500396667, -83.157096833],
+	];
+	ployline249 = L.polyline(latLongs249, {color: 'rgb(51,204,240)'} ).addTo(mymap);
+	var latLongs250 = [
+		[42.500396667, -83.157096833],
+		[42.500351, -83.157058667],
+	];
+	ployline250 = L.polyline(latLongs250, {color: 'rgb(102,153,153)'} ).addTo(mymap);
+	var latLongs251 = [
+		[42.500351, -83.157058667],
+		[42.5003075, -83.157019167],
+	];
+	ployline251 = L.polyline(latLongs251, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs252 = [
+		[42.5003075, -83.157019167],
+		[42.500263333, -83.156979333],
+	];
+	ployline252 = L.polyline(latLongs252, {color: 'rgb(51,204,240)'} ).addTo(mymap);
+	var latLongs253 = [
+		[42.500263333, -83.156979333],
+		[42.500220167, -83.156938833],
+	];
+	ployline253 = L.polyline(latLongs253, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs254 = [
+		[42.500220167, -83.156938833],
+		[42.500174, -83.156901667],
+	];
+	ployline254 = L.polyline(latLongs254, {color: 'rgb(229,25,25)'} ).addTo(mymap);
+	var latLongs255 = [
+		[42.500174, -83.156901667],
+		[42.500128167, -83.156870167],
+		[42.500083833, -83.1568355],
+	];
+	ployline255 = L.polyline(latLongs255, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs256 = [
+		[42.500083833, -83.1568355],
+		[42.500036833, -83.156800667],
+	];
+	ployline256 = L.polyline(latLongs256, {color: 'rgb(51,204,240)'} ).addTo(mymap);
+	var latLongs257 = [
+		[42.500036833, -83.156800667],
+		[42.499989833, -83.156760833],
+	];
+	ployline257 = L.polyline(latLongs257, {color: 'rgb(127,127,127)'} ).addTo(mymap);
+	var latLongs258 = [
+		[42.499989833, -83.156760833],
+		[42.499942167, -83.156723333],
+	];
+	ployline258 = L.polyline(latLongs258, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs259 = [
+		[42.499942167, -83.156723333],
+		[42.499893667, -83.156688],
+	];
+	ployline259 = L.polyline(latLongs259, {color: 'rgb(153,102,102)'} ).addTo(mymap);
+	var latLongs260 = [
+		[42.499893667, -83.156688],
+		[42.499848167, -83.156654333],
+		[42.4998005, -83.156617667],
+	];
+	ployline260 = L.polyline(latLongs260, {color: 'rgb(102,153,153)'} ).addTo(mymap);
+	var latLongs261 = [
+		[42.4998005, -83.156617667],
+		[42.499752, -83.156585333],
+	];
+	ployline261 = L.polyline(latLongs261, {color: 'rgb(127,127,127)'} ).addTo(mymap);
+	var latLongs262 = [
+		[42.499752, -83.156585333],
+		[42.499700333, -83.156566167],
+	];
+	ployline262 = L.polyline(latLongs262, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs263 = [
+		[42.499700333, -83.156566167],
+		[42.499645167, -83.156561167],
+	];
+	ployline263 = L.polyline(latLongs263, {color: 'rgb(51,204,240)'} ).addTo(mymap);
+	var latLongs264 = [
+		[42.499645167, -83.156561167],
+		[42.499587, -83.156561167],
+		[42.499532, -83.156556],
+	];
+	ployline264 = L.polyline(latLongs264, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs265 = [
+		[42.499532, -83.156556],
+		[42.499476667, -83.156551167],
+		[42.499420833, -83.156548333],
+		[42.499364, -83.156546],
+		[42.499307833, -83.156543],
+	];
+	ployline265 = L.polyline(latLongs265, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs266 = [
+		[42.499307833, -83.156543],
+		[42.4992525, -83.156540167],
+	];
+	ployline266 = L.polyline(latLongs266, {color: 'rgb(51,204,240)'} ).addTo(mymap);
+	var latLongs267 = [
+		[42.4992525, -83.156540167],
+		[42.499196833, -83.156539],
+	];
+	ployline267 = L.polyline(latLongs267, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs268 = [
+		[42.499196833, -83.156539],
+		[42.499140333, -83.156538667],
+	];
+	ployline268 = L.polyline(latLongs268, {color: 'rgb(76,178,178)'} ).addTo(mymap);
+	var latLongs269 = [
+		[42.499140333, -83.156538667],
+		[42.499085167, -83.1565375],
+	];
+	ployline269 = L.polyline(latLongs269, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs270 = [
+		[42.499085167, -83.1565375],
+		[42.499030333, -83.156534333],
+	];
+	ployline270 = L.polyline(latLongs270, {color: 'rgb(153,102,102)'} ).addTo(mymap);
+	var latLongs271 = [
+		[42.499030333, -83.156534333],
+		[42.4989775, -83.1565305],
+		[42.498926667, -83.156521333],
+	];
+	ployline271 = L.polyline(latLongs271, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs272 = [
+		[42.498926667, -83.156521333],
+		[42.498876167, -83.156510333],
+		[42.4988255, -83.1565065],
+	];
+	ployline272 = L.polyline(latLongs272, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs273 = [
+		[42.4988255, -83.1565065],
+		[42.498775, -83.156506333],
+	];
+	ployline273 = L.polyline(latLongs273, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs274 = [
+		[42.498775, -83.156506333],
+		[42.498723333, -83.156507833],
+	];
+	ployline274 = L.polyline(latLongs274, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs275 = [
+		[42.498723333, -83.156507833],
+		[42.498671167, -83.1565075],
+	];
+	ployline275 = L.polyline(latLongs275, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs276 = [
+		[42.498671167, -83.1565075],
+		[42.498618167, -83.156504],
+	];
+	ployline276 = L.polyline(latLongs276, {color: 'rgb(51,204,240)'} ).addTo(mymap);
+	var latLongs277 = [
+		[42.498618167, -83.156504],
+		[42.498565833, -83.156498667],
+	];
+	ployline277 = L.polyline(latLongs277, {color: 'rgb(127,127,127)'} ).addTo(mymap);
+	var latLongs278 = [
+		[42.498565833, -83.156498667],
+		[42.498513667, -83.156489333],
+	];
+	ployline278 = L.polyline(latLongs278, {color: 'rgb(102,153,153)'} ).addTo(mymap);
+	var latLongs279 = [
+		[42.498513667, -83.156489333],
+		[42.4984625, -83.156483],
+		[42.498411, -83.156482],
+	];
+	ployline279 = L.polyline(latLongs279, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs280 = [
+		[42.498411, -83.156482],
+		[42.4983635, -83.156483833],
+	];
+	ployline280 = L.polyline(latLongs280, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs281 = [
+		[42.4983635, -83.156483833],
+		[42.498316333, -83.156484667],
+	];
+	ployline281 = L.polyline(latLongs281, {color: 'rgb(127,127,127)'} ).addTo(mymap);
+	var latLongs282 = [
+		[42.498316333, -83.156484667],
+		[42.4982695, -83.1564875],
+		[42.498225667, -83.156492333],
+	];
+	ployline282 = L.polyline(latLongs282, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs283 = [
+		[42.498225667, -83.156492333],
+		[42.498182667, -83.1564945],
+		[42.498141167, -83.156492333],
+	];
+	ployline283 = L.polyline(latLongs283, {color: 'rgb(51,204,240)'} ).addTo(mymap);
+	var latLongs284 = [
+		[42.498141167, -83.156492333],
+		[42.4980985, -83.156484667],
+	];
+	ployline284 = L.polyline(latLongs284, {color: 'rgb(127,127,127)'} ).addTo(mymap);
+	var latLongs285 = [
+		[42.4980985, -83.156484667],
+		[42.498055833, -83.156476333],
+	];
+	ployline285 = L.polyline(latLongs285, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs286 = [
+		[42.498055833, -83.156476333],
+		[42.498012833, -83.156469],
+	];
+	ployline286 = L.polyline(latLongs286, {color: 'rgb(153,102,102)'} ).addTo(mymap);
+	var latLongs287 = [
+		[42.498012833, -83.156469],
+		[42.497970333, -83.1564645],
+		[42.497929, -83.156464333],
+	];
+	ployline287 = L.polyline(latLongs287, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs288 = [
+		[42.497929, -83.156464333],
+		[42.497888667, -83.156466667],
+	];
+	ployline288 = L.polyline(latLongs288, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs289 = [
+		[42.497888667, -83.156466667],
+		[42.497848167, -83.156469667],
+	];
+	ployline289 = L.polyline(latLongs289, {color: 'rgb(76,178,178)'} ).addTo(mymap);
+	var latLongs290 = [
+		[42.497848167, -83.156469667],
+		[42.497808833, -83.156474],
+	];
+	ployline290 = L.polyline(latLongs290, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs291 = [
+		[42.497808833, -83.156474],
+		[42.497767167, -83.156476333],
+	];
+	ployline291 = L.polyline(latLongs291, {color: 'rgb(153,102,102)'} ).addTo(mymap);
+	var latLongs292 = [
+		[42.497767167, -83.156476333],
+		[42.497724833, -83.156477333],
+	];
+	ployline292 = L.polyline(latLongs292, {color: 'rgb(127,127,127)'} ).addTo(mymap);
+	var latLongs293 = [
+		[42.497724833, -83.156477333],
+		[42.497685667, -83.156475167],
+	];
+	ployline293 = L.polyline(latLongs293, {color: 'rgb(204,51,51)'} ).addTo(mymap);
+	var latLongs294 = [
+		[42.497685667, -83.156475167],
+		[42.497645167, -83.156473167],
+	];
+	ployline294 = L.polyline(latLongs294, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs295 = [
+		[42.497645167, -83.156473167],
+		[42.497606833, -83.156465667],
+	];
+	ployline295 = L.polyline(latLongs295, {color: 'rgb(178,76,76)'} ).addTo(mymap);
+	var latLongs296 = [
+		[42.497606833, -83.156465667],
+		[42.4975685, -83.156458167],
+		[42.497531167, -83.156453],
+	];
+	ployline296 = L.polyline(latLongs296, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs297 = [
+		[42.497531167, -83.156453],
+		[42.497495833, -83.156455833],
+	];
+	ployline297 = L.polyline(latLongs297, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs298 = [
+		[42.497495833, -83.156455833],
+		[42.497461833, -83.156461167],
+	];
+	ployline298 = L.polyline(latLongs298, {color: 'rgb(51,204,240)'} ).addTo(mymap);
+	var latLongs299 = [
+		[42.497461833, -83.156461167],
+		[42.497430667, -83.15647],
+	];
+	ployline299 = L.polyline(latLongs299, {color: 'rgb(76,178,178)'} ).addTo(mymap);
+	var latLongs300 = [
+		[42.497430667, -83.15647],
+		[42.497403, -83.156476833],
+		[42.497379667, -83.156480833],
+	];
+	ployline300 = L.polyline(latLongs300, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs301 = [
+		[42.497379667, -83.156480833],
+		[42.497362333, -83.156481833],
+	];
+	ployline301 = L.polyline(latLongs301, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs302 = [
+		[42.497362333, -83.156481833],
+		[42.497350667, -83.15648],
+		[42.497342333, -83.156482333],
+		[42.497336, -83.156485833],
+		[42.497331167, -83.15649],
+		[42.497329833, -83.156489667],
+		[42.497328333, -83.156488333],
+	];
+	ployline302 = L.polyline(latLongs302, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs303 = [
+		[42.497328333, -83.156488333],
+		[42.497320667, -83.156490167],
+	];
+	ployline303 = L.polyline(latLongs303, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs304 = [
+		[42.497320667, -83.156490167],
+		[42.497306333, -83.156492333],
+	];
+	ployline304 = L.polyline(latLongs304, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs305 = [
+		[42.497306333, -83.156492333],
+		[42.497292, -83.156496333],
+	];
+	ployline305 = L.polyline(latLongs305, {color: 'rgb(255,0,0)'} ).addTo(mymap);
+	var latLongs306 = [
+		[42.497292, -83.156496333],
+		[42.4972795, -83.156509667],
+		[42.4972735, -83.156531333],
+	];
+	ployline306 = L.polyline(latLongs306, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs307 = [
+		[42.4972735, -83.156531333],
+		[42.497266833, -83.156567833],
+		[42.497264167, -83.156597333],
+	];
+	ployline307 = L.polyline(latLongs307, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs308 = [
+		[42.497264167, -83.156597333],
+		[42.497261333, -83.156618167],
+	];
+	ployline308 = L.polyline(latLongs308, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs309 = [
+		[42.497261333, -83.156618167],
+		[42.497265667, -83.156647],
+		[42.497261333, -83.156693167],
+	];
+	ployline309 = L.polyline(latLongs309, {color: 'rgb(178,76,76)'} ).addTo(mymap);
+	var latLongs310 = [
+		[42.497261333, -83.156693167],
+		[42.497254, -83.156746167],
+		[42.497239667, -83.156795833],
+	];
+	ployline310 = L.polyline(latLongs310, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs311 = [
+		[42.497239667, -83.156795833],
+		[42.497230333, -83.156850667],
+	];
+	ployline311 = L.polyline(latLongs311, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs312 = [
+		[42.497230333, -83.156850667],
+		[42.497225333, -83.1569135],
+	];
+	ployline312 = L.polyline(latLongs312, {color: 'rgb(51,204,240)'} ).addTo(mymap);
+	var latLongs313 = [
+		[42.497225333, -83.1569135],
+		[42.4972215, -83.156980833],
+	];
+	ployline313 = L.polyline(latLongs313, {color: 'rgb(153,102,102)'} ).addTo(mymap);
+	var latLongs314 = [
+		[42.4972215, -83.156980833],
+		[42.497215333, -83.157047833],
+		[42.497208167, -83.157114333],
+		[42.497199833, -83.157182833],
+	];
+	ployline314 = L.polyline(latLongs314, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs315 = [
+		[42.497199833, -83.157182833],
+		[42.497193833, -83.157250167],
+	];
+	ployline315 = L.polyline(latLongs315, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs316 = [
+		[42.497193833, -83.157250167],
+		[42.497187333, -83.157321],
+		[42.497179167, -83.157393667],
+	];
+	ployline316 = L.polyline(latLongs316, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs317 = [
+		[42.497179167, -83.157393667],
+		[42.497170167, -83.157465],
+	];
+	ployline317 = L.polyline(latLongs317, {color: 'rgb(229,25,25)'} ).addTo(mymap);
+	var latLongs318 = [
+		[42.497170167, -83.157465],
+		[42.497161833, -83.1575335],
+	];
+	ployline318 = L.polyline(latLongs318, {color: 'rgb(51,204,240)'} ).addTo(mymap);
+	var latLongs319 = [
+		[42.497161833, -83.1575335],
+		[42.497155333, -83.1576015],
+	];
+	ployline319 = L.polyline(latLongs319, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs320 = [
+		[42.497155333, -83.1576015],
+		[42.497149667, -83.157669],
+	];
+	ployline320 = L.polyline(latLongs320, {color: 'rgb(102,153,153)'} ).addTo(mymap);
+	var latLongs321 = [
+		[42.497149667, -83.157669],
+		[42.497143167, -83.1577345],
+	];
+	ployline321 = L.polyline(latLongs321, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs322 = [
+		[42.497143167, -83.1577345],
+		[42.497136333, -83.1577995],
+	];
+	ployline322 = L.polyline(latLongs322, {color: 'rgb(51,204,240)'} ).addTo(mymap);
+	var latLongs323 = [
+		[42.497136333, -83.1577995],
+		[42.4971305, -83.157864333],
+	];
+	ployline323 = L.polyline(latLongs323, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs324 = [
+		[42.4971305, -83.157864333],
+		[42.497124333, -83.157928167],
+	];
+	ployline324 = L.polyline(latLongs324, {color: 'rgb(51,204,240)'} ).addTo(mymap);
+	var latLongs325 = [
+		[42.497124333, -83.157928167],
+		[42.497118333, -83.157996],
+	];
+	ployline325 = L.polyline(latLongs325, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs326 = [
+		[42.497118333, -83.157996],
+		[42.497111333, -83.1580625],
+	];
+	ployline326 = L.polyline(latLongs326, {color: 'rgb(51,204,240)'} ).addTo(mymap);
+	var latLongs327 = [
+		[42.497111333, -83.1580625],
+		[42.4971055, -83.158128167],
+		[42.497098, -83.158192333],
+		[42.497090667, -83.158254],
+		[42.497091667, -83.158316167],
+	];
+	ployline327 = L.polyline(latLongs327, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs328 = [
+		[42.497091667, -83.158316167],
+		[42.4971125, -83.158378],
+	];
+	ployline328 = L.polyline(latLongs328, {color: 'rgb(51,204,240)'} ).addTo(mymap);
+	var latLongs329 = [
+		[42.4971125, -83.158378],
+		[42.497152667, -83.158413167],
+	];
+	ployline329 = L.polyline(latLongs329, {color: 'rgb(76,178,178)'} ).addTo(mymap);
+	var latLongs330 = [
+		[42.497152667, -83.158413167],
+		[42.497200667, -83.158424667],
+		[42.497249167, -83.158433],
+	];
+	ployline330 = L.polyline(latLongs330, {color: 'rgb(51,204,240)'} ).addTo(mymap);
+	var latLongs331 = [
+		[42.497249167, -83.158433],
+		[42.497295667, -83.158440667],
+	];
+	ployline331 = L.polyline(latLongs331, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs332 = [
+		[42.497295667, -83.158440667],
+		[42.497341167, -83.158452667],
+	];
+	ployline332 = L.polyline(latLongs332, {color: 'rgb(51,204,240)'} ).addTo(mymap);
+	var latLongs333 = [
+		[42.497341167, -83.158452667],
+		[42.497389, -83.158461],
+		[42.49744, -83.158464833],
+	];
+	ployline333 = L.polyline(latLongs333, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs334 = [
+		[42.49744, -83.158464833],
+		[42.497492833, -83.158466],
+	];
+	ployline334 = L.polyline(latLongs334, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs335 = [
+		[42.497492833, -83.158466],
+		[42.497545667, -83.158469833],
+	];
+	ployline335 = L.polyline(latLongs335, {color: 'rgb(51,204,240)'} ).addTo(mymap);
+	var latLongs336 = [
+		[42.497545667, -83.158469833],
+		[42.497598333, -83.158475],
+		[42.497649, -83.158482333],
+	];
+	ployline336 = L.polyline(latLongs336, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs337 = [
+		[42.497649, -83.158482333],
+		[42.497700333, -83.158486667],
+		[42.497750167, -83.158490667],
+	];
+	ployline337 = L.polyline(latLongs337, {color: 'rgb(127,127,127)'} ).addTo(mymap);
+	var latLongs338 = [
+		[42.497750167, -83.158490667],
+		[42.497802, -83.158498667],
+	];
+	ployline338 = L.polyline(latLongs338, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs339 = [
+		[42.497802, -83.158498667],
+		[42.497855, -83.158508167],
+		[42.497907167, -83.158520333],
+	];
+	ployline339 = L.polyline(latLongs339, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs340 = [
+		[42.497907167, -83.158520333],
+		[42.497956333, -83.158524],
+		[42.498007667, -83.158518167],
+	];
+	ployline340 = L.polyline(latLongs340, {color: 'rgb(76,178,178)'} ).addTo(mymap);
+	var latLongs341 = [
+		[42.498007667, -83.158518167],
+		[42.498055333, -83.158517167],
+	];
+	ployline341 = L.polyline(latLongs341, {color: 'rgb(178,76,76)'} ).addTo(mymap);
+	var latLongs342 = [
+		[42.498055333, -83.158517167],
+		[42.498108667, -83.1585185],
+	];
+	ployline342 = L.polyline(latLongs342, {color: 'rgb(51,204,240)'} ).addTo(mymap);
+	var latLongs343 = [
+		[42.498108667, -83.1585185],
+		[42.498162667, -83.158530167],
+	];
+	ployline343 = L.polyline(latLongs343, {color: 'rgb(102,153,153)'} ).addTo(mymap);
+	var latLongs344 = [
+		[42.498162667, -83.158530167],
+		[42.498215167, -83.158539],
+	];
+	ployline344 = L.polyline(latLongs344, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs345 = [
+		[42.498215167, -83.158539],
+		[42.498267, -83.1585435],
+	];
+	ployline345 = L.polyline(latLongs345, {color: 'rgb(76,178,178)'} ).addTo(mymap);
+	var latLongs346 = [
+		[42.498267, -83.1585435],
+		[42.4983175, -83.158546333],
+		[42.498368, -83.158548167],
+	];
+	ployline346 = L.polyline(latLongs346, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs347 = [
+		[42.498368, -83.158548167],
+		[42.498418, -83.1585515],
+	];
+	ployline347 = L.polyline(latLongs347, {color: 'rgb(51,204,240)'} ).addTo(mymap);
+	var latLongs348 = [
+		[42.498418, -83.1585515],
+		[42.498468, -83.158549333],
+	];
+	ployline348 = L.polyline(latLongs348, {color: 'rgb(76,178,178)'} ).addTo(mymap);
+	var latLongs349 = [
+		[42.498468, -83.158549333],
+		[42.4985185, -83.158547833],
+	];
+	ployline349 = L.polyline(latLongs349, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs350 = [
+		[42.4985185, -83.158547833],
+		[42.498568167, -83.1585485],
+		[42.498618167, -83.1585535],
+		[42.498658333, -83.158555833],
+		[42.4987015, -83.158562333],
+	];
+	ployline350 = L.polyline(latLongs350, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs351 = [
+		[42.4987015, -83.158562333],
+		[42.498748833, -83.158565667],
+	];
+	ployline351 = L.polyline(latLongs351, {color: 'rgb(127,127,127)'} ).addTo(mymap);
+	var latLongs352 = [
+		[42.498748833, -83.158565667],
+		[42.498790833, -83.1585645],
+	];
+	ployline352 = L.polyline(latLongs352, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs353 = [
+		[42.498790833, -83.1585645],
+		[42.498839, -83.1585665],
+	];
+	ployline353 = L.polyline(latLongs353, {color: 'rgb(51,204,240)'} ).addTo(mymap);
+	var latLongs354 = [
+		[42.498839, -83.1585665],
+		[42.4988895, -83.158564167],
+	];
+	ployline354 = L.polyline(latLongs354, {color: 'rgb(178,76,76)'} ).addTo(mymap);
+	var latLongs355 = [
+		[42.4988895, -83.158564167],
+		[42.498938167, -83.1585575],
+	];
+	ployline355 = L.polyline(latLongs355, {color: 'rgb(127,127,127)'} ).addTo(mymap);
+	var latLongs356 = [
+		[42.498938167, -83.1585575],
+		[42.498985333, -83.158562167],
+	];
+	ployline356 = L.polyline(latLongs356, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs357 = [
+		[42.498985333, -83.158562167],
+		[42.499025167, -83.158588167],
+	];
+	ployline357 = L.polyline(latLongs357, {color: 'rgb(76,178,178)'} ).addTo(mymap);
+	var latLongs358 = [
+		[42.499025167, -83.158588167],
+		[42.4990505, -83.158635333],
+	];
+	ployline358 = L.polyline(latLongs358, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs359 = [
+		[42.4990505, -83.158635333],
+		[42.499061667, -83.1586855],
+	];
+	ployline359 = L.polyline(latLongs359, {color: 'rgb(51,204,240)'} ).addTo(mymap);
+	var latLongs360 = [
+		[42.499061667, -83.1586855],
+		[42.499068167, -83.158741833],
+	];
+	ployline360 = L.polyline(latLongs360, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs361 = [
+		[42.499068167, -83.158741833],
+		[42.499072667, -83.1588055],
+	];
+	ployline361 = L.polyline(latLongs361, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs362 = [
+		[42.499072667, -83.1588055],
+		[42.499072833, -83.158865833],
+	];
+	ployline362 = L.polyline(latLongs362, {color: 'rgb(229,25,25)'} ).addTo(mymap);
+	var latLongs363 = [
+		[42.499072833, -83.158865833],
+		[42.499070667, -83.158919833],
+	];
+	ployline363 = L.polyline(latLongs363, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs364 = [
+		[42.499070667, -83.158919833],
+		[42.4990705, -83.158976833],
+	];
+	ployline364 = L.polyline(latLongs364, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs365 = [
+		[42.4990705, -83.158976833],
+		[42.499068667, -83.159034667],
+	];
+	ployline365 = L.polyline(latLongs365, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs366 = [
+		[42.499068667, -83.159034667],
+		[42.499059333, -83.159103667],
+	];
+	ployline366 = L.polyline(latLongs366, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs367 = [
+		[42.499059333, -83.159103667],
+		[42.499051, -83.159164833],
+	];
+	ployline367 = L.polyline(latLongs367, {color: 'rgb(204,51,51)'} ).addTo(mymap);
+	var latLongs368 = [
+		[42.499051, -83.159164833],
+		[42.499042, -83.159213667],
+	];
+	ployline368 = L.polyline(latLongs368, {color: 'rgb(102,153,153)'} ).addTo(mymap);
+	var latLongs369 = [
+		[42.499042, -83.159213667],
+		[42.499034333, -83.159269333],
+	];
+	ployline369 = L.polyline(latLongs369, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs370 = [
+		[42.499034333, -83.159269333],
+		[42.499029167, -83.159325167],
+	];
+	ployline370 = L.polyline(latLongs370, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs371 = [
+		[42.499029167, -83.159325167],
+		[42.499031833, -83.1593795],
+	];
+	ployline371 = L.polyline(latLongs371, {color: 'rgb(102,153,153)'} ).addTo(mymap);
+	var latLongs372 = [
+		[42.499031833, -83.1593795],
+		[42.49903, -83.159438667],
+	];
+	ployline372 = L.polyline(latLongs372, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs373 = [
+		[42.49903, -83.159438667],
+		[42.499022, -83.1594925],
+	];
+	ployline373 = L.polyline(latLongs373, {color: 'rgb(178,76,76)'} ).addTo(mymap);
+	var latLongs374 = [
+		[42.499022, -83.1594925],
+		[42.499004833, -83.1595355],
+		[42.498977333, -83.159564667],
+	];
+	ployline374 = L.polyline(latLongs374, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs375 = [
+		[42.498977333, -83.159564667],
+		[42.498943833, -83.159584833],
+	];
+	ployline375 = L.polyline(latLongs375, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs376 = [
+		[42.498943833, -83.159584833],
+		[42.498909333, -83.159594],
+		[42.498877, -83.159601833],
+		[42.498839667, -83.159601333],
+		[42.498800167, -83.159599833],
+		[42.498758667, -83.159608833],
+		[42.498711167, -83.1596135],
+	];
+	ployline376 = L.polyline(latLongs376, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs377 = [
+		[42.498711167, -83.1596135],
+		[42.498665333, -83.159606333],
+	];
+	ployline377 = L.polyline(latLongs377, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs378 = [
+		[42.498665333, -83.159606333],
+		[42.498619, -83.1596085],
+		[42.498573, -83.159615667],
+	];
+	ployline378 = L.polyline(latLongs378, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs379 = [
+		[42.498573, -83.159615667],
+		[42.498530333, -83.159614],
+	];
+	ployline379 = L.polyline(latLongs379, {color: 'rgb(204,51,51)'} ).addTo(mymap);
+	var latLongs380 = [
+		[42.498530333, -83.159614],
+		[42.498489333, -83.159610333],
+	];
+	ployline380 = L.polyline(latLongs380, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs381 = [
+		[42.498489333, -83.159610333],
+		[42.498441333, -83.159605],
+	];
+	ployline381 = L.polyline(latLongs381, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs382 = [
+		[42.498441333, -83.159605],
+		[42.4983965, -83.159599667],
+		[42.498347167, -83.159595],
+	];
+	ployline382 = L.polyline(latLongs382, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs383 = [
+		[42.498347167, -83.159595],
+		[42.4982985, -83.159590167],
+	];
+	ployline383 = L.polyline(latLongs383, {color: 'rgb(51,204,240)'} ).addTo(mymap);
+	var latLongs384 = [
+		[42.4982985, -83.159590167],
+		[42.498252833, -83.159591],
+	];
+	ployline384 = L.polyline(latLongs384, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs385 = [
+		[42.498252833, -83.159591],
+		[42.498209167, -83.1595965],
+		[42.498158, -83.159604333],
+	];
+	ployline385 = L.polyline(latLongs385, {color: 'rgb(51,204,240)'} ).addTo(mymap);
+	var latLongs386 = [
+		[42.498158, -83.159604333],
+		[42.498108, -83.159605667],
+	];
+	ployline386 = L.polyline(latLongs386, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs387 = [
+		[42.498108, -83.159605667],
+		[42.498055333, -83.159604167],
+	];
+	ployline387 = L.polyline(latLongs387, {color: 'rgb(153,102,102)'} ).addTo(mymap);
+	var latLongs388 = [
+		[42.498055333, -83.159604167],
+		[42.498004, -83.159604667],
+	];
+	ployline388 = L.polyline(latLongs388, {color: 'rgb(127,127,127)'} ).addTo(mymap);
+	var latLongs389 = [
+		[42.498004, -83.159604667],
+		[42.497959, -83.159609333],
+		[42.497919667, -83.159615333],
+	];
+	ployline389 = L.polyline(latLongs389, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs390 = [
+		[42.497919667, -83.159615333],
+		[42.4978745, -83.159617167],
+	];
+	ployline390 = L.polyline(latLongs390, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs391 = [
+		[42.4978745, -83.159617167],
+		[42.497828667, -83.159613167],
+		[42.497786167, -83.1596085],
+	];
+	ployline391 = L.polyline(latLongs391, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs392 = [
+		[42.497786167, -83.1596085],
+		[42.497743333, -83.159604333],
+		[42.497696833, -83.159603333],
+	];
+	ployline392 = L.polyline(latLongs392, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs393 = [
+		[42.497696833, -83.159603333],
+		[42.497651833, -83.159596667],
+		[42.4976065, -83.159596333],
+		[42.497560167, -83.159597],
+	];
+	ployline393 = L.polyline(latLongs393, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs394 = [
+		[42.497560167, -83.159597],
+		[42.497512333, -83.159599],
+		[42.497467, -83.1595995],
+	];
+	ployline394 = L.polyline(latLongs394, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs395 = [
+		[42.497467, -83.1595995],
+		[42.497426167, -83.159592833],
+		[42.497386, -83.159587833],
+		[42.497345667, -83.1595875],
+		[42.497309, -83.1595875],
+		[42.497274667, -83.159591667],
+	];
+	ployline395 = L.polyline(latLongs395, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs396 = [
+		[42.497274667, -83.159591667],
+		[42.497243167, -83.159597833],
+	];
+	ployline396 = L.polyline(latLongs396, {color: 'rgb(51,204,240)'} ).addTo(mymap);
+	var latLongs397 = [
+		[42.497243167, -83.159597833],
+		[42.4972125, -83.159601167],
+		[42.497181167, -83.1596025],
+		[42.497149167, -83.159604833],
+	];
+	ployline397 = L.polyline(latLongs397, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs398 = [
+		[42.497149167, -83.159604833],
+		[42.497119, -83.159606333],
+	];
+	ployline398 = L.polyline(latLongs398, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs399 = [
+		[42.497119, -83.159606333],
+		[42.497089333, -83.1596045],
+		[42.4970615, -83.159601833],
+	];
+	ployline399 = L.polyline(latLongs399, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs400 = [
+		[42.4970615, -83.159601833],
+		[42.4970335, -83.159603333],
+	];
+	ployline400 = L.polyline(latLongs400, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs401 = [
+		[42.4970335, -83.159603333],
+		[42.497004667, -83.159600667],
+		[42.496976, -83.159591167],
+		[42.496952667, -83.159567],
+	];
+	ployline401 = L.polyline(latLongs401, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs402 = [
+		[42.496952667, -83.159567],
+		[42.496932667, -83.159535],
+	];
+	ployline402 = L.polyline(latLongs402, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs403 = [
+		[42.496932667, -83.159535],
+		[42.496911833, -83.159501833],
+	];
+	ployline403 = L.polyline(latLongs403, {color: 'rgb(178,76,76)'} ).addTo(mymap);
+	var latLongs404 = [
+		[42.496911833, -83.159501833],
+		[42.496883667, -83.159481167],
+		[42.496848667, -83.159473],
+	];
+	ployline404 = L.polyline(latLongs404, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs405 = [
+		[42.496848667, -83.159473],
+		[42.496811667, -83.159469667],
+	];
+	ployline405 = L.polyline(latLongs405, {color: 'rgb(51,204,240)'} ).addTo(mymap);
+	var latLongs406 = [
+		[42.496811667, -83.159469667],
+		[42.496773667, -83.159463167],
+	];
+	ployline406 = L.polyline(latLongs406, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs407 = [
+		[42.496773667, -83.159463167],
+		[42.4967425, -83.159451167],
+		[42.4967065, -83.159445333],
+		[42.496666333, -83.159445167],
+		[42.4966255, -83.159446333],
+	];
+	ployline407 = L.polyline(latLongs407, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs408 = [
+		[42.4966255, -83.159446333],
+		[42.4965835, -83.159443833],
+	];
+	ployline408 = L.polyline(latLongs408, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs409 = [
+		[42.4965835, -83.159443833],
+		[42.496541667, -83.1594345],
+		[42.496502667, -83.159419333],
+		[42.496463167, -83.159414],
+	];
+	ployline409 = L.polyline(latLongs409, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs410 = [
+		[42.496463167, -83.159414],
+		[42.496419667, -83.159417],
+	];
+	ployline410 = L.polyline(latLongs410, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs411 = [
+		[42.496419667, -83.159417],
+		[42.496375833, -83.159415833],
+	];
+	ployline411 = L.polyline(latLongs411, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs412 = [
+		[42.496375833, -83.159415833],
+		[42.496333833, -83.159410667],
+	];
+	ployline412 = L.polyline(latLongs412, {color: 'rgb(229,25,25)'} ).addTo(mymap);
+	var latLongs413 = [
+		[42.496333833, -83.159410667],
+		[42.496295333, -83.159402167],
+	];
+	ployline413 = L.polyline(latLongs413, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs414 = [
+		[42.496295333, -83.159402167],
+		[42.496260167, -83.159394333],
+		[42.496216833, -83.159401667],
+		[42.496175333, -83.159409333],
+		[42.496134, -83.159408333],
+		[42.496092833, -83.159409333],
+	];
+	ployline414 = L.polyline(latLongs414, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs415 = [
+		[42.496092833, -83.159409333],
+		[42.4960555, -83.159411333],
+	];
+	ployline415 = L.polyline(latLongs415, {color: 'rgb(204,51,51)'} ).addTo(mymap);
+	var latLongs416 = [
+		[42.4960555, -83.159411333],
+		[42.496018833, -83.159417833],
+		[42.495977, -83.159418],
+		[42.495931833, -83.159421],
+	];
+	ployline416 = L.polyline(latLongs416, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs417 = [
+		[42.495931833, -83.159421],
+		[42.4958875, -83.1594245],
+	];
+	ployline417 = L.polyline(latLongs417, {color: 'rgb(229,25,25)'} ).addTo(mymap);
+	var latLongs418 = [
+		[42.4958875, -83.1594245],
+		[42.495841, -83.159424],
+	];
+	ployline418 = L.polyline(latLongs418, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs419 = [
+		[42.495841, -83.159424],
+		[42.495793667, -83.159420833],
+	];
+	ployline419 = L.polyline(latLongs419, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs420 = [
+		[42.495793667, -83.159420833],
+		[42.495746, -83.159416167],
+		[42.4956975, -83.159413167],
+		[42.495651333, -83.1594085],
+	];
+	ployline420 = L.polyline(latLongs420, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs421 = [
+		[42.495651333, -83.1594085],
+		[42.495606333, -83.159402833],
+	];
+	ployline421 = L.polyline(latLongs421, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs422 = [
+		[42.495606333, -83.159402833],
+		[42.495556667, -83.159397833],
+	];
+	ployline422 = L.polyline(latLongs422, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs423 = [
+		[42.495556667, -83.159397833],
+		[42.495511167, -83.1593915],
+		[42.495478833, -83.159389333],
+		[42.495438, -83.1593865],
+	];
+	ployline423 = L.polyline(latLongs423, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs424 = [
+		[42.495438, -83.1593865],
+		[42.495389, -83.159386833],
+		[42.495342667, -83.159379167],
+	];
+	ployline424 = L.polyline(latLongs424, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs425 = [
+		[42.495342667, -83.159379167],
+		[42.495297167, -83.159374],
+	];
+	ployline425 = L.polyline(latLongs425, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs426 = [
+		[42.495297167, -83.159374],
+		[42.49525, -83.159371667],
+		[42.495202667, -83.1593665],
+		[42.495156167, -83.159359833],
+		[42.495110333, -83.159355333],
+		[42.495064, -83.159353667],
+		[42.495017, -83.159348333],
+	];
+	ployline426 = L.polyline(latLongs426, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs427 = [
+		[42.495017, -83.159348333],
+		[42.494969333, -83.159345],
+		[42.494919667, -83.1593415],
+		[42.494870667, -83.159338],
+	];
+	ployline427 = L.polyline(latLongs427, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs428 = [
+		[42.494870667, -83.159338],
+		[42.494821333, -83.159334333],
+	];
+	ployline428 = L.polyline(latLongs428, {color: 'rgb(204,51,51)'} ).addTo(mymap);
+	var latLongs429 = [
+		[42.494821333, -83.159334333],
+		[42.494772667, -83.159329667],
+		[42.494728, -83.159325833],
+		[42.494681667, -83.159326],
+		[42.494633667, -83.159326333],
+		[42.494591833, -83.1593205],
+		[42.494545667, -83.159322167],
+	];
+	ployline429 = L.polyline(latLongs429, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs430 = [
+		[42.494545667, -83.159322167],
+		[42.4945035, -83.159324833],
+	];
+	ployline430 = L.polyline(latLongs430, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs431 = [
+		[42.4945035, -83.159324833],
+		[42.494462667, -83.159322],
+		[42.494422667, -83.159324667],
+	];
+	ployline431 = L.polyline(latLongs431, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs432 = [
+		[42.494422667, -83.159324667],
+		[42.494387833, -83.1593305],
+	];
+	ployline432 = L.polyline(latLongs432, {color: 'rgb(25,229,229)'} ).addTo(mymap);
+	var latLongs433 = [
+		[42.494387833, -83.1593305],
+		[42.4943535, -83.159333],
+		[42.494317167, -83.159330833],
+	];
+	ployline433 = L.polyline(latLongs433, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs434 = [
+		[42.494317167, -83.159330833],
+		[42.494283667, -83.159325],
+	];
+	ployline434 = L.polyline(latLongs434, {color: 'rgb(51,204,240)'} ).addTo(mymap);
+	var latLongs435 = [
+		[42.494283667, -83.159325],
+		[42.4942525, -83.159323333],
+		[42.494227833, -83.1593305],
+		[42.494207333, -83.159329167],
+		[42.494191167, -83.159310333],
+	];
+	ployline435 = L.polyline(latLongs435, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+	var latLongs436 = [
+		[42.494191167, -83.159310333],
+		[42.494180667, -83.159292],
+	];
+	ployline436 = L.polyline(latLongs436, {color: 'rgb(127,127,127)'} ).addTo(mymap);
+	var latLongs437 = [
+		[42.494180667, -83.159292],
+		[42.494180667, -83.159292],
+	];
+	ployline437 = L.polyline(latLongs437, {color: 'rgb(0,255,255)'} ).addTo(mymap);
+
+	var popup = L.popup();
+
+	function onMapClick(e) {
+		popup
+			.setLatLng(e.latlng)
+			.setContent("You clicked the map at " + e.latlng.toString())
+			.openOn(mymap);
+	}
+
+	mymap.on('click', onMapClick);
+
+</script>
+</body>
+</html>
