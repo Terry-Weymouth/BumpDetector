@@ -1,0 +1,18 @@
+using small_map_royal_oak.osm
+NOTE: osm2pgsql --database test_gis --multi-geometry small_map_royal_oak.osm 
+
+
+select ST_Distance(ST_GeomFromEWKT('SRID=4326;POINT(-83.159119 42.494122)'), 
+					ST_PointN(ST_Transform(way,4326),1)) 
+from planet_osm_line where name='Forestdale Road';
+
+
+select ST_AsEWKT(ST_GeomFromEWKT('SRID=4326;POINT(-83.159119 42.494122)'));      
+
+
+select osm_id, ST_AsEWKT(ST_Transform(way,4326)) from planet_osm_line where name='Forestdale Road'; 
+
+
+select ST_Distance(g1.way, g2.way) from planet_osm_line g1,planet_osm_line g2 where g1.name=g2.name AND g1.osm_id=8699581; 
+
+
