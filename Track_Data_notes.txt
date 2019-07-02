@@ -1,0 +1,24 @@
+create table bicycle_track (
+  track_id serial primary key,
+  file_path varchar(256),
+  time timestamp not null
+  );
+  
+create table bicycle_data (
+  id serial primary key,
+  track_id integer,
+  g1 integer,
+  g2 integer,
+  g3 integer,
+  g4 integer,
+  g5 integer,
+  g6 integer,
+  gmax integer,
+  time timestamp,
+  lat float,
+  long float,
+  alt float,
+  speed float,
+  delta_time integer
+  );
+  

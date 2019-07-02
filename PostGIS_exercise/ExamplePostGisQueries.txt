@@ -16,3 +16,221 @@ select osm_id, ST_AsEWKT(ST_Transform(way,4326)) from planet_osm_line where name
 select ST_Distance(g1.way, g2.way) from planet_osm_line g1,planet_osm_line g2 where g1.name=g2.name AND g1.osm_id=8699581; 
 
 
+Last login: Mon Jul  1 07:00:51 on console
+Terrys-Mac-Pro:~ weymouth$ cd Desktop/GPS/BumpDetector/
+Terrys-Mac-Pro:BumpDetector weymouth$ git pull
+Already up to date.
+Terrys-Mac-Pro:BumpDetector weymouth$ open ,
+The file /Users/weymouth/Desktop/GPS/BumpDetector/, does not exist.
+Terrys-Mac-Pro:BumpDetector weymouth$ open .
+Terrys-Mac-Pro:BumpDetector weymouth$ psql
+psql (11.3, server 10.8)
+Type "help" for help.
+
+weymouth=# \c Detroit
+psql (11.3, server 10.8)
+You are now connected to database "Detroit" as user "weymouth".
+Detroit=# \d
+                    List of relations
+ Schema |           Name           |   Type   |  Owner   
+--------+--------------------------+----------+----------
+ public | geography_columns        | view     | weymouth
+ public | geometry_columns         | view     | weymouth
+ public | planet_osm_line          | table    | weymouth
+ public | planet_osm_point         | table    | weymouth
+ public | planet_osm_polygon       | table    | weymouth
+ public | planet_osm_roads         | table    | weymouth
+ public | raster_columns           | view     | weymouth
+ public | raster_overviews         | view     | weymouth
+ public | spatial_ref_sys          | table    | weymouth
+ public | us_gaz                   | table    | weymouth
+ public | us_gaz_id_seq            | sequence | weymouth
+ public | us_lex                   | table    | weymouth
+ public | us_lex_id_seq            | sequence | weymouth
+ public | us_rules                 | table    | weymouth
+ public | us_rules_id_seq          | sequence | weymouth
+ tiger  | addr                     | table    | weymouth
+ tiger  | addr_gid_seq             | sequence | weymouth
+ tiger  | addrfeat                 | table    | weymouth
+ tiger  | addrfeat_gid_seq         | sequence | weymouth
+ tiger  | bg                       | table    | weymouth
+ tiger  | bg_gid_seq               | sequence | weymouth
+ tiger  | county                   | table    | weymouth
+ tiger  | county_gid_seq           | sequence | weymouth
+ tiger  | county_lookup            | table    | weymouth
+ tiger  | countysub_lookup         | table    | weymouth
+ tiger  | cousub                   | table    | weymouth
+ tiger  | cousub_gid_seq           | sequence | weymouth
+ tiger  | direction_lookup         | table    | weymouth
+ tiger  | edges                    | table    | weymouth
+ tiger  | edges_gid_seq            | sequence | weymouth
+ tiger  | faces                    | table    | weymouth
+ tiger  | faces_gid_seq            | sequence | weymouth
+ tiger  | featnames                | table    | weymouth
+ tiger  | featnames_gid_seq        | sequence | weymouth
+ tiger  | geocode_settings         | table    | weymouth
+ tiger  | geocode_settings_default | table    | weymouth
+ tiger  | loader_lookuptables      | table    | weymouth
+ tiger  | loader_platform          | table    | weymouth
+ tiger  | loader_variables         | table    | weymouth
+ tiger  | pagc_gaz                 | table    | weymouth
+ tiger  | pagc_gaz_id_seq          | sequence | weymouth
+ tiger  | pagc_lex                 | table    | weymouth
+ tiger  | pagc_lex_id_seq          | sequence | weymouth
+ tiger  | pagc_rules               | table    | weymouth
+ tiger  | pagc_rules_id_seq        | sequence | weymouth
+ tiger  | place                    | table    | weymouth
+ tiger  | place_gid_seq            | sequence | weymouth
+ tiger  | place_lookup             | table    | weymouth
+ tiger  | secondary_unit_lookup    | table    | weymouth
+ tiger  | state                    | table    | weymouth
+ tiger  | state_gid_seq            | sequence | weymouth
+ tiger  | state_lookup             | table    | weymouth
+ tiger  | street_type_lookup       | table    | weymouth
+ tiger  | tabblock                 | table    | weymouth
+ tiger  | tabblock_gid_seq         | sequence | weymouth
+ tiger  | tract                    | table    | weymouth
+ tiger  | tract_gid_seq            | sequence | weymouth
+ tiger  | zcta5                    | table    | weymouth
+ tiger  | zcta5_gid_seq            | sequence | weymouth
+ tiger  | zip_lookup               | table    | weymouth
+ tiger  | zip_lookup_all           | table    | weymouth
+ tiger  | zip_lookup_base          | table    | weymouth
+ tiger  | zip_state                | table    | weymouth
+ tiger  | zip_state_loc            | table    | weymouth
+(64 rows)
+
+Detroit=# select ST_Distance(ST_GeomFromEWKT('SRID=4326;POINT(-83.159119 42.494122)'), 
+Detroit(# 
+
+Detroit(# 
+
+Detroit(# 
+
+Detroit(# 
+
+Detroit(# ST_PointN(ST_Transform(way,4326),1)) 
+Detroit-# from planet_osm_line where name='Forestdale Road';
+     st_distance      
+----------------------
+  0.00286040359589533
+ 0.000769707246837616
+  0.00286844552044985
+    0.004976238654807
+(4 rows)
+
+Detroit=# select ST_Distance(ST_GeomFromEWKT('SRID=4326;POINT(-83.159119 42.494122)'), 
+ST_PointN(ST_Transform(way,4326),1)) 
+from planet_osm_line where name='Forestdale Road';
+     st_distance      
+----------------------
+  0.00286040359589533
+ 0.000769707246837616
+  0.00286844552044985
+    0.004976238654807
+(4 rows)
+
+Detroit=# ls
+Detroit-# ;
+ERROR:  syntax error at or near "ls"
+LINE 1: ls
+        ^
+Detroit=# \d
+                    List of relations
+ Schema |           Name           |   Type   |  Owner   
+--------+--------------------------+----------+----------
+ public | geography_columns        | view     | weymouth
+ public | geometry_columns         | view     | weymouth
+ public | planet_osm_line          | table    | weymouth
+ public | planet_osm_point         | table    | weymouth
+ public | planet_osm_polygon       | table    | weymouth
+ public | planet_osm_roads         | table    | weymouth
+ public | raster_columns           | view     | weymouth
+ public | raster_overviews         | view     | weymouth
+ public | spatial_ref_sys          | table    | weymouth
+ public | us_gaz                   | table    | weymouth
+ public | us_gaz_id_seq            | sequence | weymouth
+ public | us_lex                   | table    | weymouth
+ public | us_lex_id_seq            | sequence | weymouth
+ public | us_rules                 | table    | weymouth
+ public | us_rules_id_seq          | sequence | weymouth
+ tiger  | addr                     | table    | weymouth
+ tiger  | addr_gid_seq             | sequence | weymouth
+ tiger  | addrfeat                 | table    | weymouth
+ tiger  | addrfeat_gid_seq         | sequence | weymouth
+ tiger  | bg                       | table    | weymouth
+ tiger  | bg_gid_seq               | sequence | weymouth
+ tiger  | county                   | table    | weymouth
+ tiger  | county_gid_seq           | sequence | weymouth
+ tiger  | county_lookup            | table    | weymouth
+ tiger  | countysub_lookup         | table    | weymouth
+ tiger  | cousub                   | table    | weymouth
+ tiger  | cousub_gid_seq           | sequence | weymouth
+ tiger  | direction_lookup         | table    | weymouth
+ tiger  | edges                    | table    | weymouth
+ tiger  | edges_gid_seq            | sequence | weymouth
+ tiger  | faces                    | table    | weymouth
+ tiger  | faces_gid_seq            | sequence | weymouth
+ tiger  | featnames                | table    | weymouth
+ tiger  | featnames_gid_seq        | sequence | weymouth
+ tiger  | geocode_settings         | table    | weymouth
+ tiger  | geocode_settings_default | table    | weymouth
+ tiger  | loader_lookuptables      | table    | weymouth
+ tiger  | loader_platform          | table    | weymouth
+ tiger  | loader_variables         | table    | weymouth
+ tiger  | pagc_gaz                 | table    | weymouth
+ tiger  | pagc_gaz_id_seq          | sequence | weymouth
+ tiger  | pagc_lex                 | table    | weymouth
+ tiger  | pagc_lex_id_seq          | sequence | weymouth
+ tiger  | pagc_rules               | table    | weymouth
+ tiger  | pagc_rules_id_seq        | sequence | weymouth
+ tiger  | place                    | table    | weymouth
+ tiger  | place_gid_seq            | sequence | weymouth
+ tiger  | place_lookup             | table    | weymouth
+ tiger  | secondary_unit_lookup    | table    | weymouth
+ tiger  | state                    | table    | weymouth
+ tiger  | state_gid_seq            | sequence | weymouth
+ tiger  | state_lookup             | table    | weymouth
+ tiger  | street_type_lookup       | table    | weymouth
+ tiger  | tabblock                 | table    | weymouth
+ tiger  | tabblock_gid_seq         | sequence | weymouth
+ tiger  | tract                    | table    | weymouth
+ tiger  | tract_gid_seq            | sequence | weymouth
+ tiger  | zcta5                    | table    | weymouth
+ tiger  | zcta5_gid_seq            | sequence | weymouth
+ tiger  | zip_lookup               | table    | weymouth
+ tiger  | zip_lookup_all           | table    | weymouth
+ tiger  | zip_lookup_base          | table    | weymouth
+ tiger  | zip_state                | table    | weymouth
+ tiger  | zip_state_loc            | table    | weymouth
+(64 rows)
+
+Detroit=# select osm_id, ST_AsEWKT(ST_Transform(way,4326)) from planet_osm_line where name='Forestdale Road'; 
+ osm_id  |                                                                                                                                      st_asewkt                                                                                                                                       
+---------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ 8699581 | SRID=4326;LINESTRING(-83.1612014 42.4921610005172,-83.1610072 42.4922521005172,-83.1608319 42.4923344005172,-83.160822 42.4923390005172,-83.160751 42.4923970005172,-83.160471 42.4927400005172,-83.160199 42.4930720005172,-83.160153 42.4931360005173,-83.159836 42.4935770005173)
+ 8699583 | SRID=4326;LINESTRING(-83.159366 42.4933930005173,-83.1593687 42.4934831005173,-83.159388 42.4941360005173,-83.159408 42.4947920005173,-83.159435 42.4954230005174,-83.1594957 42.4968816005174,-83.1595564 42.4969569005174)
+ 8699584 | SRID=4326;LINESTRING(-83.1595564 42.4969569005174,-83.1596092 42.4970403005174,-83.159614 42.4971720005175,-83.1596836 42.4989583005176,-83.159686 42.4990200005175)
+ 8699586 | SRID=4326;LINESTRING(-83.159008 42.4990970005175,-83.1590112 42.4991711005175,-83.1590555 42.5001842005176,-83.159058 42.5002420005176,-83.1590853 42.5011800005177,-83.159087 42.5012370005177,-83.159123 42.5022750005177)
+(4 rows)
+
+Detroit=# select osm_id, highway, ST_AsEWKT(ST_Transform(way,4326)) from planet_osm_line where name='Forestdale Road'; 
+ osm_id  |   highway   |                                                                                                                                      st_asewkt                                                                                                                                       
+---------+-------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ 8699581 | residential | SRID=4326;LINESTRING(-83.1612014 42.4921610005172,-83.1610072 42.4922521005172,-83.1608319 42.4923344005172,-83.160822 42.4923390005172,-83.160751 42.4923970005172,-83.160471 42.4927400005172,-83.160199 42.4930720005172,-83.160153 42.4931360005173,-83.159836 42.4935770005173)
+ 8699583 | residential | SRID=4326;LINESTRING(-83.159366 42.4933930005173,-83.1593687 42.4934831005173,-83.159388 42.4941360005173,-83.159408 42.4947920005173,-83.159435 42.4954230005174,-83.1594957 42.4968816005174,-83.1595564 42.4969569005174)
+ 8699584 | residential | SRID=4326;LINESTRING(-83.1595564 42.4969569005174,-83.1596092 42.4970403005174,-83.159614 42.4971720005175,-83.1596836 42.4989583005176,-83.159686 42.4990200005175)
+ 8699586 | residential | SRID=4326;LINESTRING(-83.159008 42.4990970005175,-83.1590112 42.4991711005175,-83.1590555 42.5001842005176,-83.159058 42.5002420005176,-83.1590853 42.5011800005177,-83.159087 42.5012370005177,-83.159123 42.5022750005177)
+Detroit=# select * from planet_osm_line where g1.osm_id=8699581;
+ERROR:  missing FROM-clause entry for table "g1"
+LINE 1: select * from planet_osm_line where g1.osm_id=8699581;
+                                            ^
+Detroit=# select * from planet_osm_line where osm_id=8699581;
+ osm_id  | access | addr:housename | addr:housenumber | addr:interpolation | admin_level | aerialway | 
+ aeroway | amenity | area | barrier | bicycle | brand | bridge | boundary | building | construction | 
+ covered | culvert | cutting | denomination | disused | embankment | foot | generator:source | 
+ harbour |   highway   | historic | horse | intermittent | junction | landuse | layer | leisure | 
+ lock | man_made | military | motorcar |      name       | natural | office | oneway | operator | 
+ place | population | power | power_source | public_transport | railway | ref | religion | route | 
+ service | shop | sport | surface | toll | tourism | tower:type | tracktype | tunnel | water | waterway | 
+ wetland | width | wood | z_order | way_area | tags | way
