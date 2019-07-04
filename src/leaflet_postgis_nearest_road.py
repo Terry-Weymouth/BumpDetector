@@ -78,7 +78,7 @@ def add_geom(out_file, geom_list):
 
 
 def create_point_list():
-    global max_coded_value
+    global cursor, max_coded_value
     query_str = "select lat, long, nearest_road_distance from bicycle_data;"
     query = sql.SQL(query_str)
     cursor.execute(query)
