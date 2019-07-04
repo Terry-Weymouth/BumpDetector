@@ -3,7 +3,7 @@ See, also, ExamplePostGisQueries.txt
 create table bicycle_track (
   track_id serial primary key,
   file_path varchar(256),
-  max_distance_from_map integer,
+  max_distance float,
   time timestamp not null
   );
   
@@ -25,7 +25,8 @@ create table bicycle_data (
   delta_time integer,
   long_lat_original geography(POINT,4326),
   long_lat_remapped geography(POINT,4326),
-  nearest_road_id integer
+  nearest_road_id integer,
+  nearest_road_distance float
   );
   
 CREATE INDEX long_lat_original_gix ON bicycle_data USING GIST ( long_lat_original );
@@ -55,7 +56,24 @@ from bicycle_data as track, planet_osm_line as osm
 where track.id=1 and ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original) < 100
 order by st_distance limit 1;
 
+select track.id, osm.osm_id, osm.name, osm.highway, ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original) 
+from bicycle_data as track, planet_osm_line as osm
+where track.id=1 and ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original) < 30.0
+order by st_distance limit 1;
 
+select track.id, osm.osm_id, osm.name, osm.highway, ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original) 
+from bicycle_data as track, planet_osm_line as osm
+where ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original) < 70.0
+and highway is not null  
+and not (highway in ('footway', 'service', 'tertiary_link'))
+order by track.id, st_distance;
+
+select distinct highway, name from ( 
+select track.id, osm.osm_id, osm.name as name, osm.highway as highway, 
+ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original) 
+from bicycle_data as track, planet_osm_line as osm
+where ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original) < 70.0
+and not (highway in ('footway', 'service', 'tertiary_link')) order by track.id, st_distance ) foo;
 
 Samples
 
