@@ -72,14 +72,22 @@ def add_points(track_index, point_list):
     fields = sql.SQL(', ').join((sql.Identifier(x) for x in field_list))
     template = sql.SQL(', ').join(sql.Placeholder() * len(field_list))
     query = sql.SQL("insert into {}({}) values ({}) returning track_id ") \
-                       .format(sql.Identifier('bicycle_data'), fields, template)
-    print(query.as_string(connection))
+        .format(sql.Identifier('bicycle_data'), fields, template)
 
     for point in point_list:
         point.insert(0, track_index)
         # convert numpy.datetime64 to datetime.datetime
         point[8] = point[8].tolist()
         cursor.execute(query, point)
+    connection.commit()
+
+
+def update_with_geography(track_index):
+    query = sql.SQL("UPDATE bicycle_data SET long_lat_original "
+                    + "= ST_SetSRID(ST_MakePoint(long, lat), 4326)::geography "
+                    + "where track_id={};"
+                    .format(track_index))
+    cursor.execute(query)
     connection.commit()
 
 
@@ -101,8 +109,8 @@ def main():
         make_connection()
         point_list = create_point_list(source)
         track_index = add_new_track(source)
-        print(track_index)
         add_points(track_index, point_list)
+        update_with_geography(track_index)
         print("Added track: {}".format(track_index))
     except (Exception, psycopg2.Error) as error :
         print ("Error while connecting to PostgreSQL", error)

@@ -1,6 +1,9 @@
+See, also, ExamplePostGisQueries.txt
+
 create table bicycle_track (
   track_id serial primary key,
   file_path varchar(256),
+  max_distance_from_map integer,
   time timestamp not null
   );
   
@@ -19,6 +22,69 @@ create table bicycle_data (
   long float,
   alt float,
   speed float,
-  delta_time integer
+  delta_time integer,
+  long_lat_original geography(POINT,4326),
+  long_lat_remapped geography(POINT,4326),
+  nearest_road_id integer
   );
   
+CREATE INDEX long_lat_original_gix ON bicycle_data USING GIST ( long_lat_original );
+CREATE INDEX long_lat_remapped_gix ON bicycle_data USING GIST ( long_lat_remapped );
+  
+UPDATE bicycle_data SET long_lat_original = ST_SetSRID(ST_MakePoint(long, lat), 4326)::geography;
+
+SELECT long, lat, ST_AsEWKT(long_lat_original) from bicycle_data;
+
+knn nearest neighbors search for nearest feature
+
+https://postgis.net/workshops/postgis-intro/knn.html
+https://wiki.openstreetmap.org/wiki/Key:highway#Roads
+
+select track.id, track.track_id, osm.osm_id, ST_AsEWKT(track.long_lat_original), ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original)
+from bicycle_data as track, planet_osm_line as osm
+where track.id < 5 AND osm.name='Forestdale Road' and ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original) < 6
+order by st_distance;
+
+select track.id, track.track_id, osm.name, osm.highway, osm.osm_id, ST_AsEWKT(track.long_lat_original), ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original)
+from bicycle_data as track, planet_osm_line as osm
+where track.id=1 and ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original) < 100
+order by st_distance;
+
+select track.id, track.track_id, osm.name, osm.highway, osm.osm_id, ST_AsEWKT(track.long_lat_original), ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original)
+from bicycle_data as track, planet_osm_line as osm
+where track.id=1 and ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original) < 100
+order by st_distance limit 1;
+
+
+
+Samples
+
+# closest point on line to point
+ST_AsText(ST_ClosestPoint(line,pt)) As cp_line_pt
+
+UPDATE mytable SET geog = ST_SetSRID(ST_MakePoint(long, lat), 4326)::geography;
+
+UPDATE bicycle_data SET long_lat_original_gix = 'Dramatic';
+  
+CREATE TABLE ptzgeogwgs84(gid serial PRIMARY KEY, name geography(POINT,4326) );
+
+-- See the contents of the metadata view
+SELECT * FROM geography_columns;
+You can insert data into the table the same as you would if it was using a GEOMETRY column:
+
+-- Add some data into the test table
+INSERT INTO global_points (name, location) VALUES ('Town', 'SRID=4326;POINT(-110 30)');
+INSERT INTO global_points (name, location) VALUES ('Forest', 'SRID=4326;POINT(-109 29)');
+INSERT INTO global_points (name, location) VALUES ('London', 'SRID=4326;POINT(0 49)');
+Creating an index works the same as GEOMETRY. PostGIS will note that the column type is GEOGRAPHY and create an appropriate sphere-based index instead of the usual planar index used for GEOMETRY.
+
+-- Index the test table with a spherical index
+  CREATE INDEX global_points_gix ON global_points USING GIST ( location );
+Query and measurement functions use units of meters. So distance parameters should be expressed in meters, and return values should be expected in meters (or square meters for areas).
+
+-- Show a distance query and note, London is outside the 1000km tolerance
+  SELECT name FROM global_points WHERE ST_DWithin(location, 'SRID=4326;POINT(-110 29)'::geography, 1000000);
+You can see the power of GEOGRAPHY in action by calculating how close a plane flying from Seattle to London (LINESTRING(-122.33 47.606, 0.0 51.5)) comes to Reykjavik (POINT(-21.96 64.15)).
+
+-- Distance calculation using GEOGRAPHY (122.2km)
+  SELECT ST_Distance('LINESTRING(-122.33 47.606, 0.0 51.5)'::geography, 'POINT(-21.96 64.15)'::geography);
