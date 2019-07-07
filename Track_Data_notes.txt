@@ -75,8 +75,40 @@ from bicycle_data as track, planet_osm_line as osm
 where ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original) < 70.0
 and not (highway in ('footway', 'service', 'tertiary_link')) order by track.id, st_distance ) foo;
 
+select ST_AsGeoJSON(ST_Transform(way,4326))
+
+
+select id, ST_Transform(projection,4326)::geography as pt from (
+select track.id, track.long_lat_original as pt,
+	ST_ClosestPoint(ST_Transform(osm.way,4326)::geometry,track.long_lat_original::geometry) as projection
+from bicycle_data as track join planet_osm_line as osm on (track.nearest_road_id = osm.osm_id)
+where track.id=1) foo;
+
+
+update bicycle_data as new_track set long_lat_remapped=ST_Transform(results.projection,4326)::geography
+from (
+select track.id as id, ST_ClosestPoint(ST_Transform(osm.way,4326)::geometry,track.long_lat_original::geometry) as projection
+from bicycle_data as track, planet_osm_line as osm where track.nearest_road_id=osm.osm_id
+) results
+where new_track.id=results.id;
+
+
+SELECT id, lat, long, 
+ST_Y(long_lat_remapped::geometry) as new_lat, ST_X(long_lat_remapped::geometry) as new_long, 
+ST_AsEWKT(long_lat_remapped)
+FROM bicycle_data LIMIT 10;
+
+SELECT id, nearest_road_distance, ST_Distance(long_lat_original, long_lat_remapped)
+FROM bicycle_data LIMIT 10;
+
+select ST_Y(long_lat_remapped::geometry) as lat, ST_X(long_lat_remapped::geometry) as long, nearest_road_distance from bicycle_data order by id;
+
+
 Samples
 
+SELECT *
+    FROM weather INNER JOIN cities ON (weather.city = cities.name);
+    
 # closest point on line to point
 ST_AsText(ST_ClosestPoint(line,pt)) As cp_line_pt
 

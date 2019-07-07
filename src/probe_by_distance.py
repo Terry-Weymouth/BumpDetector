@@ -33,7 +33,7 @@ def probe(track_id, point_id):
         + "where track.track_id={} and track.id={} and "\
         + "ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original) < 70.0 " \
         + "and highway is not null " \
-        + "and not (highway in ('footway', 'service', 'tertiary_link', 'motorway'))" \
+        + "and not (highway in ('footway', 'tertiary_link', 'motorway'))" \
         + "order by st_distance limit 1;"
     query_str = query_str.format(track_id, point_id)
     query = sql.SQL(query_str)

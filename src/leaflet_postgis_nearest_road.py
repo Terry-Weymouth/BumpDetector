@@ -71,7 +71,6 @@ def print_bounding_box(out_file):
 def add_geom(out_file, geom_list):
     for i in range(0, len(geom_list)):
         geom = geom_list[i][0]
-        print(geom)
         name = "geom{}".format(i)
         out_file.write("\tvar {} = {};\n".format(name, geom))
         out_file.write("\tL.geoJSON({}).addTo(mymap);\n".format(name))
@@ -79,7 +78,10 @@ def add_geom(out_file, geom_list):
 
 def create_point_list():
     global cursor, max_coded_value
-    query_str = "select lat, long, nearest_road_distance from bicycle_data;"
+    # query_str = "select lat, long, nearest_road_distance from bicycle_data order by id;"
+    query_str = "select ST_Y(long_lat_remapped::geometry) as lat, " \
+                + "ST_X(long_lat_remapped::geometry) as long, " \
+                + "nearest_road_distance from bicycle_data order by id;"
     query = sql.SQL(query_str)
     cursor.execute(query)
     query_results = cursor.fetchall()
@@ -119,8 +121,8 @@ def segment_point_list(annotated_point_list):
             segment_index = color_index
             cache = []
         cache.append(record)
-    if len(cache) == 1:
-        cache.append(cache[0])
+#    if len(cache) == 1:
+#        cache.append(cache[0])
     results.append([segment_index, cache])
     return results
 
