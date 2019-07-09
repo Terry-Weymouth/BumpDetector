@@ -112,6 +112,9 @@ SELECT *
 # closest point on line to point
 ST_AsText(ST_ClosestPoint(line,pt)) As cp_line_pt
 
+select track.id, osm.name from bicycle_data as track, planet_osm_line as osm where track.id in (5, 6, 7) 
+	and track.nearest_road_id = osm.osm_id;
+
 UPDATE mytable SET geog = ST_SetSRID(ST_MakePoint(long, lat), 4326)::geography;
 
 UPDATE bicycle_data SET long_lat_original_gix = 'Dramatic';
