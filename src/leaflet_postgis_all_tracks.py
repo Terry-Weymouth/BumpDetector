@@ -12,8 +12,9 @@ cursor = None
 max_coded_value = 0.0
 color_list = [
     (255, 0, 0),
-    (229, 25, 25),
-    (204, 51, 51),
+    (255, 255, 0),
+    (0, 255, 255),
+    (255, 0, 255),
     (178, 76, 76),
     (153, 102, 102),
     (127, 127, 127),
@@ -36,22 +37,6 @@ def make_connection():
         cursor = connection.cursor()
     except (Exception, psycopg2.Error) as error :
         print ("Error while connecting to PostgreSQL", error)
-
-
-def query_ways():
-    global cursor
-
-    record = None
-    try:
-        cursor = connection.cursor()
-        geom = "ST_AsGeoJSON(ST_Transform(way,4326))"
-        table = "bicycle_data as track join planet_osm_line as osm on (track.nearest_road_id=osm.osm_id)"
-        query = "select {} from {};".format(geom, table)
-        cursor.execute(query)
-        record = cursor.fetchall()
-    except (Exception, psycopg2.Error) as error :
-        print ("Error while connecting to PostgreSQL", error)
-    return record
 
 
 def print_bounding_box(out_file):
@@ -78,10 +63,10 @@ def add_geom(out_file, geom_list):
 
 def create_point_list():
     global cursor, max_coded_value
-    # query_str = "select lat, long, nearest_road_distance from bicycle_data order by id;"
-    query_str = "select ST_Y(long_lat_remapped::geometry) as lat, " \
-                + "ST_X(long_lat_remapped::geometry) as long, " \
-                + "nearest_road_distance from bicycle_data order by id;"
+    query_str = "select lat, long, track_id from bicycle_data order by track_id, id;"
+    # query_str = "select ST_Y(long_lat_remapped::geometry) as lat, " \
+    #            + "ST_X(long_lat_remapped::geometry) as long, " \
+    #            + "nearest_road_distance from bicycle_data order by id;"
     query = sql.SQL(query_str)
     cursor.execute(query)
     query_results = cursor.fetchall()
@@ -95,40 +80,26 @@ def create_point_list():
     return results
 
 
-def annotate_point_list(point_list):
-    global max_coded_value
-    index_limit = 11
-    results = []
-    for record in point_list:
-        distance = record[2]
-        index = int((distance/max_coded_value) * float(index_limit))
-        if index >= index_limit:
-            index = index_limit -1
-        record.append(index)
-        results.append(record)
-    return results
-
-
 def segment_point_list(annotated_point_list):
-    segment_index = annotated_point_list[0][3]
+    track_id = annotated_point_list[0][2]
+    segment_index = (track_id -1) % 11
     cache = []
     results = []
     for record in annotated_point_list:
-        color_index = record[3]
+        track_id = record[2]
+        color_index = (track_id -1) % 11
         if not color_index == segment_index:
             cache.append(record)
             results.append([segment_index, cache])
             segment_index = color_index
             cache = []
         cache.append(record)
-#    if len(cache) == 1:
-#        cache.append(cache[0])
     results.append([segment_index, cache])
     return results
 
 
 def make_point_list():
-    return segment_point_list(annotate_point_list(create_point_list()))
+    return segment_point_list(create_point_list())
 
 
 def add_point_list(out_file, segmented_point_list):
@@ -159,14 +130,12 @@ def main():
     global connection, cursor
     make_connection()
     if cursor:
-        road_geom = query_ways()
         point_list = make_point_list()
-        output = "PostGIS_probe.html"
-        if point_list and road_geom:
+        output = "All_tracks_probe.html"
+        if point_list:
             with open(output, "w") as out_file:
                 copy_path_content(header_filepath, out_file)
                 print_bounding_box(out_file)
-                # add_geom(out_file, road_geom)
                 add_point_list(out_file, point_list)
                 copy_path_content(footer_filepath, out_file)
     if cursor:
