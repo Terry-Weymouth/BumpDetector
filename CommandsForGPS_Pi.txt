@@ -1,0 +1,32 @@
+Notes on GPS:
+ https://wiki.dragino.com/index.php?title=Getting_GPS_to_work_on_Raspberry_Pi_3_Model_B
+
+(install gpsd etc)
+sudo apt-get install gpsd gpsd-clients python-gps
+
+(working dir)
+cd ~/github/BumpDetector
+
+(set up python)
+pip install -r requirements.txt 
+
+(GPS raw data)
+sudo cat /dev/ttyS0
+sudo cat /dev/serial0
+
+(start gps - local)
+gpsd /dev/serial0
+(start gps - official)
+sudo gpsd /dev/ttyS0 -F /var/run/gpsd.sock
+
+(check with)
+gpsmon
+
+(check serial)
+python GryoSerial/seria_test.py
+
+(clear old data)
+rm somefile.txt
+
+(start with)
+nohup python CaptureGryoAndGps.py &
