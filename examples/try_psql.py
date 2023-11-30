@@ -1,10 +1,13 @@
 import psycopg2
+connection=None
 try:
     connection = psycopg2.connect(user = "weymouth",
                                   password = "",
                                   host = "127.0.0.1",
                                   port = "5432",
-                                  database = "Detroit")
+                                  # database = "Detroit"
+                                  database = "weymouth"
+                                  )
     cursor = connection.cursor()
     # Print PostgreSQL Connection properties
     print ( connection.get_dsn_parameters(),"\n")

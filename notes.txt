@@ -1,0 +1,12 @@
+-- environment
+cd <current-path-to>/BumpDetector
+source env/bin/activate
+(currently using Python 3.9)
+
+-- upgrade all libraries
+(once) pip install pip-upgrader
+(to upgrade) pip-upgrader
+
+-- to make initial install
+pip install -r requirements.txt
+
