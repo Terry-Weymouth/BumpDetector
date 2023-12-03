@@ -5,7 +5,7 @@ try:
                                   password="",
                                   host="127.0.0.1",
                                   port="5432",
-                                  database="Detroit")
+                                  database="detroit")
     cursor = connection.cursor()
     # Print PostgreSQL Connection properties
     print ( connection.get_dsn_parameters(), "\n")

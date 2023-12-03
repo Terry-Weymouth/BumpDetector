@@ -1,4 +1,4 @@
-See, also, ExamplePostGisQueries.txt
+See, also, ExamplePostGisQueries.txt; in dir PostGIS_exercise
 
 create table bicycle_track (
   track_id serial primary key,
@@ -6,7 +6,7 @@ create table bicycle_track (
   max_distance float,
   time timestamp not null
   );
-  
+
 create table bicycle_data (
   id serial primary key,
   track_id integer,

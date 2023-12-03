@@ -1,18 +1,19 @@
 -- environment
 cd <current-path-to>/BumpDetector
-source env/bin/activate
+source <env>/bin/activate
 (currently using Python 3.9)
+
+-- to make initial library instillation
+(once) pip install -r requirements.txt
 
 -- upgrade all libraries
 (once) pip install pip-upgrader
 (to upgrade) pip-upgrader
 
--- to make initial install
-pip install -r requirements.txt
-
--- set up postgres database
-(once) brew install osm2pgsql
+-- set up postgis extension in postgresql
 (start postgres)
+CREATE EXTENSION postgis;
+(verify) SELECT PostGIS_Full_Version();
 
--- load data from Open Streat Map (OSM)
+-- load data from Open Street Map (OSM)
 (once) brew install osm2pgsql
