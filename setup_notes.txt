@@ -16,4 +16,20 @@ CREATE EXTENSION postgis;
 (verify) SELECT PostGIS_Full_Version();
 
 -- load data from Open Street Map (OSM)
+    see: https://extract.bbbike.org/
+    see: https://osm2pgsql.org/doc/manual.html
 (once) brew install osm2pgsql
+get file of area to use from: https://extract.bbbike.org/?lang=en
+  use PBF format (compressed OSM raw data)
+  fill out form and follow instructions
+  results is, for example, planet_-83.204,42.456_-83.072,42.539.osm.pbf
+(in psql)
+  (if using a separate user) create user osmuser;
+  create database with encoding=UTF8 owner=osmuser osm;
+  (restart db user)
+  use osm;
+  CREATE EXTENSION postgis;
+  CREATE EXTENSION hstore;
+(in terminal - details in manual at osm2pgsql.org - above)
+  osm2pgsql OSM_FILE_NAME --database=osm --user=osmuser --host=localhost --port=5432
+(check by listing tables in database)
