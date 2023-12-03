@@ -3,7 +3,7 @@ import matplotlib
 matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 
-filename = "../May21_2019_Bump-FirstRun.txt"
+filename = "../data/May21_2019_Bump-FirstRun.txt"
 
 with open(filename) as f:
     content = f.readlines()
