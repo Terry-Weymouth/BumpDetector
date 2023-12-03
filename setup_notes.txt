@@ -10,5 +10,9 @@ source env/bin/activate
 -- to make initial install
 pip install -r requirements.txt
 
--- set up database
+-- set up postgres database
+(once) brew install osm2pgsql
+(start postgres)
+
+-- load data from Open Streat Map (OSM)
 (once) brew install osm2pgsql

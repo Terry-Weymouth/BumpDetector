@@ -1,0 +1,5 @@
+See .../github/BumpDetectorCore
+ e.g. git@github.com:Terry-Weymouth/BumpDetectorCore.git
+ or (locally) https://github.com/Terry-Weymouth/BumpDetectorCore.git
+ 
+Instructions there: CommandsForGPS_and_Accl_Pi.txt
