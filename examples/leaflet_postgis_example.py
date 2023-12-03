@@ -14,7 +14,7 @@ def connect_and_query():
                                   password = "",
                                   host = "127.0.0.1",
                                   port = "5432",
-                                  database = "Detroit")
+                                  database = "detroit")
         cursor = connection.cursor()
         geom = "ST_AsGeoJSON(ST_Transform(way,4326))"
         table = "planet_osm_line"
