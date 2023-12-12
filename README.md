@@ -7,7 +7,7 @@ Specifically, given a GPS trace (series of GPS readings for a moving vehicle):
 * code to plot route from map-matched points
 * code to plot data along route (in the case herein, accelerometer data)
 
-A work in progress!
+A work in progress! See plan.txt in notes
 
 See related project on using a Raspberry PI to collect the data with sensors mounted on a bicycle,
-reference in file RunningDetectorOnPi.txt
+reference in file RunningDetectorOnPi.txt in notes
