@@ -1,0 +1,5 @@
+Starting with raw data.
+
+* clean and producing tracks in database (display tracks on map)
+* for each track do map-matching (display matched tracks on map)
+* interpolate accelerator data onto matched track (display data on map)

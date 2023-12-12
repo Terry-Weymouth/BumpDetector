@@ -1,4 +1,4 @@
-See, also, ExamplePostGisQueries.txt; in dir PostGIS_exercise
+-- See, also, ExamplePostGisQueries.txt; in dir PostGIS_exercise
 
 create table bicycle_track (
   track_id serial primary key,
@@ -36,10 +36,10 @@ UPDATE bicycle_data SET long_lat_original = ST_SetSRID(ST_MakePoint(long, lat), 
 
 SELECT long, lat, ST_AsEWKT(long_lat_original) from bicycle_data;
 
-knn nearest neighbors search for nearest feature
+-- knn nearest neighbors search for nearest feature
 
-https://postgis.net/workshops/postgis-intro/knn.html
-https://wiki.openstreetmap.org/wiki/Key:highway#Roads
+-- https://postgis.net/workshops/postgis-intro/knn.html
+-- https://wiki.openstreetmap.org/wiki/Key:highway#Roads
 
 select track.id, track.track_id, osm.osm_id, ST_AsEWKT(track.long_lat_original), ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original)
 from bicycle_data as track, planet_osm_line as osm
@@ -123,13 +123,15 @@ CREATE TABLE ptzgeogwgs84(gid serial PRIMARY KEY, name geography(POINT,4326) );
 
 -- See the contents of the metadata view
 SELECT * FROM geography_columns;
-You can insert data into the table the same as you would if it was using a GEOMETRY column:
+
+-- You can insert data into the table the same as you would if it was using a GEOMETRY column:
 
 -- Add some data into the test table
 INSERT INTO global_points (name, location) VALUES ('Town', 'SRID=4326;POINT(-110 30)');
 INSERT INTO global_points (name, location) VALUES ('Forest', 'SRID=4326;POINT(-109 29)');
 INSERT INTO global_points (name, location) VALUES ('London', 'SRID=4326;POINT(0 49)');
-Creating an index works the same as GEOMETRY. PostGIS will note that the column type is GEOGRAPHY and create an appropriate sphere-based index instead of the usual planar index used for GEOMETRY.
+
+-- Creating an index works the same as GEOMETRY. PostGIS will note that the column type is GEOGRAPHY and create an appropriate sphere-based index instead of the usual planar index used for GEOMETRY.
 
 -- Index the test table with a spherical index
   CREATE INDEX global_points_gix ON global_points USING GIST ( location );
