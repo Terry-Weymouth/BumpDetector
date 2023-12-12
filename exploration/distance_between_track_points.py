@@ -1,5 +1,6 @@
 import psycopg2
 from psycopg2 import sql
+from src.config.get_config import get_database_access
 
 connection = None
 cursor = None
@@ -8,11 +9,8 @@ cursor = None
 def make_connection():
     global connection, cursor
     try:
-        connection = psycopg2.connect(user="weymouth",
-                                      password="",
-                                      host="127.0.0.1",
-                                      port="5432",
-                                      database="Detroit")
+        config = get_database_access()
+        connection = psycopg2.connect(**config)
         cursor = connection.cursor()
     except (Exception, psycopg2.Error) as error :
         print ("Error while connecting to PostgreSQL", error)

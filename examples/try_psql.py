@@ -1,5 +1,7 @@
 import psycopg2
 from src.config.get_config import get_database_access
+
+
 connection = None
 try:
     config = get_database_access()
@@ -16,7 +18,7 @@ except (Exception, psycopg2.Error) as error:
     print ("Error while connecting to PostgreSQL", error)
 finally:
     #closing database connection.
-        if(connection):
-            cursor.close()
-            connection.close()
-            print("PostgreSQL connection is closed")
+    if(connection):
+        cursor.close()
+        connection.close()
+        print("PostgreSQL connection is closed")
