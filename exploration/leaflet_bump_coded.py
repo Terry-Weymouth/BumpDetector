@@ -2,8 +2,8 @@ import argparse
 import os
 import numpy as np
 
-header_filepath = "../leaflet/leaflet_header.txt"
-footer_filepath = "../leaflet/leaflet_footer.txt"
+header_filepath = "./leaflet/leaflet_header.txt"
+footer_filepath = "./leaflet/leaflet_footer.txt"
 
 max_coded_value = 0.0
 color_list = [
