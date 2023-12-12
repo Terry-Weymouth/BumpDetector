@@ -4,8 +4,8 @@ import psycopg2
 from psycopg2 import sql
 from src.config.get_config import get_database_access
 
-header_filepath = "../leaflet/leaflet_header.txt"
-footer_filepath = "../leaflet/leaflet_footer.txt"
+header_filepath = "./leaflet/leaflet_header.txt"
+footer_filepath = "./leaflet/leaflet_footer.txt"
 
 connection = None
 cursor = None

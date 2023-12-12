@@ -1,8 +1,8 @@
 import argparse
 import os
 
-header_filepath = "../leaflet/leaflet_header.txt"
-footer_filepath = "../leaflet/leaflet_footer.txt"
+header_filepath = "./leaflet/leaflet_header.txt"
+footer_filepath = "./leaflet/leaflet_footer.txt"
 
 
 def print_bounding_box(out_file):
