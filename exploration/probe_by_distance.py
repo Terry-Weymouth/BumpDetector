@@ -78,10 +78,12 @@ def main():
     try:
         make_connection()
         limits = get_id_limits(track_index)
+        print(limits)
         results_list = []
         for point_id in range(limits[0], limits[1] + 1):
             results = probe(track_index, point_id)
             if results:
+                print(point_id, results)
                 results_list.append(results)
         print(results_list)
         update_records(results_list)

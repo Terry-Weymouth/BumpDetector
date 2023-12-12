@@ -1,5 +1,18 @@
 Starting with raw data.
 
+* set up database
+    - see notes/setup_notes.txt
+    - see notes/Track_Datat_notes.txt
 * clean and producing tracks in database (display tracks on map)
+    - clean_data.py on raw data
+    - add_track_to_db.py with cleaned data (Note, one file -> one track)
+    - distance_between_track_points.py on loaded track data (Note, hard coded track id)
+        checks for large gaps in track internode distance - may indicate track needs splitting
+    - probe_by_distance.py on loaded track data (Note, hard coded track id)
+        adds nearest_road_id and nearest_road_distance to track data
+        adds max road distance to track description
+    - display data
+        leaflet_postgis_all_tracks.py
+        leaflet_postgis_nearest_road.py
 * for each track do map-matching (display matched tracks on map)
 * interpolate accelerator data onto matched track (display data on map)

@@ -24,7 +24,7 @@ create table bicycle_data (
   speed float,
   delta_time integer,
   long_lat_original geography(POINT,4326),
-  long_lat_remapped geography(POINT,4326),
+  long_lat_remapped geography(POINT,4326),  -- projected track point after match to road
   nearest_road_id integer,
   nearest_road_distance float
   );
