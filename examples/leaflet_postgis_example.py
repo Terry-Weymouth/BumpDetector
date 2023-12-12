@@ -1,20 +1,19 @@
-import argparse
-import os
 import psycopg2
+from src.config.get_config import get_database_access
 
-header_filepath = "../leaflet/leaflet_header.txt"
-footer_filepath = "../leaflet/leaflet_footer.txt"
+
+header_filepath = "./leaflet/leaflet_header.txt"
+footer_filepath = "./leaflet/leaflet_footer.txt"
+
 
 def connect_and_query():
     connection = None
     cursor = None
     record = None
     try:
-        connection = psycopg2.connect(user = "weymouth",
-                                  password = "",
-                                  host = "127.0.0.1",
-                                  port = "5432",
-                                  database = "detroit")
+        config = get_database_access()
+        print(config)
+        connection = psycopg2.connect(**config)
         cursor = connection.cursor()
         geom = "ST_AsGeoJSON(ST_Transform(way,4326))"
         table = "planet_osm_line"
@@ -29,6 +28,7 @@ def connect_and_query():
         if connection:
             cursor.close()
             connection.close()
+    print("record", len(record), type(record))
     return record
 
 def print_bounding_box(out_file):

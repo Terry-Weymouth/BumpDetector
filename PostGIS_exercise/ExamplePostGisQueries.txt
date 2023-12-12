@@ -2,10 +2,10 @@ NOTES:
     brew install osm2pqsql
     osm2pgsql --database test_gis --multi-geometry small_map_royal_oak.osm
 
----***--- sql in db
 using small_map_royal_oak.osm
 
-select ST_Distance(ST_GeomFromEWKT('SRID=4326;POINT(-83.159119 42.494122)'), 
+---***--- sql in db
+select ST_Distance(ST_GeomFromEWKT('SRID=4326;POINT(-83.159119 42.494122)'),
 					ST_PointN(ST_Transform(way,4326),1)) 
 from planet_osm_line where name='Forestdale Road';
 

@@ -32,7 +32,7 @@ def make_connection():
                                       password="",
                                       host="127.0.0.1",
                                       port="5432",
-                                      database="Detroit")
+                                      database="lgrdetroit")
         cursor = connection.cursor()
     except (Exception, psycopg2.Error) as error :
         print ("Error while connecting to PostgreSQL", error)
