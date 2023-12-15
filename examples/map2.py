@@ -5,6 +5,7 @@ import mercantile
 import urllib.request
 import PIL.Image
 
+
 def _download_tile(tile: mercantile.Tile):
     """
     Helper function for downloading associated image
@@ -20,6 +21,7 @@ def _download_tile(tile: mercantile.Tile):
     img = PIL.Image.open(io.BytesIO(response.read()))
 
     return img, tile
+
 
 def get_image(west, south, east, north, zoom):
     """
@@ -47,10 +49,14 @@ def get_image(west, south, east, north, zoom):
         ((max_x - min_x + 1) * tile_size, (max_y - min_y + 1) * tile_size)
     )
 
-    pool = multiprocessing.Pool(8)
-    results = pool.map(_download_tile, tiles)
-    pool.close()
-    pool.join()
+    # pool = multiprocessing.Pool(8)
+    # results = pool.map(_download_tile, tiles)
+    # pool.close()
+    # pool.join()
+
+    results = []
+    for tile in tiles:
+        results.append(_download_tile(tile))
 
     for img, tile in results:
         left = tile.x - min_x
@@ -59,6 +65,7 @@ def get_image(west, south, east, north, zoom):
         out_img.paste(img, bounds)
 
     return out_img
+
 
 if __name__ == '__main__':
     # get combined image and save to file
