@@ -32,5 +32,4 @@ setuptools==69.0.2
 shapely==2.0.2
 six==1.16.0
 SQLAlchemy==2.0.23
-typing_extensions==4.9.0
 tzdata==2023.3
