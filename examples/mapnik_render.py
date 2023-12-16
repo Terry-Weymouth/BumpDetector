@@ -22,6 +22,7 @@ if not hasattr(mapnik, 'mapnik_version') and not mapnik.mapnik_version() >= 600:
     raise SystemExit('This script requires Mapnik >=0.6.0)')
 
 if __name__ == "__main__":
+    print("Starting mapnik example")
     try:
         mapfile = os.environ['MAPNIK_MAP_FILE']
     except KeyError:
@@ -71,7 +72,7 @@ if __name__ == "__main__":
     mapnik.render(m, im)
     im.save(map_uri, 'png')
 
-    sys.stdout.write('output image to %s!\n' % map_uri)
+    print('output image to %s!\n' % map_uri)
 
     # Note: instead of creating an image, rendering to it, and then
     # saving, we can also do this in one step like:

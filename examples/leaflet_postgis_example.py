@@ -2,8 +2,8 @@ import psycopg2
 from src.config.get_config import get_database_access
 
 
-header_filepath = "./leaflet/leaflet_header.txt"
-footer_filepath = "./leaflet/leaflet_footer.txt"
+header_filepath = "leaflet/leaflet_header.txt"
+footer_filepath = "leaflet/leaflet_footer.txt"
 
 
 def connect_and_query():
@@ -12,7 +12,6 @@ def connect_and_query():
     record = None
     try:
         config = get_database_access()
-        print(config)
         connection = psycopg2.connect(**config)
         cursor = connection.cursor()
         geom = "ST_AsGeoJSON(ST_Transform(way,4326))"
@@ -21,15 +20,15 @@ def connect_and_query():
         query = "select {} as g from {} where {};".format(geom, table, where)
         cursor.execute(query)
         record = cursor.fetchall()
-    except (Exception, psycopg2.Error) as error :
-        print ("Error while connecting to PostgreSQL", error)
+    except (Exception, psycopg2.Error) as error:
+        print("Error while connecting to PostgreSQL", error)
     finally:
-        #closing database connection.
+        # closing database connection.
         if connection:
             cursor.close()
             connection.close()
-    print("record", len(record), type(record))
     return record
+
 
 def print_bounding_box(out_file):
     bound_upper = 42.494433
@@ -38,9 +37,9 @@ def print_bounding_box(out_file):
     bound_right = -83.158586
 
     out_file.write("\t{}\n".format("var polygon = L.polygon(["))
-    out_file.write("\t\t[{}, {}], ".format(bound_upper,bound_left))
+    out_file.write("\t\t[{}, {}], ".format(bound_upper, bound_left))
     out_file.write("\t\t[{}, {}], ".format(bound_upper, bound_right))
-    out_file.write("\t\t[{}, {}], ".format(bound_lower,bound_right))
+    out_file.write("\t\t[{}, {}], ".format(bound_lower, bound_right))
     out_file.write("\t\t[{}, {}] ".format(bound_lower, bound_left))
     out_file.write("\t{}\n".format("]).addTo(mymap);"))
 
@@ -53,7 +52,6 @@ def close_enough(a, b):
 def add_geom(out_file, geom_list):
     for i in range(0, len(geom_list)):
         geom = geom_list[i][0]
-        print(geom)
         name = "geom{}".format(i)
         out_file.write("\tvar {} = {};\n".format(name, geom))
         out_file.write("\tL.geoJSON({}).addTo(mymap);\n".format(name))
@@ -66,13 +64,13 @@ def copy_path_content(in_path, out_file):
 
 def main():
     road_geom = connect_and_query()
-    print(road_geom)
     output = "PostGIS_probe.html"
     with open(output, "w") as out_file:
         copy_path_content(header_filepath, out_file)
         print_bounding_box(out_file)
         add_geom(out_file, road_geom)
         copy_path_content(footer_filepath, out_file)
+
 
 if __name__ == "__main__":
     main()
