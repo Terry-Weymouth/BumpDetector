@@ -1,6 +1,5 @@
+import sqlalchemy
 import geopandas as gpd
-import psycopg2
-from src.config.get_config import get_database_access
 from examples.sqlalchemy_config import get_sqlalchemy_engine
 import matplotlib.pyplot as plt
 
@@ -9,8 +8,10 @@ def make_connection():
     engine = None
     try:
         engine = get_sqlalchemy_engine()
-    except (Exception) as error:
-        print("Error while connecting to PostgreSQL", error)
+        with engine.connect() as conn:
+            result = conn.execution_options(stream_results=True).execute("select version()")
+    except (sqlalchemy.exc.OperationalError) as error:
+        print("Error while connecting to Database", error)
     return engine
 
 
