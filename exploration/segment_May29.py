@@ -1,6 +1,6 @@
 import numpy as np
 
-file_in = "../May29_2019_Cleaned_Data_Records.txt"
+file_in = "../May29_2019_Cleaned.txt"
 file_out_a = "../May29_2019_Segment_A.txt"
 file_out_b = "../May29_2019_Segment_B.txt"
 

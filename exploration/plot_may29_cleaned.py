@@ -3,7 +3,7 @@ matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 import numpy as np
 
-filename = "data/May29_2019_Cleaned_Data_Records.txt"
+filename = "data/May29_2019_Cleaned.txt"
 
 with open(filename) as f:
     content = f.readlines()
