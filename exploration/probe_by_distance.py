@@ -18,7 +18,9 @@ def get_id_limits(track_id):
     query_str = "select min(id), max(id) from bicycle_data where track_id={};"
     query_str = query_str.format(track_id)
     query = sql.SQL(query_str)
+    # noinspection PyUnresolvedReferences
     cursor.execute(query)
+    # noinspection PyUnresolvedReferences
     results = cursor.fetchone()
     return results
 
@@ -35,7 +37,9 @@ def probe(track_id, point_id):
         + "order by st_distance limit 1;"
     query_str = query_str.format(track_id, point_id)
     query = sql.SQL(query_str)
+    # noinspection PyUnresolvedReferences
     cursor.execute(query)
+    # noinspection PyUnresolvedReferences
     results = cursor.fetchone()
     if results:
         d = results[4]
@@ -58,7 +62,9 @@ def update_records(results_list):
                         + "nearest_road_distance=%s "
                         + "where id={};"
                         .format(point_id))
+        # noinspection PyUnresolvedReferences
         cursor.execute(query, (way_id, distance))
+    # noinspection PyUnresolvedReferences
     connection.commit()
 
 
@@ -68,11 +74,14 @@ def record_max_distance(track_id, d):
                     + "SET max_distance=%s "
                     + "where track_id={};"
                     .format(track_id))
+    # noinspection PyUnresolvedReferences
     cursor.execute(query, (d,))
+    # noinspection PyUnresolvedReferences
     connection.commit()
 
 
 def main():
+    # TODO: process all tracks that have no max distance
     global connection, cursor, max_d
     track_index = 1
     try:
@@ -83,9 +92,7 @@ def main():
         for point_id in range(limits[0], limits[1] + 1):
             results = probe(track_index, point_id)
             if results:
-                print(point_id, results)
                 results_list.append(results)
-        print(results_list)
         update_records(results_list)
         record_max_distance(track_index, max_d)
     except (Exception, psycopg2.Error) as error:
@@ -93,7 +100,9 @@ def main():
     finally:
         # closing database connection.
         if connection:
+            # noinspection PyUnresolvedReferences
             cursor.close()
+            # noinspection PyUnresolvedReferences
             connection.close()
 
 
