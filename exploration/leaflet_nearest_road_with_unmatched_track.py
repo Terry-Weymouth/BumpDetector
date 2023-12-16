@@ -1,11 +1,9 @@
-import argparse
-import os
 import psycopg2
 from psycopg2 import sql
 from src.config.get_config import get_database_access
 
-header_filepath = "./leaflet/leaflet_header.txt"
-footer_filepath = "./leaflet/leaflet_footer.txt"
+header_filepath = "leaflet/leaflet_header.txt"
+footer_filepath = "leaflet/leaflet_footer.txt"
 
 connection = None
 cursor = None
@@ -32,8 +30,8 @@ def make_connection():
         config = get_database_access()
         connection = psycopg2.connect(**config)
         cursor = connection.cursor()
-    except (Exception, psycopg2.Error) as error :
-        print ("Error while connecting to PostgreSQL", error)
+    except (Exception, psycopg2.Error) as error:
+        print("Error while connecting to PostgreSQL", error)
 
 
 def query_ways():
@@ -41,14 +39,17 @@ def query_ways():
 
     record = None
     try:
+        # noinspection PyUnresolvedReferences
         cursor = connection.cursor()
         geom = "ST_AsGeoJSON(ST_Transform(way,4326))"
-        table = "bicycle_data as track join planet_osm_line as osm on (track.nearest_road_id=osm.osm_id)"
-        query = "select {} from {};".format(geom, table)
+        table1 = "(select distinct nearest_road_id as id from bicycle_data) as road"
+        table2 = "planet_osm_line as osm"
+        join_on = "(road.id=osm.osm_id)"
+        query = "select {} from {} join {} on {};".format(geom, table1, table2, join_on)
         cursor.execute(query)
         record = cursor.fetchall()
-    except (Exception, psycopg2.Error) as error :
-        print ("Error while connecting to PostgreSQL", error)
+    except (Exception, psycopg2.Error) as error:
+        print("Error while connecting to PostgreSQL", error)
     return record
 
 
@@ -59,9 +60,9 @@ def print_bounding_box(out_file):
     bound_right = -83.158586
 
     out_file.write("\t{}\n".format("var polygon = L.polygon(["))
-    out_file.write("\t\t[{}, {}], ".format(bound_upper,bound_left))
+    out_file.write("\t\t[{}, {}], ".format(bound_upper, bound_left))
     out_file.write("\t\t[{}, {}], ".format(bound_upper, bound_right))
-    out_file.write("\t\t[{}, {}], ".format(bound_lower,bound_right))
+    out_file.write("\t\t[{}, {}], ".format(bound_lower, bound_right))
     out_file.write("\t\t[{}, {}] ".format(bound_lower, bound_left))
     out_file.write("\t{}\n".format("]).addTo(mymap);"))
 
@@ -76,12 +77,14 @@ def add_geom(out_file, geom_list):
 
 def create_point_list():
     global cursor, max_coded_value
-    # query_str = "select lat, long, nearest_road_distance from bicycle_data order by id;"
-    query_str = "select ST_Y(long_lat_remapped::geometry) as lat, " \
-                + "ST_X(long_lat_remapped::geometry) as long, " \
-                + "nearest_road_distance from bicycle_data order by id;"
+    query_str = "select lat, long, nearest_road_distance from bicycle_data order by id;"
+    # query_str = "select ST_Y(long_lat_remapped::geometry) as lat, " \
+    #            + "ST_X(long_lat_remapped::geometry) as long, " \
+    #            + "nearest_road_distance from bicycle_data order by id;"
     query = sql.SQL(query_str)
+    # noinspection PyUnresolvedReferences
     cursor.execute(query)
+    # noinspection PyUnresolvedReferences
     query_results = cursor.fetchall()
     max_coded_value = 0
     results = []
@@ -101,7 +104,7 @@ def annotate_point_list(point_list):
         distance = record[2]
         index = int((distance/max_coded_value) * float(index_limit))
         if index >= index_limit:
-            index = index_limit -1
+            index = index_limit - 1
         record.append(index)
         results.append(record)
     return results
@@ -164,12 +167,14 @@ def main():
             with open(output, "w") as out_file:
                 copy_path_content(header_filepath, out_file)
                 print_bounding_box(out_file)
-                # add_geom(out_file, road_geom)
+                add_geom(out_file, road_geom)
                 add_point_list(out_file, point_list)
                 copy_path_content(footer_filepath, out_file)
     if cursor:
+        # noinspection PyUnresolvedReferences
         cursor.close()
     if connection:
+        # noinspection PyUnresolvedReferences
         connection.close()
 
 

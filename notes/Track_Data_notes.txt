@@ -143,3 +143,9 @@ You can see the power of GEOGRAPHY in action by calculating how close a plane fl
 
 -- Distance calculation using GEOGRAPHY (122.2km)
   SELECT ST_Distance('LINESTRING(-122.33 47.606, 0.0 51.5)'::geography, 'POINT(-21.96 64.15)'::geography);
+
+-- All roads (as lines from planet_osm_line) that are in any track data
+select ST_AsGeoJSON(ST_Transform(way,4326))
+from (select distinct nearest_road_id as id from bicycle_data) as roads
+    join planet_osm_line as osm
+    on (roads.id=osm.osm_id);
