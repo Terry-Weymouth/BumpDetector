@@ -2,3 +2,7 @@
 env/
 laptop_env/
 *.html
+
+.DS_Store
+**/.DS_Store
+**/__pycache__
