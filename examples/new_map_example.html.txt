@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset='utf-8' />
+    <title>Your Map</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1' />
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css' rel='stylesheet' />
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div id='map'></div>
+    <script>
+        mapboxgl.accessToken = 'pk.eyJ1Ijoid2V5bW91dGgiLCJhIjoiY2phNjFwcWx6M3RzajJ3bnJycTE1dG90NiJ9._9zGTEu12KL8CZIrhsTooQ';
+        const map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/mapbox/streets-v12',
+            center: [-83.1592,42.4939],
+            zoom: 16.5,
+        });
+        map.on('style.load', () => {
+            var geom0 = {"type":"LineString",
+                    "coordinates":[[-83.1590104,42.499099601],[-83.1590112,42.499171101],[-83.1590466,42.500186201],[-83.1590488,42.500252101],[-83.1590516,42.500322401],[-83.1590853,42.501180001],[-83.1590857,42.501244901],[-83.1590895,42.501308701],[-83.1591236,42.502278901]]
+            };
+	        map.addSource('route', {
+                type: 'geojson',
+                data: {
+                    'type': 'Feature',
+                    'properties': {},
+                    'geometry': geom0 }
+            });
+            map.addLayer({
+                id: 'route',
+                type: 'line',
+                source: 'route',
+                paint: {
+                    'line-color': '#888',
+                    'line-width': 3
+                }
+            });
+        });
+
+    </script>
+</body>
+</html>
