@@ -31,31 +31,6 @@ def connect_and_query():
     return record
 
 
-"""
-        map.on('style.load', () => {
-            var geom0 = {"type":"LineString",
-                    "coordinates":[[-83.1590104,42.499099601],[-83.1590112,42.499171101],[-83.1590466,42.500186201],[-83.1590488,42.500252101],[-83.1590516,42.500322401],[-83.1590853,42.501180001],[-83.1590857,42.501244901],[-83.1590895,42.501308701],[-83.1591236,42.502278901]]
-            };
-            map.addSource('route', {
-                type: 'geojson',
-                data: {
-                    'type': 'Feature',
-                    'properties': {},
-                    'geometry': geom0 }
-            });
-            map.addLayer({
-                id: 'route',
-                type: 'line',
-                source: 'route',
-                paint: {
-                    'line-color': '#888',
-                    'line-width': 3
-                }
-            });
-        });
-"""
-
-
 def add_geom(out_file, geom_list):
     # loader header
     out_file.write("map.on('style.load', () => {\n")
