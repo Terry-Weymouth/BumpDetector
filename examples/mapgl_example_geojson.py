@@ -21,6 +21,7 @@ def connect_and_query():
         query = "select {} as g from {} where {};".format(geom, table, where)
         cursor.execute(query)
         record = cursor.fetchall()
+        print(record)
     except (Exception, psycopg2.Error) as error:
         print("Error while connecting to PostgreSQL", error)
     finally:
