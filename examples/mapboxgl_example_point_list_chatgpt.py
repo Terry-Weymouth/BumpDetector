@@ -64,14 +64,31 @@ def add_geom(out_file, track_data):
             }});
         """)
 
-def add_map_base(out_file):
+
+def compute_all_track_data_centroid(track_data):
+    long_centroid = 0.0
+    lat_centroid = 0.0
+    n = 0
+    for track in track_data:
+        position_data = track[2]
+        for position in position_data:
+            (long, lat) = position
+            long_centroid = (long_centroid*n + long)/(n + 1)
+            lat_centroid = (lat_centroid*n + lat)/(n + 1)
+            n = n + 1
+    return long_centroid, lat_centroid
+
+
+def add_map_base(out_file, track_data):
+    (long, lat) = compute_all_track_data_centroid(track_data)
+    print(long, lat)
     out_file.write(
-        """\t\tconst map = new mapboxgl.Map({
+        f"""\t\tconst map = new mapboxgl.Map({{
             container: 'map',
             style: 'mapbox://styles/mapbox/streets-v12',
-            center: [-83.1592,42.4939],
-            zoom: 14,
-        });
+            center: [{long},{lat}],
+            zoom: 13,
+        }});
         """
     )
 
@@ -88,12 +105,11 @@ def add_access_token(out_file):
 
 def main():
     track_data = connect_and_query()
-    print(track_data[0])
     output = "mapboxgl_chatgpt_example.html"
     with open(output, "w") as out_file:
         copy_path_content(header_filepath, out_file)
         add_access_token(out_file)
-        add_map_base(out_file)
+        add_map_base(out_file, track_data)
         add_geom(out_file, track_data)
         copy_path_content(footer_filepath, out_file)
 
