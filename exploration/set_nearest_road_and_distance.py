@@ -83,7 +83,7 @@ def record_max_distance(track_id, d):
 def main():
     # TODO: process all tracks that have no max distance
     global connection, cursor, max_d
-    track_index = 1
+    track_index = 3
     try:
         make_connection()
         limits = get_id_limits(track_index)
