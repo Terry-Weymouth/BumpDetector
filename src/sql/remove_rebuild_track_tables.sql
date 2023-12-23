@@ -1,7 +1,7 @@
-drop index long_lat_original_gix;
-drop index long_lat_remapped_gix;
-drop table bicycle_track;
-drop table bicycle_data;
+drop index if exists long_lat_original_gix;
+drop index if exists long_lat_remapped_gix;
+drop table if exists bicycle_track;
+drop table if exists bicycle_data;
 
 create table bicycle_track (
   track_id serial primary key,
