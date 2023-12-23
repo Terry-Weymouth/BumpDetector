@@ -17,6 +17,12 @@
             bottom: 0;
             width: 100%;
         }
+        .marker {
+            background-color: black;
+            border-radius: 50%;
+            width: 2px;
+            height: 2px;
+        }
     </style>
 </head>
 <body>

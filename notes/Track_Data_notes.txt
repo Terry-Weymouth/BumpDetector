@@ -149,3 +149,9 @@ select ST_AsGeoJSON(ST_Transform(way,4326))
 from (select distinct nearest_road_id as id from bicycle_data) as roads
     join planet_osm_line as osm
     on (roads.id=osm.osm_id);
+
+select distinct osm.name
+from (select distinct nearest_road_id as id from bicycle_data) as roads
+    join planet_osm_line as osm
+    on (roads.id=osm.osm_id);
+
