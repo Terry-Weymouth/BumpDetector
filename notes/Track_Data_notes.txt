@@ -162,3 +162,38 @@ FROM  planet_osm_line As road, bicycle_data
 WHERE ST_DWithin(road.way, bicycle_data.long_lat_original, 70)
     and not (road.highway='footway')
 ORDER BY road.osm_id, bicycle_data.id, dist;
+
+-- Distance to nearest road
+-- --  Old method
+select track.id, osm.osm_id, osm.name, osm.highway,
+        ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original) as dist
+    from bicycle_data as track, planet_osm_line as osm
+    where track.track_id=1 and track.id=32
+        and ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original) < 70.0
+        and highway is not null
+        and not (highway in ('footway', 'tertiary_link', 'motorway'))
+        order by  ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original) limit 1;
+
+-- --  New method
+select distinct on (track.id) track.id, osm.osm_id, osm.name, osm.highway,
+        ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original) as dist
+    from bicycle_data as track, planet_osm_line as osm
+    where track.track_id=1
+        and ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original) < 20.0
+        and highway is not null
+        and not (highway in ('footway', 'tertiary_link', 'motorway'))
+        order by  track.id, ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original);
+
+-- --  New method as update for a given track
+update bicycle_data
+set nearest_road_id = new_data.osm_id, nearest_road_distance = new_data.dist
+from (select distinct on (track.id) track.id, osm.osm_id, osm.name, osm.highway,
+        ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original) as dist
+    from bicycle_data as track, planet_osm_line as osm
+    where track.track_id=1
+        and ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original) < 20.0
+        and highway is not null
+        and not (highway in ('footway', 'tertiary_link', 'motorway'))
+        order by  track.id, ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original)
+    ) as new_data
+where bicycle_data.id = new_data.id ;
