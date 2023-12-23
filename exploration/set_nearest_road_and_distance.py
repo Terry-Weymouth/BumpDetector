@@ -50,7 +50,7 @@ def probe(track_id, point_id):
     return results
 
 
-def update_records(results_list):
+def insert_nearest_road(results_list):
     global cursor, connection
     for item in results_list:
         print(item)
@@ -93,7 +93,7 @@ def main():
             results = probe(track_index, point_id)
             if results:
                 results_list.append(results)
-        update_records(results_list)
+        insert_nearest_road(results_list)
         record_max_distance(track_index, max_d)
     except (Exception, psycopg2.Error) as error:
         print("Error while connecting to PostgreSQL", error)

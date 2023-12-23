@@ -155,3 +155,10 @@ from (select distinct nearest_road_id as id from bicycle_data) as roads
     join planet_osm_line as osm
     on (roads.id=osm.osm_id);
 
+SELECT
+   DISTINCT ON (road.osm_id)
+   road.osm_id, bicycle_data.id, ST_Distance(road.way, bicycle_data.long_lat_original)  as dist
+FROM  planet_osm_line As road, bicycle_data
+WHERE ST_DWithin(road.way, bicycle_data.long_lat_original, 70)
+    and not (road.highway='footway')
+ORDER BY road.osm_id, bicycle_data.id, dist;

@@ -34,3 +34,7 @@ create table bicycle_data (
 
 CREATE INDEX long_lat_original_gix ON bicycle_data USING GIST ( long_lat_original );
 CREATE INDEX long_lat_remapped_gix ON bicycle_data USING GIST ( long_lat_remapped );
+
+UPDATE bicycle_data SET long_lat_original = ST_SetSRID(ST_MakePoint(long, lat), 4326)::geography;
+
+SELECT long, lat, ST_AsEWKT(long_lat_original) from bicycle_data;
