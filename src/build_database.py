@@ -27,12 +27,10 @@ def apply_sql_file(file_path):
         # Execute each SQL statement
         for statement in statements:
             if statement and statement.strip():  # Skip empty statements
-                print(statement)
                 cursor.execute(statement)
 
         # Commit the changes
         connection.commit()
-        print("SQL statements executed successfully.")
 
     except (Exception, psycopg2.DatabaseError) as error:
         print(f"Error executing SQL statements: {error}")

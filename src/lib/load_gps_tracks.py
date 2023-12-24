@@ -1,8 +1,10 @@
 import os
+import time as clock
 import fnmatch
 import numpy as np
 from datetime import datetime
 from psycopg2 import sql
+from src.lib.progress_bar import print_progress, clear_progress
 
 global connection, cursor, max_d
 
@@ -12,24 +14,34 @@ def load_track_data(cur, con):
     connection = con
     cursor = cur
     max_d = 0
+
     directory_path = "./data"  # Change this to the desired directory path
     pattern = "*_Cleaned.txt"
     matching_files = find_files(directory_path, pattern)
     for file_path in matching_files:
+        start_time = clock.time()
         print("loading data from", file_path)
         point_list = create_point_list(file_path)
         track_index = add_new_track(file_path)
         add_points(track_index, point_list)
         update_with_geography(track_index)
+        print(f"initial data loaded; update with distance to road, for track {track_index}")
+
         limits = get_id_limits(track_index)
         results_list = []
         for point_id in range(limits[0], limits[1] + 1):
             results = get_nearest_road_and_distance(track_index, point_id)
             if results:
                 results_list.append(results)
+            print_progress(point_id, limits[0], limits[1])
         add_road_and_distance(results_list)
+        clear_progress(f"distance to road added for track {track_index}")
+        print(f"\rdistance to road added for track {track_index}")  # also, clear progress bar
         record_max_distance(track_index, max_d)
-        print(f"Added track: {track_index}")
+        secs = int(clock.time() - start_time + 0.49)
+        num_records = limits[1] - limits[0]
+        print(f"Added track {track_index} ({num_records} records) in {secs} secs")
+
 
 def create_point_list(file_path):
     with open(file_path) as f:
