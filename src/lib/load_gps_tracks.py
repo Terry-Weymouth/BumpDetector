@@ -1,6 +1,4 @@
-import os
 import time as clock
-import fnmatch
 import numpy as np
 from datetime import datetime
 from psycopg2 import sql
@@ -9,16 +7,13 @@ from src.lib.progress_bar import print_progress, clear_progress
 global connection, cursor, max_d
 
 
-def load_track_data(cur, con):
+def load_track_data(cur, con, file_path_list):
     global connection, cursor, max_d
     connection = con
     cursor = cur
     max_d = 0
 
-    directory_path = "./data"  # Change this to the desired directory path
-    pattern = "*_Cleaned.txt"
-    matching_files = find_files(directory_path, pattern)
-    for file_path in matching_files:
+    for file_path in file_path_list:
         start_time = clock.time()
         print("loading data from", file_path)
         point_list = create_point_list(file_path)
@@ -36,10 +31,9 @@ def load_track_data(cur, con):
             print_progress(point_id, limits[0], limits[1])
         add_road_and_distance(results_list)
         clear_progress(f"distance to road added for track {track_index}")
-        print(f"\rdistance to road added for track {track_index}")  # also, clear progress bar
         record_max_distance(track_index, max_d)
         secs = int(clock.time() - start_time + 0.49)
-        num_records = limits[1] - limits[0]
+        num_records = limits[1] - limits[0] + 1
         print(f"Added track {track_index} ({num_records} records) in {secs} secs")
 
 
@@ -87,14 +81,6 @@ def add_new_track(source_filename):
     connection.commit()
     track_index = cursor.fetchone()[0]
     return track_index
-
-
-def find_files(directory, pattern):
-    file_list = []
-    for root, dirs, files in os.walk(directory):
-        for filename in fnmatch.filter(files, pattern):
-            file_list.append(os.path.join(root, filename))
-    return file_list
 
 
 def add_points(track_index, point_list):
