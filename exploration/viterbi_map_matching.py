@@ -39,8 +39,9 @@ def viterbi_hmm(gps_sequence, street_graph):
     for t in range(1, len(gps_sequence)):
         for s in range(len(states)):
             # Calculate transition probabilities from the previous step to the current state
-            transition_probs = [viterbi_matrix[prev_s, t - 1] * transition_probability(prev_s, s, street_graph)
-                                for prev_s in range(len(states))]
+            transition_probs = [
+                viterbi_matrix[prev_s, t - 1] * transition_probability(prev_s, s, states, street_graph)
+                for prev_s in range(len(states))]
 
             # Choose the state with the maximum probability and update the Viterbi matrix and backpointer matrix
             max_prob_index = np.argmax(transition_probs)
@@ -59,11 +60,15 @@ def viterbi_hmm(gps_sequence, street_graph):
     return matched_street_nodes
 
 
-def transition_probability(prev_state, current_state, street_graph):
-    keys = list(street_graph.keys())
-    # print(prev_state, current_state, keys[prev_state], keys[current_state])
-    # Placeholder function for transition probability, you should replace it with your own logic
-    return 0.5
+def transition_probability(prev_state, current_state, states, street_graph):
+    prev_street = states[prev_state]
+    current_street = states[current_state]
+    adjacent_streets = street_graph[prev_street]
+    if prev_street == current_street:
+        return 1.0/(len(adjacent_streets) - 1.0)
+    if current_state in adjacent_streets:
+        return 1.0/(len(adjacent_streets) + 1.0)
+    return 0.0
 
 
 def emission_probability(gps_point_id, street_id):
@@ -91,36 +96,25 @@ def distance_to_road(gps_point_id, street_node_id):
     return results[0]
 
 
-def get_road_ids(track_id):
-    global cursor
+def get_point_ids(track_id, first_road_id):
     query = f"""
-        select distinct nearest_road_id as id from bicycle_data where track_id={track_id} order by id
+        select id, nearest_road_id from bicycle_data where track_id={track_id} order by id
     """
     query = sql.SQL(query)
     # noinspection PyUnresolvedReferences
     cursor.execute(query)
     # noinspection PyUnresolvedReferences
     results = cursor.fetchall()
+    # trim leading points (moving away from base towards first road)
+    while not results[0][1] == first_road_id:
+        x = results.pop(0)
     return [item[0] for item in results]
 
 
-def get_point_ids(track_id):
-    query = f"""
-        select id from bicycle_data where track_id={track_id} order by id
-    """
-    query = sql.SQL(query)
-    # noinspection PyUnresolvedReferences
-    cursor.execute(query)
-    # noinspection PyUnresolvedReferences
-    results = cursor.fetchall()
-    return [item[0] for item in results]
-
-
-def get_road_graph(track_id):
+def get_road_graph(track_id, first_road_id):
     global connection, cursor
-    # print(f"track_id = {track_id}")
     query = f"""
-        select one.osm_id, two.osm_id, ST_Distance(ST_Transform(one.way,4326),ST_Transform(two.way,4326)) as dist from
+        select distinct on (one.osm_id, two.osm_id) one.osm_id, two.osm_id, ST_Distance(ST_Transform(one.way,4326),ST_Transform(two.way,4326)) as dist from
             planet_osm_line as one, planet_osm_line as two
             where one.osm_id < two.osm_id
                 and one.osm_id in (select distinct nearest_road_id from bicycle_data bd where bd.track_id={track_id})
@@ -134,16 +128,57 @@ def get_road_graph(track_id):
     cursor.execute(query)
     # noinspection PyUnresolvedReferences
     results = cursor.fetchall()
+    # find first occurrence of first_road_id, and put element at start of list
+    index = 0
+    for item in results:
+        id1, id2, _ = item
+        if (not id1 == id2) and (id1 == first_road_id or id2 == first_road_id):
+            break
+        index = index + 1
+    if index < len(results):
+        results.insert(0, results.pop(index))
     ret = dict()
     for item in results:
         id1, id2, _ = item
+        if id1 == id2:
+            continue
         if id1 not in ret.keys():
             ret[id1] = []
-        if id not in ret.keys():
+        if id2 not in ret.keys():
             ret[id2] = []
         ret[id1].append(id2)
         ret[id2].append(id1)
     return ret
+
+
+def get_road_names(track_id):
+    query = f"""
+        select osm_id, name from planet_osm_line, 
+            (select distinct nearest_road_id from bicycle_data bd where bd.track_id={track_id}) as track
+        where osm_id = track.nearest_road_id
+    """
+    query = sql.SQL(query)
+    # noinspection PyUnresolvedReferences
+    cursor.execute(query)
+    # noinspection PyUnresolvedReferences
+    results = cursor.fetchall()
+    ret = dict()
+    for item in results:
+        key, name = item
+        if not name:
+            continue
+        ret[key] = name
+    return ret
+
+
+def print_street_graph_entry_with_names(key, road_graph, road_name):
+    print(f"{road_name[key]}:: {key}")
+    name_keys = list(road_name.keys())
+    for other in road_graph[key]:
+        if other in name_keys:
+            print(f"    {road_name[other]}:: {other}")
+        else:
+            print(f"    <unnamed>:: {other}")
 
 
 def make_connection():
@@ -159,11 +194,15 @@ def main():
     track_id = 1
     max_d = 10
     if connection:
-        points = get_point_ids(track_id)
-        # print(points[0])
-        # roads = get_road_ids(track_id)
-        road_graph = get_road_graph(track_id)
-        viterbi_hmm(points, road_graph)
+        first_road = 8699583
+
+        # points are index into bicycle_data
+        gps_points = get_point_ids(track_id, first_road)
+        # road_graph keys are osm_id in planet_osm_line from nearest_road_id of selected points
+        #   entry is list of 'adjacent roads'
+        road_graph = get_road_graph(track_id, first_road)
+        road_name = get_road_names(track_id)
+        viterbi_hmm(gps_points, road_graph)
         cursor.close()
         connection.close()
 
