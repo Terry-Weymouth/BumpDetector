@@ -18,9 +18,7 @@ import psycopg2
 from psycopg2 import sql
 from src.config.get_config import get_database_access
 
-
 global connection, cursor, max_d
-max_d = 10
 
 
 def viterbi_hmm(gps_sequence, street_graph):
@@ -41,12 +39,13 @@ def viterbi_hmm(gps_sequence, street_graph):
     for t in range(1, len(gps_sequence)):
         for s in range(len(states)):
             # Calculate transition probabilities from the previous step to the current state
-            transition_probs = [viterbi_matrix[prev_s, t - 1] * transition_probability(prev_s, s) for prev_s in
-                                range(len(states))]
+            transition_probs = [viterbi_matrix[prev_s, t - 1] * transition_probability(prev_s, s, street_graph)
+                                for prev_s in range(len(states))]
 
             # Choose the state with the maximum probability and update the Viterbi matrix and backpointer matrix
             max_prob_index = np.argmax(transition_probs)
-            viterbi_matrix[s, t] = transition_probs[max_prob_index] * emission_probability(gps_sequence[t], states[s])
+            viterbi_matrix[s, t] = (transition_probs[max_prob_index] *
+                                    emission_probability(gps_sequence[t], states[s]))
             back_pointer_matrix[s, t] = max_prob_index
 
     # Backtrack to find the most likely path
@@ -60,27 +59,29 @@ def viterbi_hmm(gps_sequence, street_graph):
     return matched_street_nodes
 
 
-def transition_probability(prev_state, current_state):
-    print(prev_state, current_state)
+def transition_probability(prev_state, current_state, street_graph):
+    keys = list(street_graph.keys())
+    # print(prev_state, current_state, keys[prev_state], keys[current_state])
     # Placeholder function for transition probability, you should replace it with your own logic
     return 0.5
 
 
-def emission_probability(gps_point, street_node):
+def emission_probability(gps_point_id, street_id):
     global max_d
-    d = distance_to_road(gps_point, street_node)
+    d = distance_to_road(gps_point_id, street_id)
     if d > max_d:
         return 0
     d_norm = (d/max_d)**2
+    print("emission_probability", gps_point_id, street_id, d, 1 - d_norm)
     return max(0, min(1, 1 - d_norm))
 
 
-def distance_to_road(gps_point, street_node):
+def distance_to_road(gps_point_id, street_node_id):
     global cursor
     query = f"""
-        select osm.osm_id, ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original)
-        from bicycle_data as track, planet_osm_line as osm where track.id={gps_point}
-        and osm.osm_id={street_node};
+        select ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original)
+        from bicycle_data as track, planet_osm_line as osm where track.id={gps_point_id}
+        and osm.osm_id={street_node_id}
     """
     query = sql.SQL(query)
     # noinspection PyUnresolvedReferences
@@ -117,7 +118,7 @@ def get_point_ids(track_id):
 
 def get_road_graph(track_id):
     global connection, cursor
-    print(f"track_id = {track_id}")
+    # print(f"track_id = {track_id}")
     query = f"""
         select one.osm_id, two.osm_id, ST_Distance(ST_Transform(one.way,4326),ST_Transform(two.way,4326)) as dist from
             planet_osm_line as one, planet_osm_line as two
@@ -153,12 +154,14 @@ def make_connection():
 
 
 def main():
-    global connection, cursor
+    global connection, cursor, max_d
     make_connection()  # if successful - sets connection, cursor
     track_id = 1
+    max_d = 10
     if connection:
         points = get_point_ids(track_id)
-        roads = get_road_ids(track_id)
+        # print(points[0])
+        # roads = get_road_ids(track_id)
         road_graph = get_road_graph(track_id)
         viterbi_hmm(points, road_graph)
         cursor.close()
