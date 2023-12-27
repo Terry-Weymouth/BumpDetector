@@ -197,3 +197,22 @@ from (select distinct on (track.id) track.id, osm.osm_id, osm.name, osm.highway,
         order by  track.id, ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original)
     ) as new_data
 where bicycle_data.id = new_data.id ;
+
+
+-- road graph for a given track
+select one.osm_id, two.osm_id, ST_Distance(ST_Transform(one.way,4326),ST_Transform(two.way,4326)) as dist from
+    planet_osm_line as one, planet_osm_line as two
+    where one.osm_id < two.osm_id
+        and one.osm_id in (select distinct nearest_road_id from bicycle_data bd where bd.track_id=1)
+        and two.osm_id in (select distinct nearest_road_id from bicycle_data bd where bd.track_id=1)
+        and not one.osm_id = two.osm_id
+        and ST_Distance(ST_Transform(one.way,4326),ST_Transform(two.way,4326)) < 4
+    order by one.osm_id, two.osm_id;
+
+
+-- get data to create a lookup table osm_id -> name for all osm_id's in track data (e.g. nearest road)
+select distinct osm_id, name from planet_osm_line as oam, bicycle_data as bd
+where osm_id = nearest_road_id
+    and track_id = 1
+order by osm_id;
+
