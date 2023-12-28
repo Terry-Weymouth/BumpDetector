@@ -37,6 +37,7 @@ def viterbi_hmm(gps_sequence, street_graph, distance_map):
 
     # Iterate through the GPS sequence
     for t in range(1, len(gps_sequence)):
+        # print("-" * 40)
         for s in range(len(states)):
             # Calculate transition probabilities from the previous step to the current state
             transition_probs = [
@@ -45,6 +46,7 @@ def viterbi_hmm(gps_sequence, street_graph, distance_map):
 
             # Choose the state with the maximum probability and update the Viterbi matrix and backpointer matrix
             max_prob_index = np.argmax(transition_probs)
+            # print("****", max_prob_index, transition_probs[max_prob_index])
             viterbi_matrix[s, t] = (transition_probs[max_prob_index] *
                                     emission_probability(gps_sequence[t], states[s], distance_map))
             back_pointer_matrix[s, t] = max_prob_index
@@ -65,9 +67,9 @@ def transition_probability(prev_state, current_state, states, street_graph):
     current_street = states[current_state]
     adjacent_streets = street_graph[prev_street]
     if prev_street == current_street:
-        return 1.0/(len(adjacent_streets) - 1.0)
+        return 1.0
     if current_state in adjacent_streets:
-        return 1.0/(len(adjacent_streets) + 1.0)
+        return 1.0/(len(adjacent_streets))
     return 0.000001
 
 
@@ -89,7 +91,7 @@ def emission_probability(gps_point_id, street_id, distance_map):
 
 def get_point_ids(track_id, first_road_id):
     query = f"""
-        select id, nearest_road_id from bicycle_data where track_id={track_id} order by id limit 200
+        select id, nearest_road_id from bicycle_data where track_id={track_id} order by id
     """
     query = sql.SQL(query)
     # noinspection PyUnresolvedReferences
@@ -210,8 +212,8 @@ def make_connection():
 def main():
     global connection, cursor, max_d
     make_connection()  # if successful - sets connection, cursor
-    track_id = 1
-    max_d = 10
+    track_id = 2
+    max_d = 15
     if connection:
         first_road = 8699583
 
@@ -224,11 +226,17 @@ def main():
         distance_map = build_track_point_to_road_distance_map(track_id)
         matched_street_nodes = viterbi_hmm(gps_points, road_graph, distance_map)
         probe = 0
+        all_ids = []
         for id in matched_street_nodes:
             if id == probe:
                 continue
             probe = id
-            print(f"{id}::{road_name[id]}")
+            all_ids.append(id)
+            if id in road_name:
+                print(f"{id}::{road_name[id]}")
+            else:
+                print(f"{id}::<no name>")
+        print(all_ids)
         cursor.close()
         connection.close()
 

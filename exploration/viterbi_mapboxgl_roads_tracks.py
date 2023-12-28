@@ -15,7 +15,7 @@ def tracks_connect_and_query(track_id):
         connection = psycopg2.connect(**config)
         cursor = connection.cursor()
         track_color = 'blue'
-        query = f"select long, lat from bicycle_data where track_id={track_id} order by id limit 200"
+        query = (f"select long, lat from bicycle_data where track_id={track_id} order by id")
         cursor.execute(query)
         point_list = cursor.fetchall()
         track_data.append((track_id, track_color, point_list))
@@ -62,7 +62,8 @@ def matched_roads_connect_and_query():
     connection = None
     cursor = None
     record = None
-    matched_roads = [8699583, 8695357, 8700617, 8670713]
+    matched_roads = [8699583, 8688834, 992526123, 107384593, 404611500, 1070134475,
+                     8688836, 8670713, 1134277550, 992521504, 955158555, 8670713]
     try:
         config = get_database_access()
         connection = psycopg2.connect(**config)
@@ -158,7 +159,7 @@ def add_access_token(out_file):
 
 
 def main():
-    track_id = 1
+    track_id = 2
     track_data = tracks_connect_and_query(track_id)
     road_data = matched_roads_connect_and_query()
     output = "mapboxgl_roads_tracks.html"
