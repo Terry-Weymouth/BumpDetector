@@ -50,7 +50,10 @@ def viterbi_hmm(gps_sequence, street_graph, distance_map):
             viterbi_matrix[s, t] = (transition_probs[max_prob_index] *
                                     emission_probability(gps_sequence[t], states[s], distance_map))
             back_pointer_matrix[s, t] = max_prob_index
-
+        # rescale current column
+        scale = 1.0/np.sum(viterbi_matrix[:, t])
+        for s in range(len(states)):
+            viterbi_matrix[s, t] = viterbi_matrix[s, t] * scale
     # Backtrack to find the most likely path
     best_path = [np.argmax(viterbi_matrix[:, -1])]
     for t in range(len(gps_sequence) - 1, 0, -1):
@@ -213,7 +216,7 @@ def main():
     global connection, cursor, max_d
     make_connection()  # if successful - sets connection, cursor
     track_id = 2
-    max_d = 15
+    max_d = 20
     if connection:
         first_road = 8699583
 
