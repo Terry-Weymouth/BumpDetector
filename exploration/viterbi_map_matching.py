@@ -21,7 +21,7 @@ from src.config.get_config import get_database_access
 global connection, cursor, max_d
 
 
-def viterbi_hmm(gps_sequence, street_graph):
+def viterbi_hmm(gps_sequence, street_graph, distance_map):
     # Assuming street_graph is a dictionary where keys are street nodes and values are lists of neighboring nodes
     states = list(street_graph.keys())
 
@@ -46,7 +46,7 @@ def viterbi_hmm(gps_sequence, street_graph):
             # Choose the state with the maximum probability and update the Viterbi matrix and backpointer matrix
             max_prob_index = np.argmax(transition_probs)
             viterbi_matrix[s, t] = (transition_probs[max_prob_index] *
-                                    emission_probability(gps_sequence[t], states[s]))
+                                    emission_probability(gps_sequence[t], states[s], distance_map))
             back_pointer_matrix[s, t] = max_prob_index
 
     # Backtrack to find the most likely path
@@ -68,37 +68,28 @@ def transition_probability(prev_state, current_state, states, street_graph):
         return 1.0/(len(adjacent_streets) - 1.0)
     if current_state in adjacent_streets:
         return 1.0/(len(adjacent_streets) + 1.0)
-    return 0.0
+    return 0.000001
 
 
-def emission_probability(gps_point_id, street_id):
+def emission_probability(gps_point_id, street_id, distance_map):
     global max_d
-    d = distance_to_road(gps_point_id, street_id)
-    if d > max_d:
-        return 0
-    d_norm = (d/max_d)**2
-    print("emission_probability", gps_point_id, street_id, d, 1 - d_norm)
+    # print(gps_point_id, street_id)
+    if street_id not in distance_map:
+        # print(f"no street_id: {street_id}")
+        return 0.000001
+    distances = distance_map[street_id]
+    if gps_point_id not in distances:
+        # print(f"no point_id: {gps_point_id}")
+        return 0.000001
+    d = distances[gps_point_id]
+    d_norm = d/max_d
+    # print("emission_probability", gps_point_id, street_id, d, 1 - d_norm)
     return max(0, min(1, 1 - d_norm))
-
-
-def distance_to_road(gps_point_id, street_node_id):
-    global cursor
-    query = f"""
-        select ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original)
-        from bicycle_data as track, planet_osm_line as osm where track.id={gps_point_id}
-        and osm.osm_id={street_node_id}
-    """
-    query = sql.SQL(query)
-    # noinspection PyUnresolvedReferences
-    cursor.execute(query)
-    # noinspection PyUnresolvedReferences
-    results = cursor.fetchone()
-    return results[0]
 
 
 def get_point_ids(track_id, first_road_id):
     query = f"""
-        select id, nearest_road_id from bicycle_data where track_id={track_id} order by id
+        select id, nearest_road_id from bicycle_data where track_id={track_id} order by id limit 200
     """
     query = sql.SQL(query)
     # noinspection PyUnresolvedReferences
@@ -107,22 +98,23 @@ def get_point_ids(track_id, first_road_id):
     results = cursor.fetchall()
     # trim leading points (moving away from base towards first road)
     while not results[0][1] == first_road_id:
-        x = results.pop(0)
+        results.pop(0)
     return [item[0] for item in results]
 
 
 def get_road_graph(track_id, first_road_id):
     global connection, cursor
     query = f"""
-        select distinct on (one.osm_id, two.osm_id) one.osm_id, two.osm_id, ST_Distance(ST_Transform(one.way,4326),ST_Transform(two.way,4326)) as dist from
-            planet_osm_line as one, planet_osm_line as two
-            where one.osm_id < two.osm_id
-                and one.osm_id in (select distinct nearest_road_id from bicycle_data bd where bd.track_id={track_id})
-                and two.osm_id in (select distinct nearest_road_id from bicycle_data bd where bd.track_id={track_id})
-                and not one.osm_id = two.osm_id
-                and ST_Distance(ST_Transform(one.way,4326),ST_Transform(two.way,4326)) < 4
-            order by one.osm_id, two.osm_id;
-        """
+        select distinct on (one.osm_id, two.osm_id) 
+                one.osm_id, two.osm_id, ST_Distance(ST_Transform(one.way,4326),ST_Transform(two.way,4326)) as dist
+        from planet_osm_line as one, planet_osm_line as two
+        where one.osm_id < two.osm_id
+            and one.osm_id in (select distinct nearest_road_id from bicycle_data bd where bd.track_id={track_id})
+            and two.osm_id in (select distinct nearest_road_id from bicycle_data bd where bd.track_id={track_id})
+            and not one.osm_id = two.osm_id
+            and ST_Distance(ST_Transform(one.way,4326),ST_Transform(two.way,4326)) < 4
+        order by one.osm_id, two.osm_id;
+    """
     query = sql.SQL(query)
     # noinspection PyUnresolvedReferences
     cursor.execute(query)
@@ -171,6 +163,33 @@ def get_road_names(track_id):
     return ret
 
 
+def build_track_point_to_road_distance_map(track_id):
+    global max_d
+
+    query = f"""
+        select track.id, osm_id, ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original) as dist
+        from bicycle_data as track, planet_osm_line as osm
+        where track.track_id = {track_id}
+            and osm.osm_id in (select distinct nearest_road_id from bicycle_data bd where bd.track_id={track_id})
+            and ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original) < {max_d};    
+    """
+    query = sql.SQL(query)
+    # noinspection PyUnresolvedReferences
+    cursor.execute(query)
+    # noinspection PyUnresolvedReferences
+    results = cursor.fetchall()
+    ret = dict()
+    for item in results:
+        point_key, street_key, distance = item
+        if street_key not in ret:
+            distance_map = dict()
+            ret[street_key] = distance_map
+        else:
+            distance_map = ret[street_key]
+        distance_map[point_key] = distance
+    return ret
+
+
 def print_street_graph_entry_with_names(key, road_graph, road_name):
     print(f"{road_name[key]}:: {key}")
     name_keys = list(road_name.keys())
@@ -202,7 +221,14 @@ def main():
         #   entry is list of 'adjacent roads'
         road_graph = get_road_graph(track_id, first_road)
         road_name = get_road_names(track_id)
-        viterbi_hmm(gps_points, road_graph)
+        distance_map = build_track_point_to_road_distance_map(track_id)
+        matched_street_nodes = viterbi_hmm(gps_points, road_graph, distance_map)
+        probe = 0
+        for id in matched_street_nodes:
+            if id == probe:
+                continue
+            probe = id
+            print(f"{id}::{road_name[id]}")
         cursor.close()
         connection.close()
 

@@ -1,5 +1,5 @@
 from src.config.get_config import get_mapgl_access
-import src.lib.map_adjecent_roads as roads
+import src.lib.map_adjacent_roads as roads
 import src.lib.map_raw_tracks as tracks
 
 header_filepath = "leaflet/mapgl_header.txt"

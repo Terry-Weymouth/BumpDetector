@@ -216,3 +216,18 @@ where osm_id = nearest_road_id
     and track_id = 1
 order by osm_id;
 
+-- alternative to above
+select osm_id, name from planet_osm_line,
+            (select distinct nearest_road_id from bicycle_data bd where bd.track_id={track_id}) as track
+        where osm_id = track.nearest_road_id
+
+-- data to populate a table or dictionary of point to road distance
+select track.id, osm_id, ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original) as dist
+from bicycle_data as track, planet_osm_line as osm
+where track.track_id = 1
+    and osm.osm_id in (select distinct nearest_road_id from bicycle_data bd where bd.track_id=1)
+    and ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original) < 10;
+
+
+-- data to populate a table or dictionary of road to road distance
+
