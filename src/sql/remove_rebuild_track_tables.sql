@@ -28,7 +28,7 @@ create table bicycle_data (
   delta_time integer,
   long_lat_original geography(POINT,4326),
   long_lat_remapped geography(POINT,4326),  -- projected track point after match to road
-  nearest_road_id integer,
+  nearest_road_id bigint,
   nearest_road_distance float
   );
 
@@ -37,4 +37,8 @@ CREATE INDEX long_lat_remapped_gix ON bicycle_data USING GIST ( long_lat_remappe
 
 UPDATE bicycle_data SET long_lat_original = ST_SetSRID(ST_MakePoint(long, lat), 4326)::geography;
 
-SELECT long, lat, ST_AsEWKT(long_lat_original) from bicycle_data;
+create table map_matching_roads(
+  id serial primary key,
+  track_id integer,
+  osm_id bigint
+);

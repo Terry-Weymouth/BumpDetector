@@ -186,6 +186,7 @@ def build_track_point_to_road_distance_map(track_id):
     ret = dict()
     for item in results:
         point_key, street_key, distance = item
+        print(point_key, street_key, distance)
         if street_key not in ret:
             distance_map = dict()
             ret[street_key] = distance_map
@@ -210,6 +211,22 @@ def make_connection():
     config = get_database_access()
     connection = psycopg2.connect(**config)
     cursor = connection.cursor()
+
+
+def insert_road_ids_into_db(track_id, all_ids):
+    query = "insert into map_matching_roads(track_id, osm_id) values(%s,%s)"
+    for osm_id in all_ids:
+        cursor.execute(query, (track_id, osm_id))
+    connection.commit()
+
+
+def get_road_ids_from_db(track_id):
+    query = f"select osm_id from map_matching_roads where track_id={track_id} order by id"
+    # noinspection PyUnresolvedReferences
+    cursor.execute(query)
+    # noinspection PyUnresolvedReferences
+    results = cursor.fetchall()
+    return [e[0] for e in list(results)]
 
 
 def main():
@@ -239,7 +256,9 @@ def main():
                 print(f"{id}::{road_name[id]}")
             else:
                 print(f"{id}::<no name>")
-        print(all_ids)
+        # print(all_ids)
+        # insert_road_ids_into_db(track_id, all_ids)
+        # print(get_road_ids_from_db(track_id))
         cursor.close()
         connection.close()
 
