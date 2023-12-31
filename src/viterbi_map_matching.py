@@ -176,7 +176,8 @@ def build_track_point_to_road_distance_map(track_id):
         from bicycle_data as track, planet_osm_line as osm
         where track.track_id = {track_id}
             and osm.osm_id in (select distinct nearest_road_id from bicycle_data bd where bd.track_id={track_id})
-            and ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original) < {max_d};    
+            and ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original) < {max_d}
+        order by track.id    
     """
     query = sql.SQL(query)
     # noinspection PyUnresolvedReferences
@@ -186,7 +187,7 @@ def build_track_point_to_road_distance_map(track_id):
     ret = dict()
     for item in results:
         point_key, street_key, distance = item
-        print(point_key, street_key, distance)
+        # print(point_key, street_key, distance)
         if street_key not in ret:
             distance_map = dict()
             ret[street_key] = distance_map
@@ -218,7 +219,7 @@ def insert_road_ids_into_db(track_id, all_ids):
     for osm_id in all_ids:
         cursor.execute(query, (track_id, osm_id))
     connection.commit()
-
+    
 
 def get_road_ids_from_db(track_id):
     query = f"select osm_id from map_matching_roads where track_id={track_id} order by id"
@@ -229,39 +230,93 @@ def get_road_ids_from_db(track_id):
     return [e[0] for e in list(results)]
 
 
+def compute_point_to_road_list(gps_points, matched_street_nodes, distance_map):
+    ret = []
+    if not len(gps_points) == len(matched_street_nodes):
+        print(f"""
+            Matching problem, matching street count not same as point count: 
+            {len(matched_street_nodes)}, {len(gps_points)}
+        """)
+    else:
+        for i in range(0, len(gps_points)):
+            street_key = matched_street_nodes[i]
+            point_key = gps_points[i]
+            distance = distance_map[street_key][point_key]
+            ret.append((point_key, street_key, distance))
+    return ret
+
+
+def build_original_nearest_road_map(track_id):
+    query = f"""
+        select id, nearest_road_id, nearest_road_distance
+        from bicycle_data
+        where track_id={track_id}
+        order by id
+    """
+    query = sql.SQL(query)
+    # noinspection PyUnresolvedReferences
+    cursor.execute(query)
+    # noinspection PyUnresolvedReferences
+    results = cursor.fetchall()
+    ret = dict()
+    for item in results:
+        point_id, road_id, distance = item
+        ret[point_id] = (road_id, distance)
+    return ret
+
+
 def main():
     global connection, cursor, max_d
     make_connection()  # if successful - sets connection, cursor
     track_id = 2
     max_d = 20
     if connection:
-        first_road = 8699583
-
-        # points are index into bicycle_data
+        first_road = 8699583  # Forestdale Road
+        print("Starting...")
+        # points are index into bicycle_data - first few dropped to start on first_road
         gps_points = get_point_ids(track_id, first_road)
         # road_graph keys are osm_id in planet_osm_line from nearest_road_id of selected points
         #   entry is list of 'adjacent roads'
         road_graph = get_road_graph(track_id, first_road)
         road_name = get_road_names(track_id)
         distance_map = build_track_point_to_road_distance_map(track_id)
+        nearest_road_map = build_original_nearest_road_map(track_id)
+        print("... got all data ...")
         matched_street_nodes = viterbi_hmm(gps_points, road_graph, distance_map)
-        probe = 0
-        all_ids = []
-        for id in matched_street_nodes:
-            if id == probe:
-                continue
-            probe = id
-            all_ids.append(id)
-            if id in road_name:
-                print(f"{id}::{road_name[id]}")
-            else:
-                print(f"{id}::<no name>")
+        print("... got matching roads ...")
+        # probe = 0
+        # all_ids = []
+        # for road_id in matched_street_nodes:
+        #    if road_id == probe:
+        #        continue
+        #    probe = road_id
+        #    all_ids.append(road_id)
+        #    if road_id in road_name:
+        #        print(f"{road_id}::{road_name[road_id]}")
+        #    else:
+        #        print(f"{road_id}::<no name>")
         # print(all_ids)
         # insert_road_ids_into_db(track_id, all_ids)
         # print(get_road_ids_from_db(track_id))
+        point_to_road_list = compute_point_to_road_list(gps_points, matched_street_nodes, distance_map)
+        for item in point_to_road_list:
+            point_id, matching_road_id, distance = item
+            matching_road_name = "<no name>"
+            if matching_road_id in road_name:
+                matching_road_name = road_name[matching_road_id]
+            original_road_id, original_dist = nearest_road_map[point_id]
+            original_road_name = "<no name>"
+            if original_road_id in road_name:
+                original_road_name = road_name[original_road_id]
+            str1 = f"{point_id} to {matching_road_id}:: {distance} ({matching_road_name}) -- "
+            str2 = f"{original_road_id}:: {original_dist}"
+            str3 = ""
+            if not matching_road_id == original_road_id:
+                str3 = "*" * 10 + f"  ({original_road_name})"
+            print(str1, str2, str3)
         cursor.close()
         connection.close()
-
+        print("... done.")
 
 if __name__ == "__main__":
     main()
