@@ -228,6 +228,20 @@ where track.track_id = 1
     and osm.osm_id in (select distinct nearest_road_id from bicycle_data bd where bd.track_id=1)
     and ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original) < 10;
 
+-- get the closest point on a line (for map matching)
 
--- data to populate a table or dictionary of road to road distance
+select  ST_AsText(ST_ClosestPoint(line, point)) as cp1,
+        ST_AsText(ST_ClosestPoint(point, line)) as cp2,
+        ST_AsText(point),
+        ST_AsText(ST_ShortestLine(point, line)) as line_between1,
+        ST_AsText(ST_ShortestLine(line, point)) as line_between2
+	from bicycle_data as track, planet_osm_line as osm,
+    	LATERAL (select ST_Transform(osm.way,4326) as line from planet_osm_line where osm_id=8699583) as a,
+    	LATERAL (select long_lat_original as point from bicycle_data where id=27) as b
+    where track.id=27 and osm.osm_id=8699583;
 
+POINT(-83.159392167 42.49512)
+POINT(-83.159392167 42.49512)
+POINT(-83.159392167 42.49512)
+LINESTRING(-83.159392167 42.49512,-83.15942204707504 42.49511930714997)
+LINESTRING(-83.159392167 42.49512,-83.15942204707504 42.49511930714997)
