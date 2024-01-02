@@ -234,14 +234,72 @@ select  ST_AsText(ST_ClosestPoint(line, point)) as cp1,
         ST_AsText(ST_ClosestPoint(point, line)) as cp2,
         ST_AsText(point),
         ST_AsText(ST_ShortestLine(point, line)) as line_between1,
-        ST_AsText(ST_ShortestLine(line, point)) as line_between2
-	from bicycle_data as track, planet_osm_line as osm,
-    	LATERAL (select ST_Transform(osm.way,4326) as line from planet_osm_line where osm_id=8699583) as a,
-    	LATERAL (select long_lat_original as point from bicycle_data where id=27) as b
-    where track.id=27 and osm.osm_id=8699583;
+        ST_AsText(ST_ShortestLine(line, point)) as line_between2,
+        ST_Distance(point,line),
+        ST_Length(ST_ShortestLine(line, point))
+--        ST_AsText(ST_StartPoint(ST_ShortestLine(line, point)::geometry)),
+--        ST_AsText(ST_EndPoint(ST_ShortestLine(line, point)::geometry))
+	from
+    	(select ST_Transform(way,4326) as line from planet_osm_line where osm_id=8699583) as a,
+    	(select long_lat_original as point from bicycle_data where id=27) as b;
 
 POINT(-83.159392167 42.49512)
 POINT(-83.159392167 42.49512)
 POINT(-83.159392167 42.49512)
 LINESTRING(-83.159392167 42.49512,-83.15942204707504 42.49511930714997)
 LINESTRING(-83.159392167 42.49512,-83.15942204707504 42.49511930714997)
+
+select ST_AsText(ST_Transform(way,4326)) from planet_osm_line where osm_id=8699583;
+select ST_AsText(long_lat_original) as point from bicycle_data where id=27;
+
+ LINESTRING(-83.15936009999999 42.49339650051727,-83.1593622 42.49347670051727,
+ -83.159365 42.493549200517265,-83.1593764 42.493839900517294,-83.1593806 42.4939471005173,
+ -83.15938539999999 42.494069800517295,-83.159388 42.49413600051731,
+ -83.15939389999998 42.494330300517326,-83.15939629999998 42.49440790051732,
+ -83.15940269999999 42.49461900051733,-83.1594065 42.494742300517345,
+ -83.159408 42.49479200051732,-83.15941419999999 42.494938100517345,
+ -83.15941879999998 42.49504500051735,-83.15942019999999 42.49507600051735,
+ -83.15943499999999 42.495423000517384,-83.15948029999998 42.49651070051744,
+ -83.15949569999998 42.49688160051744,-83.1595564 42.496956900517446)
+
+ LINESTRING(-83.15936009999999 42.49339650051727,-83.1593622 42.49347670051727,
+ -83.159365 42.493549200517265)
+
+ POINT(-83.159392167 42.49512)
+
+SELECT ST_AsText( ST_ClosestPoint(pt,line)) AS cp_pt_line,
+       ST_AsText( ST_ClosestPoint(line,pt)) AS cp_line_pt
+    FROM (SELECT 'POINT(-83.159392167 42.49512)'::geometry AS pt,
+                 'LINESTRING(-83.15936009999999 42.49339650051727,-83.1593622 42.49347670051727,
+ -83.159365 42.493549200517265,-83.1593764 42.493839900517294,-83.1593806 42.4939471005173,
+ -83.15938539999999 42.494069800517295,-83.159388 42.49413600051731,
+ -83.15939389999998 42.494330300517326,-83.15939629999998 42.49440790051732,
+ -83.15940269999999 42.49461900051733,-83.1594065 42.494742300517345,
+ -83.159408 42.49479200051732,-83.15941419999999 42.494938100517345,
+ -83.15941879999998 42.49504500051735,-83.15942019999999 42.49507600051735,
+ -83.15943499999999 42.495423000517384,-83.15948029999998 42.49651070051744,
+ -83.15949569999998 42.49688160051744,-83.1595564 42.496956900517446)'::geometry AS line ) AS t;
+
+select  ST_AsText(ST_ClosestPoint(line, point)) as cp1,
+        ST_AsText(ST_ClosestPoint(point, line)) as cp2,
+        ST_AsText(point),
+        ST_AsText(ST_ShortestLine(point, line)) as line_between1,
+        ST_AsText(ST_ShortestLine(line, point)) as line_between2,
+	from
+    	(select ST_Transform(way,4326) as line from planet_osm_line where osm_id=8699583) as a,
+    	(select long_lat_original as point from bicycle_data where id=27) as b;
+
+select ST_GeometryType(way) as line from planet_osm_line where osm_id=8699583;
+select ST_GeometryType(ST_Transform(way,4326)) from planet_osm_line where osm_id=8699583;
+
+SELECT ST_Distance(
+  'SRID=4326;POINT(-83.159392167 42.49512)'::geography::geometry,
+  'SRID=4326;POINT(-83.15942204707504 42.49511930714997)'::geography::geometry
+  );
+
+SELECT Find_SRID('public', 'planet_osm_line', 'line');
+
+SELECT ST_SRID(point), ST_SRID(line), ST_GeometryType(point), ST_GeometryType(line)
+from
+    	(select ST_Transform(way,4326) as line from planet_osm_line where osm_id=8699583) as a,
+    	(select long_lat_original as point from bicycle_data where id=27) as b;
