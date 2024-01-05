@@ -23,8 +23,8 @@ create table bicycle_data (
   alt float,
   speed float,
   delta_time integer,
-  long_lat_original geography(POINT,4326),
-  long_lat_remapped geography(POINT,4326),  -- projected track point after match to road
+  long_lat_original geometry(POINT,4326),
+  long_lat_remapped geometry(POINT,4326),  -- projected track point after match to road
   nearest_road_id integer,
   nearest_road_distance float
   );
@@ -32,7 +32,7 @@ create table bicycle_data (
 CREATE INDEX long_lat_original_gix ON bicycle_data USING GIST ( long_lat_original );
 CREATE INDEX long_lat_remapped_gix ON bicycle_data USING GIST ( long_lat_remapped );
   
-UPDATE bicycle_data SET long_lat_original = ST_SetSRID(ST_MakePoint(long, lat), 4326)::geography;
+UPDATE bicycle_data SET long_lat_original = ST_SetSRID(ST_MakePoint(long, lat), 4326)::geometry;
 
 SELECT long, lat, ST_AsEWKT(long_lat_original) from bicycle_data;
 
@@ -241,7 +241,7 @@ select  ST_AsText(ST_ClosestPoint(line, point)) as cp1,
 --        ST_AsText(ST_EndPoint(ST_ShortestLine(line, point)::geometry))
 	from
     	(select ST_Transform(way,4326) as line from planet_osm_line where osm_id=8699583) as a,
-    	(select long_lat_original as point from bicycle_data where id=27) as b;
+    	(select long_lat_original::geometry as point from bicycle_data where id=27) as b;
 
 POINT(-83.159392167 42.49512)
 POINT(-83.159392167 42.49512)
@@ -299,7 +299,23 @@ SELECT ST_Distance(
 
 SELECT Find_SRID('public', 'planet_osm_line', 'line');
 
-SELECT ST_SRID(point), ST_SRID(line), ST_GeometryType(point), ST_GeometryType(line)
+SELECT ST_SRID(point), ST_SRID(line), ST_GeometryType(line), ST_GeometryType(point)
 from
     	(select ST_Transform(way,4326) as line from planet_osm_line where osm_id=8699583) as a,
-    	(select long_lat_original as point from bicycle_data where id=27) as b;
+    	(select long_lat_original::geometry as point from bicycle_data where id=27) as b;
+
+LINESTRING(-83.15936009999999 42.49339650051727, -83.1595564 42.496956900517446)
+
+select  ST_AsText(ST_ClosestPoint(line, point)) as cp1,
+        ST_AsText(ST_ClosestPoint(point, line)) as cp2,
+        ST_AsText(point)
+from
+    	(select ST_Transform(way,4326) as line from planet_osm_line where osm_id=8699583) as a,
+    	(select long_lat_original::geometry as point from bicycle_data where id=27) as b;
+
+insert into geometry_columns(f_table_catalog, f_table_schema, f_table_name, f_geometry_column,
+        coord_dimension, srid, type) values('lgrdetroit','public','bicycle_data',
+        'long_lat_original',2,4326,'Point');
+insert into geometry_columns(f_table_catalog, f_table_schema, f_table_name, f_geometry_column,
+        coord_dimension, srid, type) values('lgrdetroit','public','bicycle_data','long_lat_remapped',2,4326,'Point'));
+

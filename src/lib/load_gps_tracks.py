@@ -73,11 +73,13 @@ def create_point_list(file_path):
 
 
 def add_new_track(source_filename):
-    cursor.execute(sql.SQL("insert into {}({},{}) values (%s, %s) returning track_id ")
-                   .format(sql.Identifier('bicycle_track'),
-                           sql.Identifier('file_path'),
-                           sql.Identifier('time')),
-                   [source_filename, datetime.now()])
+    query = (sql.SQL("insert into {}({},{}) values (%s, %s) returning track_id ")
+             .format(sql.Identifier('bicycle_track'),
+                     sql.Identifier('file_path'),
+                     sql.Identifier('time')))
+    time_of_insert = datetime.now()
+    print(query, source_filename, time_of_insert)
+    cursor.execute(query,[source_filename, time_of_insert])
     connection.commit()
     track_index = cursor.fetchone()[0]
     return track_index
@@ -102,8 +104,8 @@ def add_points(track_index, point_list):
 
 
 def update_with_geography(track_index):
-    query = sql.SQL("UPDATE bicycle_data SET long_lat_original "
-                    + "= ST_SetSRID(ST_MakePoint(long, lat), 4326)::geography "
+    query = sql.SQL("UPDATE bicycle_data SET long_lat_original"
+                    + "= ST_SetSRID(ST_MakePoint(long, lat), 4326)::geometry "
                     + "where track_id={};"
                     .format(track_index))
     cursor.execute(query)

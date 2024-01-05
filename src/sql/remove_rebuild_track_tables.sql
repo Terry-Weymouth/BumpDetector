@@ -2,6 +2,7 @@ drop index if exists long_lat_original_gix;
 drop index if exists long_lat_remapped_gix;
 drop table if exists bicycle_track;
 drop table if exists bicycle_data;
+drop table if exists map_matching_roads;
 
 create table bicycle_track (
   track_id serial primary key,
@@ -26,16 +27,14 @@ create table bicycle_data (
   alt float,
   speed float,
   delta_time integer,
-  long_lat_original geography(POINT,4326),
-  long_lat_remapped geography(POINT,4326),  -- projected track point after match to road
+  long_lat_original geometry(POINT,4326),
+  long_lat_remapped geometry(POINT,4326),  -- projected track point after match to road
   nearest_road_id bigint,
   nearest_road_distance float
   );
 
 CREATE INDEX long_lat_original_gix ON bicycle_data USING GIST ( long_lat_original );
 CREATE INDEX long_lat_remapped_gix ON bicycle_data USING GIST ( long_lat_remapped );
-
-UPDATE bicycle_data SET long_lat_original = ST_SetSRID(ST_MakePoint(long, lat), 4326)::geography;
 
 create table map_matching_roads(
   id serial primary key,
