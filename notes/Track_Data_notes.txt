@@ -232,16 +232,17 @@ where track.track_id = 1
 
 select  ST_AsText(ST_ClosestPoint(line, point)) as cp1,
         ST_AsText(ST_ClosestPoint(point, line)) as cp2,
-        ST_AsText(point),
-        ST_AsText(ST_ShortestLine(point, line)) as line_between1,
-        ST_AsText(ST_ShortestLine(line, point)) as line_between2,
-        ST_Distance(point,line),
-        ST_Length(ST_ShortestLine(line, point))
---        ST_AsText(ST_StartPoint(ST_ShortestLine(line, point)::geometry)),
---        ST_AsText(ST_EndPoint(ST_ShortestLine(line, point)::geometry))
+        ST_AsText(point)
 	from
     	(select ST_Transform(way,4326) as line from planet_osm_line where osm_id=8699583) as a,
-    	(select long_lat_original::geometry as point from bicycle_data where id=27) as b;
+    	(select long_lat_original as point from bicycle_data where id=27) as b;
+
+--        ST_AsText(ST_ShortestLine(point, line)) as line_between1,
+--        ST_AsText(ST_ShortestLine(line, point)) as line_between2,
+--        ST_Distance(point,line),
+--        ST_Length(ST_ShortestLine(line, point))
+--        ST_AsText(ST_StartPoint(ST_ShortestLine(line, point)::geometry)),
+--        ST_AsText(ST_EndPoint(ST_ShortestLine(line, point)::geometry))
 
 POINT(-83.159392167 42.49512)
 POINT(-83.159392167 42.49512)
@@ -319,3 +320,11 @@ insert into geometry_columns(f_table_catalog, f_table_schema, f_table_name, f_ge
 insert into geometry_columns(f_table_catalog, f_table_schema, f_table_name, f_geometry_column,
         coord_dimension, srid, type) values('lgrdetroit','public','bicycle_data','long_lat_remapped',2,4326,'Point'));
 
+select  ST_AsText(ST_ClosestPoint(line, point)) as cp1,
+        ST_AsText(ST_ClosestPoint(point, line)) as cp2,
+        ST_AsText(point)
+    from
+        (select ST_Transform(way,4326) as line
+            from planet_osm_line where osm_id=8699583) as a,
+        (select long_lat_original as point
+            from bicycle_data where id=27) as b;
