@@ -114,13 +114,13 @@ def get_road_graph(track_id, first_road_id):
     global connection, cursor
     query = f"""
         select distinct on (one.osm_id, two.osm_id) 
-                one.osm_id, two.osm_id, ST_Distance(ST_Transform(one.way,4326),ST_Transform(two.way,4326)) as dist
+                one.osm_id, two.osm_id, ST_Distance(one.way,two.way) as dist
         from planet_osm_line as one, planet_osm_line as two
         where one.osm_id < two.osm_id
             and one.osm_id in (select distinct nearest_road_id from bicycle_data bd where bd.track_id={track_id})
             and two.osm_id in (select distinct nearest_road_id from bicycle_data bd where bd.track_id={track_id})
             and not one.osm_id = two.osm_id
-            and ST_Distance(ST_Transform(one.way,4326),ST_Transform(two.way,4326)) < 4
+            and ST_Distance(one.way,two.way) < 4
         order by one.osm_id, two.osm_id;
     """
     query = sql.SQL(query)
@@ -175,11 +175,11 @@ def build_track_point_to_road_distance_map(track_id):
     global max_d
 
     query = f"""
-        select track.id, osm_id, ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original) as dist
+        select track.id, osm_id, ST_Distance(osm.way,ST_Transform(track.long_lat_original,3857)) as dist
         from bicycle_data as track, planet_osm_line as osm
         where track.track_id = {track_id}
             and osm.osm_id in (select distinct nearest_road_id from bicycle_data bd where bd.track_id={track_id})
-            and ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original) < {max_d}
+            and ST_Distance(osm.way,ST_Transform(track.long_lat_original,3857)) <= {max_d}
         order by track.id    
     """
     query = sql.SQL(query)

@@ -79,7 +79,7 @@ def add_new_track(source_filename):
                      sql.Identifier('time')))
     time_of_insert = datetime.now()
     print(query, source_filename, time_of_insert)
-    cursor.execute(query,[source_filename, time_of_insert])
+    cursor.execute(query, [source_filename, time_of_insert])
     connection.commit()
     track_index = cursor.fetchone()[0]
     return track_index
@@ -125,14 +125,16 @@ def get_id_limits(track_id):
 
 def get_nearest_road_and_distance(track_id, point_id):
     global cursor, max_d
-    query_str = "select track.id, osm.osm_id, osm.name, osm.highway, "\
-        + "ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original) "\
-        + "from bicycle_data as track, planet_osm_line as osm "\
-        + "where track.track_id={} and track.id={} and "\
-        + "ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original) < 70.0 " \
-        + "and highway is not null " \
-        + "and not (highway in ('footway', 'tertiary_link', 'motorway'))" \
-        + "order by st_distance limit 1;"
+    query_str = """
+    select track.id, osm.osm_id, osm.name, osm.highway,
+        ST_Distance(osm.way, ST_Transform(track.long_lat_original,3857)) as dist
+    from bicycle_data as track, planet_osm_line as osm
+    where where track.track_id={} and track.id={}
+        and ST_Distance(osm.way, ST_Transform(track.long_lat_original,3857)) < 45.0
+        and highway is not null
+        and not (highway in ('footway', 'tertiary_link', 'motorway'))
+        order by st_distance limit 1
+    """
     query_str = query_str.format(track_id, point_id)
     query = sql.SQL(query_str)
     # noinspection PyUnresolvedReferences
