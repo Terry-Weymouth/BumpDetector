@@ -210,6 +210,32 @@ from (select distinct on (track.id) track.id, osm.osm_id, osm.name, osm.highway,
         order by  track.id, ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original)
     ) as new_data;
 
+
+-- break out details
+-- use 4326
+-- ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original)
+select distinct on (track.id) track.id, osm.osm_id, osm.name, osm.highway,
+    ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original) as dist
+from bicycle_data as track, planet_osm_line as osm
+where track.track_id=2
+    and track.id=3981
+    and ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original) < 20.0
+    and highway is not null
+    and not (highway in ('footway', 'tertiary_link', 'motorway'))
+    order by  track.id, ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original);
+-- use 3857
+-- ST_Distance(osm.way, ST_Transform(track.long_lat_original,3857))
+select distinct on (track.id) track.id, osm.osm_id, osm.name, osm.highway,
+    ST_Distance(osm.way, ST_Transform(track.long_lat_original,3857)) as dist
+from bicycle_data as track, planet_osm_line as osm
+where track.track_id=2
+    and track.id=3981
+    and ST_Distance(osm.way, ST_Transform(track.long_lat_original,3857)) < 20.0
+    and highway is not null
+    and not (highway in ('footway', 'tertiary_link', 'motorway'))
+    order by  track.id, ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original);
+
+
 -- road graph for a given track
 select one.osm_id, two.osm_id, ST_Distance(ST_Transform(one.way,4326),ST_Transform(two.way,4326)) as dist from
     planet_osm_line as one, planet_osm_line as two
@@ -256,6 +282,7 @@ select osm_id, name from planet_osm_line,
         where osm_id = track.nearest_road_id
 
 -- data to populate a table or dictionary of point to road distance
+
 select track.id, osm_id, ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original) as dist
 from bicycle_data as track, planet_osm_line as osm
 where track.track_id = 1
@@ -274,6 +301,9 @@ select  ST_AsText(ST_ClosestPoint(line, point)) as cp1,
             from bicycle_data where id=27) as b;
 
 -- viterbi nearest road
+     -- probe
+select track_id, id, nearest_road_id, nearest_road_distance, viterbi_nearest_road_distance
+from bicycle_data where track_id=2 and nearest_road_id=8715654 limit 10;
 
 select track_id, id,
     nearest_road_id, nearest_road_distance,

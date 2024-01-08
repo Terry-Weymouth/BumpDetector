@@ -27,11 +27,13 @@ def get_id_limits(track_id):
 
 def probe(track_id, point_id):
     global cursor, max_d
+    # old: ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original)
+    # new: ST_Distance(osm.way,ST_Transform(track.long_lat_original, 3857))
     query_str = "select track.id, osm.osm_id, osm.name, osm.highway, "\
-        + "ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original) "\
+        + "ST_Distance(osm.way,ST_Transform(track.long_lat_original, 3857)) "\
         + "from bicycle_data as track, planet_osm_line as osm "\
         + "where track.track_id={} and track.id={} and "\
-        + "ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original) < 70.0 " \
+        + "ST_Distance(osm.way,ST_Transform(track.long_lat_original, 3857)) < 45.0 " \
         + "and highway is not null " \
         + "and not (highway in ('footway', 'tertiary_link', 'motorway'))" \
         + "order by st_distance limit 1;"
@@ -46,7 +48,7 @@ def probe(track_id, point_id):
         if d > max_d:
             max_d = d
     else:
-        print("Missing id =", id)
+        print("Missing id =", point_id)
     return results
 
 
@@ -93,6 +95,7 @@ def main():
             results = probe(track_index, point_id)
             if results:
                 results_list.append(results)
+        print("Got all results")
         insert_nearest_road(results_list)
         record_max_distance(track_index, max_d)
     except (Exception, psycopg2.Error) as error:
