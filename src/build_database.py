@@ -52,7 +52,7 @@ def main(rebuild):
     make_connection()  # if successful - sets connection, cursor
     if connection:
         file_path_list = get_trace_file_paths(connection, cursor, rebuild)
-        print(file_path_list)
+        print(f"load from files: {file_path_list}")
         if rebuild:
             apply_sql_file("src/sql/remove_rebuild_track_tables.sql")
         if file_path_list:

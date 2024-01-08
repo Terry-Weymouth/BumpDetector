@@ -6,7 +6,6 @@ def get_trace_file_paths(connection, cursor, use_all=True):
     directory_path = "./data"  # Change this to the desired directory path
     pattern = "*_Cleaned.txt"
     matching_files = find_files(directory_path, pattern)
-    print(matching_files)
     if use_all:
         return matching_files
     else:
