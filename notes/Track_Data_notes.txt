@@ -34,93 +34,6 @@ CREATE INDEX long_lat_remapped_gix ON bicycle_data USING GIST ( long_lat_remappe
   
 UPDATE bicycle_data SET long_lat_original = ST_SetSRID(ST_MakePoint(long, lat), 4326)::geometry;
 
-SELECT long, lat, ST_AsEWKT(long_lat_original) from bicycle_data;
-
--- knn nearest neighbors search for nearest feature
-
--- https://postgis.net/workshops/postgis-intro/knn.html
--- https://wiki.openstreetmap.org/wiki/Key:highway#Roads
-
-select track.id, track.track_id, osm.osm_id, ST_AsEWKT(track.long_lat_original), ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original)
-from bicycle_data as track, planet_osm_line as osm
-where track.id < 5 AND osm.name='Forestdale Road' and ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original) < 6
-order by st_distance;
-
-select track.id, track.track_id, osm.name, osm.highway, osm.osm_id, ST_AsEWKT(track.long_lat_original), ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original)
-from bicycle_data as track, planet_osm_line as osm
-where track.id=1 and ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original) < 100
-order by st_distance;
-
-select track.id, track.track_id, osm.name, osm.highway, osm.osm_id, ST_AsEWKT(track.long_lat_original), ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original)
-from bicycle_data as track, planet_osm_line as osm
-where track.id=1 and ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original) < 100
-order by st_distance limit 1;
-
-select track.id, osm.osm_id, osm.name, osm.highway, ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original) 
-from bicycle_data as track, planet_osm_line as osm
-where track.id=1 and ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original) < 30.0
-order by st_distance limit 1;
-
-select track.id, osm.osm_id, osm.name, osm.highway, ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original) 
-from bicycle_data as track, planet_osm_line as osm
-where ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original) < 70.0
-and highway is not null  
-and not (highway in ('footway', 'service', 'tertiary_link'))
-order by track.id, st_distance;
-
-select distinct highway, name from ( 
-select track.id, osm.osm_id, osm.name as name, osm.highway as highway, 
-ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original) 
-from bicycle_data as track, planet_osm_line as osm
-where ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original) < 70.0
-and not (highway in ('footway', 'service', 'tertiary_link')) order by track.id, st_distance ) foo;
-
-select ST_AsGeoJSON(ST_Transform(way,4326))
-
-
-select id, ST_Transform(projection,4326)::geography as pt from (
-select track.id, track.long_lat_original as pt,
-	ST_ClosestPoint(ST_Transform(osm.way,4326)::geometry,track.long_lat_original::geometry) as projection
-from bicycle_data as track join planet_osm_line as osm on (track.nearest_road_id = osm.osm_id)
-where track.id=1) foo;
-
-
-update bicycle_data as new_track set long_lat_remapped=ST_Transform(results.projection,4326)::geography
-from (
-select track.id as id, ST_ClosestPoint(ST_Transform(osm.way,4326)::geometry,track.long_lat_original::geometry) as projection
-from bicycle_data as track, planet_osm_line as osm where track.nearest_road_id=osm.osm_id
-) results
-where new_track.id=results.id;
-
-
-SELECT id, lat, long, 
-ST_Y(long_lat_remapped::geometry) as new_lat, ST_X(long_lat_remapped::geometry) as new_long, 
-ST_AsEWKT(long_lat_remapped)
-FROM bicycle_data LIMIT 10;
-
-SELECT id, nearest_road_distance, ST_Distance(long_lat_original, long_lat_remapped)
-FROM bicycle_data LIMIT 10;
-
-select ST_Y(long_lat_remapped::geometry) as lat, ST_X(long_lat_remapped::geometry) as long, nearest_road_distance from bicycle_data order by id;
-
-
-Samples
-
-SELECT *
-    FROM weather INNER JOIN cities ON (weather.city = cities.name);
-    
-# closest point on line to point
-ST_AsText(ST_ClosestPoint(line,pt)) As cp_line_pt
-
-select track.id, osm.name from bicycle_data as track, planet_osm_line as osm where track.id in (5, 6, 7) 
-	and track.nearest_road_id = osm.osm_id;
-
-UPDATE mytable SET geog = ST_SetSRID(ST_MakePoint(long, lat), 4326)::geography;
-
-UPDATE bicycle_data SET long_lat_original_gix = 'Dramatic';
-  
-CREATE TABLE ptzgeogwgs84(gid serial PRIMARY KEY, name geography(POINT,4326) );
-
 -- See the contents of the metadata view
 SELECT * FROM geography_columns;
 
@@ -141,9 +54,6 @@ Query and measurement functions use units of meters. So distance parameters shou
   SELECT name FROM global_points WHERE ST_DWithin(location, 'SRID=4326;POINT(-110 29)'::geography, 1000000);
 You can see the power of GEOGRAPHY in action by calculating how close a plane flying from Seattle to London (LINESTRING(-122.33 47.606, 0.0 51.5)) comes to Reykjavik (POINT(-21.96 64.15)).
 
--- Distance calculation using GEOGRAPHY (122.2km)
-  SELECT ST_Distance('LINESTRING(-122.33 47.606, 0.0 51.5)'::geography, 'POINT(-21.96 64.15)'::geography);
-
 -- All roads (as lines from planet_osm_line) that are in any track data
 select ST_AsGeoJSON(ST_Transform(way,4326))
 from (select distinct nearest_road_id as id from bicycle_data) as roads
@@ -155,6 +65,7 @@ from (select distinct nearest_road_id as id from bicycle_data) as roads
     join planet_osm_line as osm
     on (roads.id=osm.osm_id);
 
+-- ???
 SELECT
    DISTINCT ON (road.osm_id)
    road.osm_id, bicycle_data.id, ST_Distance(road.way, bicycle_data.long_lat_original)  as dist
@@ -164,65 +75,23 @@ WHERE ST_DWithin(road.way, bicycle_data.long_lat_original, 70)
 ORDER BY road.osm_id, bicycle_data.id, dist;
 
 -- Distance to nearest road
--- --  Old method
-select track.id, osm.osm_id, osm.name, osm.highway,
-        ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original) as dist
-    from bicycle_data as track, planet_osm_line as osm
-    where track.track_id=1 and track.id=32
-        and ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original) < 70.0
-        and highway is not null
-        and not (highway in ('footway', 'tertiary_link', 'motorway'))
-        order by  ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original) limit 1;
-
--- --  New method
-select distinct on (track.id) track.id, osm.osm_id, osm.name, osm.highway,
-        ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original) as dist
-    from bicycle_data as track, planet_osm_line as osm
-    where track.track_id=1
-        and ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original) < 20.0
-        and highway is not null
-        and not (highway in ('footway', 'tertiary_link', 'motorway'))
-        order by  track.id, ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original);
-
 -- --  New method as update for a given track - as update and query (for testing)
 -- --  takes a long time! -- not used in code
 update bicycle_data
 set nearest_road_id = new_data.osm_id, nearest_road_distance = new_data.dist
 from (select distinct on (track.id) track.id, osm.osm_id, osm.name, osm.highway,
-        ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original) as dist
-    from bicycle_data as track, planet_osm_line as osm
-    where track.track_id=1
-        and ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original) < 20.0
+        ST_Distance(osm.way, ST_Transform(track.long_lat_original,3857)) as dist
+      from bicycle_data as track, planet_osm_line as osm
+      where track.track_id=2
+        and track.id=3981
+        and ST_Distance(osm.way, ST_Transform(track.long_lat_original,3857)) < 20.0
         and highway is not null
         and not (highway in ('footway', 'tertiary_link', 'motorway'))
-        order by  track.id, ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original)
+        order by track.id, st_distance
     ) as new_data
 where bicycle_data.id = new_data.id;
 
-select track.id, track_id, osm_id, dist
-from (select distinct on (track.id) track.id, osm.osm_id, osm.name, osm.highway,
-        ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original) as dist
-    from bicycle_data as track, planet_osm_line as osm
-    where track.track_id=1
-        and ST_DWithin(ST_Transform(osm.way,4326),track.long_lat_original, 20.0)
-        and highway is not null
-        and not (highway in ('footway', 'tertiary_link', 'motorway'))
-        order by  track.id, ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original)
-    ) as new_data;
-
-
--- break out details
--- use 4326
--- ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original)
-select distinct on (track.id) track.id, osm.osm_id, osm.name, osm.highway,
-    ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original) as dist
-from bicycle_data as track, planet_osm_line as osm
-where track.track_id=2
-    and track.id=3981
-    and ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original) < 20.0
-    and highway is not null
-    and not (highway in ('footway', 'tertiary_link', 'motorway'))
-    order by  track.id, ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original);
+-- Distance to nearest road - break out details
 -- use 3857
 -- ST_Distance(osm.way, ST_Transform(track.long_lat_original,3857))
 select distinct on (track.id) track.id, osm.osm_id, osm.name, osm.highway,
@@ -237,25 +106,18 @@ where track.track_id=2
 
 
 -- road graph for a given track
-select one.osm_id, two.osm_id, ST_Distance(ST_Transform(one.way,4326),ST_Transform(two.way,4326)) as dist from
+-- use 3857 - by implication
+select one.osm_id, two.osm_id, ST_Distance(one.way, two.way) as dist from
     planet_osm_line as one, planet_osm_line as two
     where one.osm_id < two.osm_id
         and one.osm_id in (select distinct nearest_road_id from bicycle_data bd where bd.track_id=1)
         and two.osm_id in (select distinct nearest_road_id from bicycle_data bd where bd.track_id=1)
         and not one.osm_id = two.osm_id
-        and ST_Distance(ST_Transform(one.way,4326),ST_Transform(two.way,4326)) < 4
+        and ST_Distance(one.way, two.way) < 4
     order by one.osm_id, two.osm_id;
 
 
 -- distance between two roads
-select one.osm_id, two.osm_id, ST_Distance(ST_Transform(one.way,4326),ST_Transform(two.way,4326)) as dist from
-    planet_osm_line as one, planet_osm_line as two
-    where one.osm_id = 8670713 and two.osm_id = 8684827
-
-select one.osm_id, two.osm_id, ST_Distance(ST_Transform(one.way,3857),ST_Transform(two.way,3857)) as dist from
-    planet_osm_line as one, planet_osm_line as two
-    where one.osm_id = 8670713 and two.osm_id = 8684827
-
 select one.osm_id, two.osm_id, ST_Distance(one.way, two.way) as dist from
     planet_osm_line as one, planet_osm_line as two
     where one.osm_id = 8670713 and two.osm_id = 8684827
@@ -283,11 +145,11 @@ select osm_id, name from planet_osm_line,
 
 -- data to populate a table or dictionary of point to road distance
 
-select track.id, osm_id, ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original) as dist
+select track.id, osm_id, ST_Distance(osm.way, ST_Transform(track.long_lat_original,3857)) as dist
 from bicycle_data as track, planet_osm_line as osm
 where track.track_id = 1
     and osm.osm_id in (select distinct nearest_road_id from bicycle_data bd where bd.track_id=1)
-    and ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original) < 10;
+    and ST_Distance(osm.way, ST_Transform(track.long_lat_original,3857)) < 10;
 
 -- get the closest point on a line (for map matching)
 
@@ -295,9 +157,9 @@ select  ST_AsText(ST_ClosestPoint(line, point)) as cp1,
         ST_AsText(ST_ClosestPoint(point, line)) as cp2,
         ST_AsText(point)
     from
-        (select ST_Transform(way,4326) as line
+        (select way as line
             from planet_osm_line where osm_id=8699583) as a,
-        (select long_lat_original as point
+        (select ST_Transform(track.long_lat_original,3857) as point
             from bicycle_data where id=27) as b;
 
 -- viterbi nearest road
