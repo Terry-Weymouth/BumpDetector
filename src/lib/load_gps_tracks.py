@@ -19,7 +19,7 @@ def load_track_data(cur, con, file_path_list):
         point_list = create_point_list(file_path)
         track_index = add_new_track(file_path)
         add_points(track_index, point_list)
-        update_with_geography(track_index)
+        update_with_geometry(track_index)
         print(f"initial data loaded; update with distance to road, for track {track_index}")
 
         limits = get_id_limits(track_index)
@@ -103,7 +103,7 @@ def add_points(track_index, point_list):
     connection.commit()
 
 
-def update_with_geography(track_index):
+def update_with_geometry(track_index):
     query = sql.SQL("UPDATE bicycle_data SET long_lat_original"
                     + "= ST_SetSRID(ST_MakePoint(long, lat), 4326)::geometry "
                     + "where track_id={};"

@@ -28,9 +28,11 @@ create table bicycle_data (
   speed float,
   delta_time integer,
   long_lat_original geometry(POINT,4326),
-  long_lat_remapped geometry(POINT,4326),  -- projected track point after match to road
   nearest_road_id bigint,
-  nearest_road_distance float
+  nearest_road_distance float,
+  long_lat_remapped geometry(POINT,4326),  -- projected track point after match to road
+  viterbi_nearest_road_id bigint,
+  viterbi_nearest_road_distance float
   );
 
 CREATE INDEX long_lat_original_gix ON bicycle_data USING GIST ( long_lat_original );

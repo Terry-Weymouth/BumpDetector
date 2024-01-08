@@ -182,9 +182,10 @@ select distinct on (track.id) track.id, osm.osm_id, osm.name, osm.highway,
         and ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original) < 20.0
         and highway is not null
         and not (highway in ('footway', 'tertiary_link', 'motorway'))
-        order by  track.id, ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original);
+        order by track.id, ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original);
 
--- --  New method as update for a given track
+-- --  New method as update for a given track - as update and query (for testing)
+-- --  takes a long time! -- not used in code
 update bicycle_data
 set nearest_road_id = new_data.osm_id, nearest_road_distance = new_data.dist
 from (select distinct on (track.id) track.id, osm.osm_id, osm.name, osm.highway,
@@ -196,8 +197,18 @@ from (select distinct on (track.id) track.id, osm.osm_id, osm.name, osm.highway,
         and not (highway in ('footway', 'tertiary_link', 'motorway'))
         order by  track.id, ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original)
     ) as new_data
-where bicycle_data.id = new_data.id ;
+where bicycle_data.id = new_data.id;
 
+select track.id, track_id, osm_id, dist
+from (select distinct on (track.id) track.id, osm.osm_id, osm.name, osm.highway,
+        ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original) as dist
+    from bicycle_data as track, planet_osm_line as osm
+    where track.track_id=1
+        and ST_DWithin(ST_Transform(osm.way,4326),track.long_lat_original, 20.0)
+        and highway is not null
+        and not (highway in ('footway', 'tertiary_link', 'motorway'))
+        order by  track.id, ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original)
+    ) as new_data;
 
 -- road graph for a given track
 select one.osm_id, two.osm_id, ST_Distance(ST_Transform(one.way,4326),ST_Transform(two.way,4326)) as dist from
@@ -208,6 +219,29 @@ select one.osm_id, two.osm_id, ST_Distance(ST_Transform(one.way,4326),ST_Transfo
         and not one.osm_id = two.osm_id
         and ST_Distance(ST_Transform(one.way,4326),ST_Transform(two.way,4326)) < 4
     order by one.osm_id, two.osm_id;
+
+
+-- distance between two roads
+select one.osm_id, two.osm_id, ST_Distance(ST_Transform(one.way,4326),ST_Transform(two.way,4326)) as dist from
+    planet_osm_line as one, planet_osm_line as two
+    where one.osm_id = 8670713 and two.osm_id = 8684827
+
+select one.osm_id, two.osm_id, ST_Distance(ST_Transform(one.way,3857),ST_Transform(two.way,3857)) as dist from
+    planet_osm_line as one, planet_osm_line as two
+    where one.osm_id = 8670713 and two.osm_id = 8684827
+
+select one.osm_id, two.osm_id, ST_Distance(one.way, two.way) as dist from
+    planet_osm_line as one, planet_osm_line as two
+    where one.osm_id = 8670713 and two.osm_id = 8684827
+
+select one.osm_id, two.osm_id, one.name, two.name, ST_Distance(one.way, two.way) as dist
+  from
+    planet_osm_line as one, planet_osm_line as two
+  where one.osm_id < two.osm_id
+        and one.osm_id in (select distinct nearest_road_id from bicycle_data bd where bd.track_id=1)
+        and two.osm_id in (select distinct nearest_road_id from bicycle_data bd where bd.track_id=1)
+        and ST_Distance(one.way, two.way) < 10
+  order by one.osm_id, two.osm_id, ST_Distance(one.way, two.way);
 
 
 -- get data to create a lookup table osm_id -> name for all osm_id's in track data (e.g. nearest road)
@@ -233,98 +267,22 @@ where track.track_id = 1
 select  ST_AsText(ST_ClosestPoint(line, point)) as cp1,
         ST_AsText(ST_ClosestPoint(point, line)) as cp2,
         ST_AsText(point)
-	from
-    	(select ST_Transform(way,4326) as line from planet_osm_line where osm_id=8699583) as a,
-    	(select long_lat_original as point from bicycle_data where id=27) as b;
-
---        ST_AsText(ST_ShortestLine(point, line)) as line_between1,
---        ST_AsText(ST_ShortestLine(line, point)) as line_between2,
---        ST_Distance(point,line),
---        ST_Length(ST_ShortestLine(line, point))
---        ST_AsText(ST_StartPoint(ST_ShortestLine(line, point)::geometry)),
---        ST_AsText(ST_EndPoint(ST_ShortestLine(line, point)::geometry))
-
-POINT(-83.159392167 42.49512)
-POINT(-83.159392167 42.49512)
-POINT(-83.159392167 42.49512)
-LINESTRING(-83.159392167 42.49512,-83.15942204707504 42.49511930714997)
-LINESTRING(-83.159392167 42.49512,-83.15942204707504 42.49511930714997)
-
-select ST_AsText(ST_Transform(way,4326)) from planet_osm_line where osm_id=8699583;
-select ST_AsText(long_lat_original) as point from bicycle_data where id=27;
-
- LINESTRING(-83.15936009999999 42.49339650051727,-83.1593622 42.49347670051727,
- -83.159365 42.493549200517265,-83.1593764 42.493839900517294,-83.1593806 42.4939471005173,
- -83.15938539999999 42.494069800517295,-83.159388 42.49413600051731,
- -83.15939389999998 42.494330300517326,-83.15939629999998 42.49440790051732,
- -83.15940269999999 42.49461900051733,-83.1594065 42.494742300517345,
- -83.159408 42.49479200051732,-83.15941419999999 42.494938100517345,
- -83.15941879999998 42.49504500051735,-83.15942019999999 42.49507600051735,
- -83.15943499999999 42.495423000517384,-83.15948029999998 42.49651070051744,
- -83.15949569999998 42.49688160051744,-83.1595564 42.496956900517446)
-
- LINESTRING(-83.15936009999999 42.49339650051727,-83.1593622 42.49347670051727,
- -83.159365 42.493549200517265)
-
- POINT(-83.159392167 42.49512)
-
-SELECT ST_AsText( ST_ClosestPoint(pt,line)) AS cp_pt_line,
-       ST_AsText( ST_ClosestPoint(line,pt)) AS cp_line_pt
-    FROM (SELECT 'POINT(-83.159392167 42.49512)'::geometry AS pt,
-                 'LINESTRING(-83.15936009999999 42.49339650051727,-83.1593622 42.49347670051727,
- -83.159365 42.493549200517265,-83.1593764 42.493839900517294,-83.1593806 42.4939471005173,
- -83.15938539999999 42.494069800517295,-83.159388 42.49413600051731,
- -83.15939389999998 42.494330300517326,-83.15939629999998 42.49440790051732,
- -83.15940269999999 42.49461900051733,-83.1594065 42.494742300517345,
- -83.159408 42.49479200051732,-83.15941419999999 42.494938100517345,
- -83.15941879999998 42.49504500051735,-83.15942019999999 42.49507600051735,
- -83.15943499999999 42.495423000517384,-83.15948029999998 42.49651070051744,
- -83.15949569999998 42.49688160051744,-83.1595564 42.496956900517446)'::geometry AS line ) AS t;
-
-select  ST_AsText(ST_ClosestPoint(line, point)) as cp1,
-        ST_AsText(ST_ClosestPoint(point, line)) as cp2,
-        ST_AsText(point),
-        ST_AsText(ST_ShortestLine(point, line)) as line_between1,
-        ST_AsText(ST_ShortestLine(line, point)) as line_between2,
-	from
-    	(select ST_Transform(way,4326) as line from planet_osm_line where osm_id=8699583) as a,
-    	(select long_lat_original as point from bicycle_data where id=27) as b;
-
-select ST_GeometryType(way) as line from planet_osm_line where osm_id=8699583;
-select ST_GeometryType(ST_Transform(way,4326)) from planet_osm_line where osm_id=8699583;
-
-SELECT ST_Distance(
-  'SRID=4326;POINT(-83.159392167 42.49512)'::geography::geometry,
-  'SRID=4326;POINT(-83.15942204707504 42.49511930714997)'::geography::geometry
-  );
-
-SELECT Find_SRID('public', 'planet_osm_line', 'line');
-
-SELECT ST_SRID(point), ST_SRID(line), ST_GeometryType(line), ST_GeometryType(point)
-from
-    	(select ST_Transform(way,4326) as line from planet_osm_line where osm_id=8699583) as a,
-    	(select long_lat_original::geometry as point from bicycle_data where id=27) as b;
-
-LINESTRING(-83.15936009999999 42.49339650051727, -83.1595564 42.496956900517446)
-
-select  ST_AsText(ST_ClosestPoint(line, point)) as cp1,
-        ST_AsText(ST_ClosestPoint(point, line)) as cp2,
-        ST_AsText(point)
-from
-    	(select ST_Transform(way,4326) as line from planet_osm_line where osm_id=8699583) as a,
-    	(select long_lat_original::geometry as point from bicycle_data where id=27) as b;
-
-insert into geometry_columns(f_table_catalog, f_table_schema, f_table_name, f_geometry_column,
-        coord_dimension, srid, type) values('lgrdetroit','public','bicycle_data',
-        'long_lat_original',2,4326,'Point');
-insert into geometry_columns(f_table_catalog, f_table_schema, f_table_name, f_geometry_column,
-        coord_dimension, srid, type) values('lgrdetroit','public','bicycle_data','long_lat_remapped',2,4326,'Point'));
-
-select  ST_AsText(ST_ClosestPoint(line, point)) as cp1,
-        ST_AsText(ST_ClosestPoint(point, line)) as cp2,
-        ST_AsText(point)
     from
         (select ST_Transform(way,4326) as line
             from planet_osm_line where osm_id=8699583) as a,
         (select long_lat_original as point
             from bicycle_data where id=27) as b;
+
+-- viterbi nearest road
+
+select track_id, id,
+    nearest_road_id, nearest_road_distance,
+    viterbi_nearest_road_id, viterbi_nearest_road_distance
+from bicycle_data
+-- where not nearest_road_id=viterbi_nearest_road_id
+limit 5;
+
+select track_id, id, nearest_road_distance, viterbi_nearest_road_distance
+from bicycle_data
+-- where not nearest_road_id=viterbi_nearest_road_id
+limit 5;

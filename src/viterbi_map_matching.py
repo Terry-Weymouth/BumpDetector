@@ -16,6 +16,7 @@ street graph. Here are a few approaches you might consider...
 import numpy as np
 import psycopg2
 from psycopg2 import sql
+from psycopg2.extras import execute_values
 from src.config.get_config import get_database_access
 
 global connection, cursor, max_d
@@ -80,11 +81,11 @@ def emission_probability(gps_point_id, street_id, distance_map):
     global max_d
     # print(gps_point_id, street_id)
     if street_id not in distance_map:
-        # print(f"no street_id: {street_id}")
+        print(f"distance map - no street_id: {street_id}")
         return 0.000001
     distances = distance_map[street_id]
     if gps_point_id not in distances:
-        # print(f"no point_id: {gps_point_id}")
+        print(f"distance map - no point_id: {gps_point_id} for street_id: {street_id}")
         return 0.000001
     d = distances[gps_point_id]
     d_norm = d/max_d
@@ -93,6 +94,7 @@ def emission_probability(gps_point_id, street_id, distance_map):
 
 
 def get_point_ids(track_id, first_road_id):
+    print(f"For track id = {track_id}")
     query = f"""
         select id, nearest_road_id from bicycle_data where track_id={track_id} order by id
     """
@@ -101,6 +103,7 @@ def get_point_ids(track_id, first_road_id):
     cursor.execute(query)
     # noinspection PyUnresolvedReferences
     results = cursor.fetchall()
+    print(f"Points in track: {len(results)}")
     # trim leading points (moving away from base towards first road)
     while not results[0][1] == first_road_id:
         results.pop(0)
@@ -265,6 +268,15 @@ def build_original_nearest_road_map(track_id):
     return ret
 
 
+def insert_new_nearest_road(track_id, point_to_road_list):
+    query = f"""
+        UPDATE bicycle_data SET viterbi_nearest_road_id = data.road, viterbi_nearest_road_distance=dist
+        FROM (VALUES %s) AS data (id, road, dist)
+        WHERE bicycle_data.id = data.id
+        """
+    execute_values(cursor, query, point_to_road_list)
+
+
 def main():
     global connection, cursor, max_d
     make_connection()  # if successful - sets connection, cursor
@@ -284,39 +296,27 @@ def main():
         print("... got all data ...")
         matched_street_nodes = viterbi_hmm(gps_points, road_graph, distance_map)
         print("... got matching roads ...")
-        # probe = 0
-        # all_ids = []
-        # for road_id in matched_street_nodes:
-        #    if road_id == probe:
-        #        continue
-        #    probe = road_id
-        #    all_ids.append(road_id)
-        #    if road_id in road_name:
-        #        print(f"{road_id}::{road_name[road_id]}")
-        #    else:
-        #        print(f"{road_id}::<no name>")
-        # print(all_ids)
-        # insert_road_ids_into_db(track_id, all_ids)
-        # print(get_road_ids_from_db(track_id))
+        probe = 0
+        all_ids = []
+        for road_id in matched_street_nodes:
+            if road_id == probe:
+                continue
+            probe = road_id
+            all_ids.append(road_id)
+            if road_id in road_name:
+                print(f"{road_id}::{road_name[road_id]}")
+            else:
+                print(f"{road_id}::<no name>")
+        print(len(all_ids))
+        insert_road_ids_into_db(track_id, all_ids)
+        print(len(get_road_ids_from_db(track_id)))
         point_to_road_list = compute_point_to_road_list(gps_points, matched_street_nodes, distance_map)
-        for item in point_to_road_list:
-            point_id, matching_road_id, distance = item
-            matching_road_name = "<no name>"
-            if matching_road_id in road_name:
-                matching_road_name = road_name[matching_road_id]
-            original_road_id, original_dist = nearest_road_map[point_id]
-            original_road_name = "<no name>"
-            if original_road_id in road_name:
-                original_road_name = road_name[original_road_id]
-            str1 = f"{point_id} to {matching_road_id}:: {distance} ({matching_road_name}) -- "
-            str2 = f"{original_road_id}:: {original_dist}"
-            str3 = ""
-            if not matching_road_id == original_road_id:
-                str3 = "*" * 10 + f"  ({original_road_name})"
-            print(str1, str2, str3)
+        print(f"Matched {len(point_to_road_list)} points")
+        insert_new_nearest_road(track_id, point_to_road_list)
         cursor.close()
         connection.close()
         print("... done.")
+
 
 if __name__ == "__main__":
     main()
