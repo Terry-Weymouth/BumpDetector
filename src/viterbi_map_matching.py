@@ -79,13 +79,12 @@ def transition_probability(prev_state, current_state, states, street_graph):
 
 def emission_probability(gps_point_id, street_id, distance_map):
     global max_d
-    # print(gps_point_id, street_id)
     if street_id not in distance_map:
-        print(f"distance map - no street_id: {street_id}")
+        # print(f"distance map - no street_id: {street_id}")
         return 0.000001
     distances = distance_map[street_id]
     if gps_point_id not in distances:
-        print(f"distance map - no point_id: {gps_point_id} for street_id: {street_id}")
+        # print(f"distance map - no point_id: {gps_point_id} for street_id: {street_id}")
         return 0.000001
     d = distances[gps_point_id]
     d_norm = d/max_d
@@ -120,7 +119,7 @@ def get_road_graph(track_id, first_road_id):
             and one.osm_id in (select distinct nearest_road_id from bicycle_data bd where bd.track_id={track_id})
             and two.osm_id in (select distinct nearest_road_id from bicycle_data bd where bd.track_id={track_id})
             and not one.osm_id = two.osm_id
-            and ST_Distance(one.way,two.way) < 4
+            and ST_Distance(one.way,two.way) = 0
         order by one.osm_id, two.osm_id;
     """
     query = sql.SQL(query)
@@ -244,8 +243,9 @@ def compute_point_to_road_list(gps_points, matched_street_nodes, distance_map):
         for i in range(0, len(gps_points)):
             street_key = matched_street_nodes[i]
             point_key = gps_points[i]
-            distance = distance_map[street_key][point_key]
-            ret.append((point_key, street_key, distance))
+            if point_key in distance_map[street_key]:
+                distance = distance_map[street_key][point_key]
+                ret.append((point_key, street_key, distance))
     return ret
 
 
@@ -270,11 +270,12 @@ def build_original_nearest_road_map(track_id):
 
 def insert_new_nearest_road(track_id, point_to_road_list):
     query = f"""
-        UPDATE bicycle_data SET viterbi_nearest_road_id = data.road, viterbi_nearest_road_distance=dist
+        UPDATE bicycle_data SET viterbi_nearest_road_id = data.road, viterbi_nearest_road_distance=data.dist
         FROM (VALUES %s) AS data (id, road, dist)
         WHERE bicycle_data.id = data.id
         """
     execute_values(cursor, query, point_to_road_list)
+    connection.commit()
 
 
 def main():

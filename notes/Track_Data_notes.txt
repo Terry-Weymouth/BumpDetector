@@ -120,16 +120,19 @@ select one.osm_id, two.osm_id, ST_Distance(one.way, two.way) as dist from
 -- distance between two roads
 select one.osm_id, two.osm_id, ST_Distance(one.way, two.way) as dist from
     planet_osm_line as one, planet_osm_line as two
-    where one.osm_id = 8670713 and two.osm_id = 8684827
+    where one.osm_id = 8670713 and two.osm_id = 8684827;
 
-select one.osm_id, two.osm_id, one.name, two.name, ST_Distance(one.way, two.way) as dist
+-- select max(ST_Distance(one.way, two.way))
+-- select one.osm_id, two.osm_id, one.name, two.name, ST_Distance(one.way, two.way) as dist
+select one.osm_id, two.osm_id, ST_Distance(one.way, two.way) as dist
   from
     planet_osm_line as one, planet_osm_line as two
   where one.osm_id < two.osm_id
-        and one.osm_id in (select distinct nearest_road_id from bicycle_data bd where bd.track_id=1)
-        and two.osm_id in (select distinct nearest_road_id from bicycle_data bd where bd.track_id=1)
-        and ST_Distance(one.way, two.way) < 10
-  order by one.osm_id, two.osm_id, ST_Distance(one.way, two.way);
+        and one.osm_id in (select distinct nearest_road_id from bicycle_data)
+        and two.osm_id in (select distinct nearest_road_id from bicycle_data)
+        and ST_Distance(one.way, two.way) < 20
+        and ST_Distance(one.way, two.way) > 0;
+--  order by one.osm_id, two.osm_id, ST_Distance(one.way, two.way);
 
 
 -- get data to create a lookup table osm_id -> name for all osm_id's in track data (e.g. nearest road)
