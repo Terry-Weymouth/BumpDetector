@@ -268,52 +268,87 @@ def build_original_nearest_road_map(track_id):
     return ret
 
 
-def insert_new_nearest_road(track_id, point_to_road_list):
+def insert_new_nearest_road(point_to_road_list):
     query = f"""
-        UPDATE bicycle_data SET viterbi_nearest_road_id = data.road, viterbi_nearest_road_distance=data.dist
-        FROM (VALUES %s) AS data (id, road, dist)
-        WHERE bicycle_data.id = data.id
+        INSERT INTO map_matching_results(data_id, nearest_road_id, nearest_road_distance)
+        VALUES %s
         """
     execute_values(cursor, query, point_to_road_list)
+    connection.commit()
+
+
+def get_all_track_and_max_d():
+    query = f"""
+        select track_id, max_distance
+        from bicycle_track
+        order by track_id
+    """
+    query = sql.SQL(query)
+    # noinspection PyUnresolvedReferences
+    cursor.execute(query)
+    # noinspection PyUnresolvedReferences
+    results = cursor.fetchall()
+    return results
+
+
+def clear_out_old_data():
+    query = """
+        TRUNCATE TABLE map_matching_roads RESTART IDENTITY
+    """
+    query = sql.SQL(query)
+    # noinspection PyUnresolvedReferences
+    cursor.execute(query)
+    query = """
+        TRUNCATE TABLE map_matching_results RESTART IDENTITY
+    """
+    query = sql.SQL(query)
+    # noinspection PyUnresolvedReferences
+    cursor.execute(query)
+    # noinspection PyUnresolvedReferences
     connection.commit()
 
 
 def main():
     global connection, cursor, max_d
     make_connection()  # if successful - sets connection, cursor
-    track_id = 2
-    max_d = 20
     if connection:
-        first_road = 8699583  # Forestdale Road
         print("Starting...")
-        # points are index into bicycle_data - first few dropped to start on first_road
-        gps_points = get_point_ids(track_id, first_road)
-        # road_graph keys are osm_id in planet_osm_line from nearest_road_id of selected points
-        #   entry is list of 'adjacent roads'
-        road_graph = get_road_graph(track_id, first_road)
-        road_name = get_road_names(track_id)
-        distance_map = build_track_point_to_road_distance_map(track_id)
-        nearest_road_map = build_original_nearest_road_map(track_id)
-        print("... got all data ...")
-        matched_street_nodes = viterbi_hmm(gps_points, road_graph, distance_map)
-        print("... got matching roads ...")
-        probe = 0
-        all_ids = []
-        for road_id in matched_street_nodes:
-            if road_id == probe:
-                continue
-            probe = road_id
-            all_ids.append(road_id)
-            if road_id in road_name:
-                print(f"{road_id}::{road_name[road_id]}")
-            else:
-                print(f"{road_id}::<no name>")
-        print(len(all_ids))
-        insert_road_ids_into_db(track_id, all_ids)
-        print(len(get_road_ids_from_db(track_id)))
-        point_to_road_list = compute_point_to_road_list(gps_points, matched_street_nodes, distance_map)
-        print(f"Matched {len(point_to_road_list)} points")
-        insert_new_nearest_road(track_id, point_to_road_list)
+        clear_out_old_data()
+        track_data_list = get_all_track_and_max_d()
+        for item in track_data_list:
+            track_id = item[0]
+            max_d = item[1] * 2.0
+            print(f"Processing track {track_id}, with max_d = {max_d}")
+            first_road = 8699583  # Forestdale Road
+            # points are index into bicycle_data - first few dropped to start on first_road
+            gps_points = get_point_ids(track_id, first_road)
+            # road_graph keys are osm_id in planet_osm_line from nearest_road_id of selected points
+            #   entry is list of 'adjacent roads'
+            road_graph = get_road_graph(track_id, first_road)
+            road_name = get_road_names(track_id)
+            distance_map = build_track_point_to_road_distance_map(track_id)
+            nearest_road_map = build_original_nearest_road_map(track_id)
+            print("... got all data ...")
+            matched_street_nodes = viterbi_hmm(gps_points, road_graph, distance_map)
+            print("... got matching roads ...")
+            probe = 0
+            all_ids = []
+            for road_id in matched_street_nodes:
+                if road_id == probe:
+                    continue
+                probe = road_id
+                all_ids.append(road_id)
+                if road_id in road_name:
+                    print(f"{road_id}::{road_name[road_id]}")
+                else:
+                    print(f"{road_id}::<no name>")
+            print(len(all_ids))
+            insert_road_ids_into_db(track_id, all_ids)
+            print(len(get_road_ids_from_db(track_id)))
+            point_to_road_list = compute_point_to_road_list(gps_points, matched_street_nodes, distance_map)
+            print(f"Matched {len(point_to_road_list)} points")
+            insert_new_nearest_road(point_to_road_list)
+            print(f"Finished processing track {track_id}")
         cursor.close()
         connection.close()
         print("... done.")
