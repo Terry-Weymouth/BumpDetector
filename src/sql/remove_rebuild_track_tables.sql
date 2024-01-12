@@ -52,3 +52,5 @@ create table map_matching_results(
 
 CREATE INDEX data_id_idx ON map_matching_results USING btree ( data_id );
 CREATE INDEX long_lat_remapped_gix ON map_matching_results USING GIST ( long_lat_remapped );
+
+

@@ -1,40 +1,8 @@
 -- See, also, ExamplePostGisQueries.txt; in dir PostGIS_exercise
+-- for create tables see (moved to) src.sql.remove_rebuild_track_tables
 
-create table bicycle_track (
-  track_id serial primary key,
-  file_path varchar(256),
-  max_distance float,
-  time timestamp not null
-  );
-
-create table bicycle_data (
-  id serial primary key,
-  track_id integer,
-  g1 integer,
-  g2 integer,
-  g3 integer,
-  g4 integer,
-  g5 integer,
-  g6 integer,
-  gmax integer,
-  time timestamp,
-  lat float,
-  long float,
-  alt float,
-  speed float,
-  delta_time integer,
-  long_lat_original geometry(POINT,4326),
-  long_lat_remapped geometry(POINT,4326),  -- projected track point after match to road
-  nearest_road_id integer,
-  nearest_road_distance float
-  );
-  
-CREATE INDEX long_lat_original_gix ON bicycle_data USING GIST ( long_lat_original );
-CREATE INDEX long_lat_remapped_gix ON bicycle_data USING GIST ( long_lat_remapped );
-  
-UPDATE bicycle_data SET long_lat_original = ST_SetSRID(ST_MakePoint(long, lat), 4326)::geometry;
-
--- See the contents of the metadata view
+-- See column metadata
+SELECT * FROM geometry_columns;
 SELECT * FROM geography_columns;
 
 -- You can insert data into the table the same as you would if it was using a GEOMETRY column:
@@ -44,15 +12,22 @@ INSERT INTO global_points (name, location) VALUES ('Town', 'SRID=4326;POINT(-110
 INSERT INTO global_points (name, location) VALUES ('Forest', 'SRID=4326;POINT(-109 29)');
 INSERT INTO global_points (name, location) VALUES ('London', 'SRID=4326;POINT(0 49)');
 
--- Creating an index works the same as GEOMETRY. PostGIS will note that the column type is GEOGRAPHY and create an appropriate sphere-based index instead of the usual planar index used for GEOMETRY.
+-- Creating an index GEOGRAPHY works the same as GEOMETRY.
+-- PostGIS will note that the column type is GEOGRAPHY and
+-- create an appropriate sphere-based index instead of the usual planar index used for GEOMETRY.
 
 -- Index the test table with a spherical index
-  CREATE INDEX global_points_gix ON global_points USING GIST ( location );
-Query and measurement functions use units of meters. So distance parameters should be expressed in meters, and return values should be expected in meters (or square meters for areas).
+CREATE INDEX global_points_gix ON global_points USING GIST ( location );
+
+-- SRID=3857 (osm map data) Query and measurement functions use units of meters.
+-- So distance parameters should be expressed in meters, and return
+-- values should be expected in meters (or square meters for areas).
 
 -- Show a distance query and note, London is outside the 1000km tolerance
-  SELECT name FROM global_points WHERE ST_DWithin(location, 'SRID=4326;POINT(-110 29)'::geography, 1000000);
-You can see the power of GEOGRAPHY in action by calculating how close a plane flying from Seattle to London (LINESTRING(-122.33 47.606, 0.0 51.5)) comes to Reykjavik (POINT(-21.96 64.15)).
+SELECT name FROM global_points WHERE ST_DWithin(location, 'SRID=4326;POINT(-110 29)'::geography, 1000000);
+
+-- You can see the power of GEOGRAPHY in action by calculating how close a plane flying
+from Seattle to London (LINESTRING(-122.33 47.606, 0.0 51.5)) comes to Reykjavik (POINT(-21.96 64.15)).
 
 -- All roads (as lines from planet_osm_line) that are in any track data
 select ST_AsGeoJSON(ST_Transform(way,4326))
@@ -102,7 +77,7 @@ where track.track_id=2
     and ST_Distance(osm.way, ST_Transform(track.long_lat_original,3857)) < 20.0
     and highway is not null
     and not (highway in ('footway', 'tertiary_link', 'motorway'))
-    order by  track.id, ST_Distance(ST_Transform(osm.way,4326),track.long_lat_original);
+    order by  track.id, ST_Distance(osm.way, ST_Transform(track.long_lat_original,3857));
 
 
 -- road graph for a given track
@@ -163,7 +138,7 @@ select  ST_AsText(ST_ClosestPoint(line, point)) as cp1,
         (select way as line
             from planet_osm_line where osm_id=8699583) as a,
         (select ST_Transform(track.long_lat_original,3857) as point
-            from bicycle_data where id=27) as b;
+            from bicycle_data as track where id=27) as b;
 
 -- viterbi nearest road
      -- probe
@@ -181,3 +156,19 @@ select track_id, id, nearest_road_distance, viterbi_nearest_road_distance
 from bicycle_data
 -- where not nearest_road_id=viterbi_nearest_road_id
 limit 5;
+
+-- get all matching points
+
+update map_matching_results as r set long_lat_remapped = x.matched_point
+from
+  (select r.id, ST_Transform(ST_ClosestPoint(line, point),4326) as matched_point
+    from
+        map_matching_results as r,
+        (select osm_id, way as line
+            from planet_osm_line) as a,
+        (select id, ST_Transform(long_lat_original,3857) as point
+            from bicycle_data) as b
+    where
+        r.data_id = b.id and r.nearest_road_id = a.osm_id)
+    as x
+  where x.id = r.id;

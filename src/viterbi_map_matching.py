@@ -308,6 +308,29 @@ def clear_out_old_data():
     connection.commit()
 
 
+def update_results_table_with_projected_points():
+    query = """
+    update map_matching_results as r set long_lat_remapped = x.matched_point
+    from
+        (select r.id, ST_Transform(ST_ClosestPoint(line, point),4326) as matched_point
+        from
+            map_matching_results as r,
+            (select osm_id, way as line
+                from planet_osm_line) as a,
+            (select id, ST_Transform(long_lat_original,3857) as point
+                from bicycle_data) as b
+        where
+            r.data_id = b.id and r.nearest_road_id = a.osm_id)
+        as x
+    where x.id = r.id;
+    """
+    query = sql.SQL(query)
+    # noinspection PyUnresolvedReferences
+    cursor.execute(query)
+    # noinspection PyUnresolvedReferences
+    connection.commit()
+
+
 def main():
     global connection, cursor, max_d
     make_connection()  # if successful - sets connection, cursor
@@ -317,7 +340,7 @@ def main():
         track_data_list = get_all_track_and_max_d()
         for item in track_data_list:
             track_id = item[0]
-            max_d = item[1] * 2.0
+            max_d = item[1] * 1.3
             print(f"Processing track {track_id}, with max_d = {max_d}")
             first_road = 8699583  # Forestdale Road
             # points are index into bicycle_data - first few dropped to start on first_road
@@ -349,6 +372,8 @@ def main():
             print(f"Matched {len(point_to_road_list)} points")
             insert_new_nearest_road(point_to_road_list)
             print(f"Finished processing track {track_id}")
+        update_results_table_with_projected_points()
+        print("All road-matching points in updated to results table")
         cursor.close()
         connection.close()
         print("... done.")
