@@ -157,7 +157,7 @@ from bicycle_data
 -- where not nearest_road_id=viterbi_nearest_road_id
 limit 5;
 
--- get all matching points
+-- get/set all matching points
 
 update map_matching_results as r set long_lat_remapped = x.matched_point
 from
@@ -172,3 +172,27 @@ from
         r.data_id = b.id and r.nearest_road_id = a.osm_id)
     as x
   where x.id = r.id;
+
+-- get track long,lat (original and remapped) for a given track
+-- cases: get individual long,lat for each case
+    -- long,lat for original track point
+    select long, lat from bicycle_data where track_id=2 order by id;
+    -- long,lat for remapped point
+    select ST_X(long_lat_remapped), ST_Y(long_lat_remapped) from map_matching_results order by data_id;
+
+-- checking
+    select a.id, a.nearest_road_distance, b.nearest_road_distance
+    from bicycle_data a join map_matching_results b on a.id=b.data_id
+    where a.nearest_road_distance <> b.nearest_road_distance
+    order by a.id;
+
+    select a.id, b.nearest_road_distance,
+      ST_Distance(ST_Transform(long_lat_original,3857),ST_Transform(long_lat_remapped,3857))
+    from bicycle_data a join map_matching_results b on a.id=b.data_id
+    where a.nearest_road_distance <> b.nearest_road_distance
+    order by a.id;
+
+select a.id, long, lat, ST_X(long_lat_remapped), ST_Y(long_lat_remapped)
+from bicycle_data a join map_matching_results b on a.id=b.data_id
+where track_id=2
+order by a.id;

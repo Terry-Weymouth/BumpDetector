@@ -6,7 +6,7 @@ header_filepath = "leaflet/mapgl_header.txt"
 footer_filepath = "leaflet/mapgl_footer.txt"
 
 
-def tracks_connect_and_query(track_id):
+def tracks_connect_and_query(track_id_list):
     connection = None
     cursor = None
     track_data = []
@@ -14,11 +14,16 @@ def tracks_connect_and_query(track_id):
         config = get_database_access()
         connection = psycopg2.connect(**config)
         cursor = connection.cursor()
-        track_color = 'blue'
-        query = (f"select long, lat from bicycle_data where track_id={track_id} order by id")
-        cursor.execute(query)
-        point_list = cursor.fetchall()
-        track_data.append((track_id, track_color, point_list))
+        for track_id in track_id_list:
+            query = f"""
+                select long, lat, ST_X(long_lat_remapped), ST_Y(long_lat_remapped)
+                from bicycle_data a join map_matching_results b on a.id=b.data_id
+                where track_id={track_id}
+                order by a.id
+            """
+            cursor.execute(query)
+            point_list = cursor.fetchall()
+            track_data.append((track_id, point_list))
     except (Exception, psycopg2.Error) as error:
         print("Error while connecting to PostgreSQL", error)
     finally:
@@ -32,64 +37,51 @@ def tracks_connect_and_query(track_id):
 
 def tracks_add_geom(out_file, track_data):
     index = 0
+    track_colors = ['orange', 'red']
     for track_desc in track_data:
-        points_var_name = "points_long_lat{}".format(index)
-        index = index + 1
         track_id = track_desc[0]
-        track_color = track_desc[1]
-        track_points = track_desc[2]
+        track_points = track_desc[1]
+        print(f"geom for track {track_id}")
+        for sub_track in range(len(track_colors)):
+            track_color = track_colors[sub_track]
+            points_var_name = f"points_long_lat_{index}"
+            index = index + 1
 
-        out_file.write("//for track id = {}, color = {}\n".format(track_id, track_color))
-        out_file.write("let {} = [];\n".format(points_var_name))
+            out_file.write("//for track id = {}, color = {}\n".format(track_id, track_color))
+            out_file.write("let {} = [];\n".format(points_var_name))
 
-        for point in track_points:
-            out_file.write('{}.push([{},{}]);\n'.format(points_var_name, point[0], point[1]))
+            for point in track_points:
+                offset = 2 * sub_track
+                long = point[0 + offset]
+                lat = point[1 + offset]
+                out_file.write('{}.push([{},{}]);\n'.format(points_var_name, long, lat))
 
-        out_file.write(f"""
-            // Add markers for each point (marker in new DOM dev)
-            {points_var_name}.forEach(function(point) {{
-                var el = document.createElement('div');
-                el.className = 'marker';
-                el.style.background = '{track_color}';
-                new mapboxgl.Marker(el)
-                  .setLngLat(point)
-                  .addTo(map);
-            }});
-        """)
+            out_file.write(f"""
+                // Add markers for each point (marker in new DOM dev)
+                {points_var_name}.forEach(function(point) {{
+                    var el = document.createElement('div');
+                    el.className = 'marker';
+                    el.style.background = '{track_color}';
+                    new mapboxgl.Marker(el)
+                      .setLngLat(point)
+                      .addTo(map);
+                }});
+            """)
 
 
 def matched_roads_connect_and_query():
     connection = None
     cursor = None
     record = None
-    matched_roads = [8699583, 8688834, 992526123, 107384593, 404611500, 1070134475, 8688836, 8670713,
-                     1134277550, 992521504, 955158555, 8706804, 8693004, 460783874, 8681747, 725387069,
-                     39369060, 8696480, 8708560, 8705205, 8695203, 8684101, 853584290, 8696078, 8696480,
-                     39369060, 725387069, 971947462, 107384581, 107384569, 107384675, 8688343, 8700755,
-                     1134261479, 8716806, 107384610, 8713029, 8715654, 8690303, 8701122, 8694873, 8693007,
-                     8687772, 8718293, 418972731, 418973276, 8670713, 8688836, 1070134475, 107384604,
-                     107384593, 992526123, 8688834, 8699583]
-
-    """[8699583, 8688834, 992526123, 107384593, 404611500, 1070134475, 8688836, 8670713,
-                     1134277550, 992521504, 955158555, 8693006, 8693004, 460783874, 8681747, 725387069,
-                     39369060, 8696480, 8708560, 508156970, 8708560, 8705205, 8695203, 8684101, 853584290,
-                     8696078, 8696480, 39369060, 725387069, 971947462, 107384581, 107384569, 107384675,
-                     8688343, 8703921, 8700755, 1134261479, 8716806, 107384610, 8713029, 8715654, 8690303,
-                     8701122, 8694873, 8693007, 8687772, 8718293, 418972731, 418973276, 8670713, 8688836,
-                     1070134475, 107384604, 107384593, 992526123, 8688834, 8699583]
-    """
     try:
         config = get_database_access()
         connection = psycopg2.connect(**config)
         cursor = connection.cursor()
-        match_string = "(" + ", ".join(str(e) for e in matched_roads) + ")"
-        print(match_string)
-        query = f"""
+        query = """
             select ST_AsGeoJSON(ST_Transform(way,4326))
-                from (select distinct nearest_road_id as id from bicycle_data) as roads
+                from map_matching_roads as roads
                 join planet_osm_line as osm
-                    on (roads.id=osm.osm_id)
-                where roads.id in {match_string}
+                    on (roads.osm_id=osm.osm_id)
         """
         cursor.execute(query)
         record = cursor.fetchall()
@@ -101,6 +93,11 @@ def matched_roads_connect_and_query():
             cursor.close()
             connection.close()
     return record
+
+
+def get_track_id_list():
+    ret = [1, 2, 3]
+    return ret
 
 
 def roads_add_geom(out_file, geom_list):
@@ -125,8 +122,8 @@ def roads_add_geom(out_file, geom_list):
                 type: 'line',
                 source: '{map_item_name}',
                 paint: {{
-                    'line-color': '#888',
-                    'line-width': 3
+                    'line-color': '#555',
+                    'line-width': 2
                 }}
             }});
         """
@@ -140,9 +137,9 @@ def compute_all_track_data_centroid(track_data):
     lat_centroid = 0.0
     n = 0
     for track in track_data:
-        position_data = track[2]
+        position_data = track[1]
         for position in position_data:
-            (long, lat) = position
+            (long, lat, _, _) = position
             long_centroid = (long_centroid*n + long)/(n + 1)
             lat_centroid = (lat_centroid*n + lat)/(n + 1)
             n = n + 1
@@ -173,10 +170,11 @@ def add_access_token(out_file):
 
 
 def main():
-    track_id = 2
-    track_data = tracks_connect_and_query(track_id)
+    all_track_id = get_track_id_list()
+    print(all_track_id)
+    track_data = tracks_connect_and_query(all_track_id)
     road_data = matched_roads_connect_and_query()
-    output = "mapboxgl_roads_tracks.html"
+    output = "mapboxgl_roads_viterbi_tracks.html"
     with open(output, "w") as out_file:
         copy_path_content(header_filepath, out_file)
         add_access_token(out_file)
