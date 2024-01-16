@@ -96,8 +96,27 @@ def matched_roads_connect_and_query():
 
 
 def get_track_id_list():
-    ret = [1, 2, 3]
-    return ret
+    connection = None
+    cursor = None
+    record = None
+    try:
+        config = get_database_access()
+        connection = psycopg2.connect(**config)
+        cursor = connection.cursor()
+        query = """
+        select track_id 
+            from bicycle_track
+        """
+        cursor.execute(query)
+        record = cursor.fetchall()
+    except (Exception, psycopg2.Error) as error:
+        print("Error while connecting to PostgreSQL", error)
+    finally:
+        # closing database connection.
+        if connection:
+            cursor.close()
+            connection.close()
+    return [x[0] for x in record]
 
 
 def roads_add_geom(out_file, geom_list):

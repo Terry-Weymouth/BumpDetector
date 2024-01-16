@@ -342,7 +342,8 @@ def main():
             track_id = item[0]
             max_d = item[1] * 1.3
             print(f"Processing track {track_id}, with max_d = {max_d}")
-            first_road = 8699583  # Forestdale Road
+            # first_road = 8699583  # Forestdale Road
+            first_road = 404611500  # Glenn Frey Dr
             # points are index into bicycle_data - first few dropped to start on first_road
             gps_points = get_point_ids(track_id, first_road)
             # road_graph keys are osm_id in planet_osm_line from nearest_road_id of selected points
