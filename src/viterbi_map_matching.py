@@ -38,7 +38,7 @@ def viterbi_hmm(gps_sequence, street_graph, distance_map):
 
     # Iterate through the GPS sequence
     for t in range(1, len(gps_sequence)):
-        # print("-" * 40)
+        print("-" * 40, t)
         for s in range(len(states)):
             # Calculate transition probabilities from the previous step to the current state
             transition_probs = [
@@ -47,14 +47,15 @@ def viterbi_hmm(gps_sequence, street_graph, distance_map):
 
             # Choose the state with the maximum probability and update the Viterbi matrix and backpointer matrix
             max_prob_index = np.argmax(transition_probs)
-            # print("****", max_prob_index, transition_probs[max_prob_index])
             viterbi_matrix[s, t] = (transition_probs[max_prob_index] *
                                     emission_probability(gps_sequence[t], states[s], distance_map))
+            print("****", s, t, max_prob_index, transition_probs[max_prob_index], viterbi_matrix[s, t], states[s])
             back_pointer_matrix[s, t] = max_prob_index
         # rescale current column
         scale = 1.0/np.sum(viterbi_matrix[:, t])
         for s in range(len(states)):
             viterbi_matrix[s, t] = viterbi_matrix[s, t] * scale
+        print(t, viterbi_matrix[:, t])
     # Backtrack to find the most likely path
     best_path = [np.argmax(viterbi_matrix[:, -1])]
     for t in range(len(gps_sequence) - 1, 0, -1):
@@ -62,17 +63,18 @@ def viterbi_hmm(gps_sequence, street_graph, distance_map):
 
     # Map the best path to the corresponding street nodes
     matched_street_nodes = [states[i] for i in best_path]
-
+    print(matched_street_nodes)
     return matched_street_nodes
 
 
 def transition_probability(prev_state, current_state, states, street_graph):
+    global max_d
     prev_street = states[prev_state]
     current_street = states[current_state]
     adjacent_streets = street_graph[prev_street]
     if prev_street == current_street:
         return 1.0
-    if current_state in adjacent_streets:
+    if current_street in adjacent_streets:
         return 1.0/(len(adjacent_streets))
     return 0.000001
 
@@ -331,6 +333,30 @@ def update_results_table_with_projected_points():
     connection.commit()
 
 
+def print_distance_map(distance_map, road_name):
+    for street_key in distance_map:
+        name = "<no name>"
+        if street_key in road_name:
+            name = road_name[street_key]
+        print(f"{street_key}: {name}")
+        point_distance = distance_map[street_key]
+        index = 0
+        width = 5
+        for point_key in point_distance:
+            distance = point_distance[point_key]
+            pattern = index % width
+            if pattern == 0:
+                if index == len(point_distance) - 1:
+                    print(f"    {point_key:3}: {distance:7.4f}")
+                else:
+                    print(f"    {point_key:3}: {distance:7.4f}", end="")
+            elif pattern == (width - 1) or index == len(point_distance) - 1:
+                print(f", {point_key:3}: {distance:7.4f}")
+            else:
+                print(f", {point_key:3}: {distance:7.4f}", end="")
+            index = index + 1
+
+
 def main():
     global connection, cursor, max_d
     make_connection()  # if successful - sets connection, cursor
@@ -351,7 +377,8 @@ def main():
             road_graph = get_road_graph(track_id, first_road)
             road_name = get_road_names(track_id)
             distance_map = build_track_point_to_road_distance_map(track_id)
-            nearest_road_map = build_original_nearest_road_map(track_id)
+            # nearest_road_map = build_original_nearest_road_map(track_id)
+            # print_distance_map(distance_map, road_name)
             print("... got all data ...")
             matched_street_nodes = viterbi_hmm(gps_points, road_graph, distance_map)
             print("... got matching roads ...")
