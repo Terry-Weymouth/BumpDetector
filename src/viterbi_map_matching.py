@@ -72,7 +72,7 @@ def transition_probability(prev_state, current_state, states, street_graph):
     adjacent_streets = street_graph[prev_street]
     if prev_street == current_street:
         return 1.0
-    if current_state in adjacent_streets:
+    if current_street in adjacent_streets:
         return 1.0/(len(adjacent_streets))
     return 0.000001
 
