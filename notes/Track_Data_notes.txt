@@ -211,10 +211,12 @@ from planet_osm_line
 where way &&
     ST_MakeEnvelope(-83.14047675226435, 42.495622880904875, -83.14047675226435, 42.495622880904875, 4326);
 
-select osm_id, name, ST_Distance(way,
-    (ST_Transform
-        (ST_GeomFromText('POINT(-83.14448238874682 42.49406222012129)',4326), 3857))
-    )
+select osm_id, name,
+    ST_Distance(
+        way,
+        (ST_Transform
+            (ST_GeomFromText('POINT(-83.14448238874682 42.49406222012129)',4326), 3857)
+        ))
 from planet_osm_line,
 (select distinct nearest_road_id from map_matching_results) as track
 where name = 'North Main Street'
@@ -247,8 +249,8 @@ where track_id = 1
     and 300 > ST_Distance(
         ST_Transform(long_lat_original, 3857),
         ST_Transform(ST_GeomFromText('POINT(-83.14448238874682 42.49406222012129)',4326), 3857)
-        )
-order by id
+    )
+order by id;
 
 
 -- return LineString (with SRID:4326) in for all points in a given matched track (e.g. 2)
