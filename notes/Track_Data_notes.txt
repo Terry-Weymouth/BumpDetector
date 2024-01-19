@@ -249,3 +249,12 @@ where track_id = 1
         ST_Transform(ST_GeomFromText('POINT(-83.14448238874682 42.49406222012129)',4326), 3857)
         )
 order by id
+
+
+-- return LineString (with SRID:4326) in for all points in a given matched track (e.g. 2)
+-- use map_matching_results
+SELECT ST_AsGeoJSON( ST_MakeLine( ARRAY (
+    select long_lat_remapped
+    from map_matching_results r join bicycle_data d on r.data_id = d.id
+    where d.track_id = 2)) )
+

@@ -104,8 +104,9 @@ def get_point_ids(track_id, first_road_id):
     results = cursor.fetchall()
     print(f"Points in track: {len(results)}")
     # trim leading points (moving away from base towards first road)
-    while not results[0][1] == first_road_id:
-        results.pop(0)
+    if first_road_id in results[0:]:
+        while not results[0][1] == first_road_id:
+            results.pop(0)
     return [item[0] for item in results]
 
 

@@ -119,6 +119,10 @@ def get_track_id_list():
     return [x[0] for x in record]
 
 
+def tracks_add_as_line(out_file, track_data_line):
+    pass
+
+
 def roads_add_geom(out_file, geom_list):
     # loader header
     out_file.write("map.on('style.load', () => {\n")
@@ -188,10 +192,40 @@ def add_access_token(out_file):
     out_file.write("\t\tmapboxgl.accessToken = '{}'\n".format(token))
 
 
+def make_line_from_matched_track(track_id):
+    connection = None
+    cursor = None
+    record = None
+    try:
+        config = get_database_access()
+        connection = psycopg2.connect(**config)
+        cursor = connection.cursor()
+        query = """
+            SELECT ST_AsGeoJSON( ST_MakeLine( ARRAY (
+                select long_lat_remapped
+                from map_matching_results r join bicycle_data d on r.data_id = d.id
+                where d.track_id = 2)) )
+        """
+        cursor.execute(query)
+        record = cursor.fetchall()
+    except (Exception, psycopg2.Error) as error:
+        print("Error while connecting to PostgreSQL", error)
+    finally:
+        # closing database connection.
+        if connection:
+            cursor.close()
+            connection.close()
+    return record[0][0]
+
+
 def main():
     all_track_id = get_track_id_list()
     print(all_track_id)
     track_data = tracks_connect_and_query(all_track_id)
+    track_data_line = make_line_from_matched_track(2)
+    print(track_data[1][1][0:4])
+    print(track_data_line)
+    exit(0)
     road_data = matched_roads_connect_and_query()
     output = "mapboxgl_roads_viterbi_tracks.html"
     with open(output, "w") as out_file:
@@ -199,7 +233,8 @@ def main():
         add_access_token(out_file)
         add_map_base(out_file, track_data)
         roads_add_geom(out_file, road_data)
-        tracks_add_geom(out_file, track_data)
+        # tracks_add_geom(out_file, track_data)
+        tracks_add_as_line(out_file, track_data)
         copy_path_content(footer_filepath, out_file)
     print("Done: {} roads, {} tracks".format(len(road_data), len(track_data)))
 
